@@ -1,0 +1,85 @@
+<body class="flex flex-col bg-very-pale-blue">
+    <nav class="flex-shrink-0 flex justify-between items-center bg-white py-[15px] pl-[150px] pr-[50px]">
+        <img src="assets/logo-blue.png" alt="" class="w-[120px] h-[25px]">
+        <div x-data="{ show: false }" class="relative">
+            <div class="inline-flex items-center gap-x-2">
+                <div class="flex flex-col items-end">
+                    <span>Sarah Morrison</span>
+                    <span class="text-xs font-light">Job Title</span>
+                </div>
+                <img src="assets/profile.svg" alt="" class="w-[36px] h-[36px]" @click="show = ! show">
+            </div>
+            <div x-show="show"
+                class="absolute bg-white p-[12px] right-0 w-[120px] rounded-[4px] shadow-[0_0_40px_0_rgba(0,0,0,0.1)]">
+                <a href="" class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
+                    Profile
+                </a>
+                <a href="" class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
+                    Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+    <main class="flex flex-col gap-y-[44px] flex-grow px-[200px] py-[60px]">
+        <section class="flex-grow flex flex-col gap-y-[43px] bg-white min-h-[400px] p-[36px]">
+            <div class="flex-shrink-0 flex flex-col gap-y-[21px]">
+                <div class="flex justify-between items-start">
+                    <a href="#" class="flex items-center gap-x-2">
+                        <span><img src="assets/chevron-left.svg" alt=""></span>
+                        <span class="uppercase text-sm font-light">Go Back</span>
+                    </a>
+                </div>
+                <div class="text-[28px] font-semibold">Applicant Information</div>
+            </div>
+
+            <div class="flex-grow grid grid-cols-3 gap-x-8">
+                <div class="flex flex-col gap-y-[34px]">
+                    <div class="flex flex-col gap-y-[8px]">
+                        <div class="label-2">Fullname</div>
+                        <div class="info">
+                            Timothy Ryeyn Lim Perez
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-y-[8px]">
+                        <div class="label-2">Skills</div>
+                        <div class="info prose">
+                            <ul>
+                                <li>Foo</li>
+                                <li>Foo</li>
+                                <li>Foo</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="inline-flex flex-col items-start gap-y-[8px]">
+                        <div class="label-2">Resume</div>
+                        <button class="btn">View Resume</button>
+                    </div>
+                </div>
+                <div class="col-span-2 flex flex-col gap-y-[34px]">
+                    <div class="flex flex-col gap-y-[8px]">
+                        <div class="label-2">About Me</div>
+                        <div class="info prose">
+                            BS Information Technology or BS Computer Science or BS Electronics Engineering
+                            Exposure on developing web solutions in Drupal and PHP implementations in a LAMP
+                            environment as well as user interfaces
+                            for websites and or web application
+                            Ability to architect enterprise Drupal solutions including data, display, and
+                            information
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-y-[8px]">
+                        <div class="label-2">Experience</div>
+                        <div class="info prose">
+                            BS Information Technology or BS Computer Science or BS Electronics Engineering
+                            Exposure on developing web solutions in Drupal and PHP implementations in a LAMP
+                            environment as well as user interfaces
+                            for websites and or web application
+                            Ability to architect enterprise Drupal solutions including data, display, and
+                            information
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
