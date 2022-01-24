@@ -17,7 +17,8 @@ from django.contrib import admin
 from django.urls import path, include
 from jobPortalApp import views
 
+
 urlpatterns = [
-    path('creatt/', views.index),
     path('admin/', admin.site.urls),
+    path('', include('jobPortalApp.urls'))
 ]
