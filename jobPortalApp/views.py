@@ -15,3 +15,9 @@ def home(request):
 # job seeker
 def seeker_no_info(request):
     return render(request, "jobPortalApp/pages/profile/seeker/no-info.html")
+
+# admin
+
+
+def admin_dashboard(request):
+    return render(request, "jobPortalApp/admin/admin_dashboard.html")

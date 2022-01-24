@@ -11,3 +11,8 @@ urlpatterns = [
 urlpatterns += [
     path('seeker-info/', views.seeker_no_info, name="seeker_no_info"),
 ]
+# mohammed
+# administrator
+urlpatterns += [
+    path('admin_dashboard/', views.admin_dashboard, name="admin_dashboard"),
+]
