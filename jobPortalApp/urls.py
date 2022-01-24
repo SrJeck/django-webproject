@@ -9,5 +9,5 @@ urlpatterns = [
 # benitez
 # for job seeker profile
 urlpatterns += [
-    path('info/', views.seeker_no_info, name="seeker_no_info"),
+    path('seeker-info/', views.seeker_no_info, name="seeker_no_info"),
 ]
