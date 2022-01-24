@@ -12,18 +12,15 @@ def home(request):
     return render(request, "jobPortalApp/index.html")
 
 
-def admin_dashboard(request):
-    return render(request, "jobPortalApp/admin/admin_dashboard.html")
-
-
 # job seeker
 def seeker_no_info(request):
     return render(request, "jobPortalApp/pages/profile/seeker/no-info.html")
 
+# admin
 
-def seeker_no_info(request):
-    state = request.session['active'] = True
-    return render(request, "jobPortalApp/pages/profile/seeker/no-info.html", {"state": state})
+
+def admin_dashboard(request):
+    return render(request, "jobPortalApp/admin/admin_dashboard.html")
 
 
 # job provider
