@@ -23,7 +23,20 @@ def admin_dashboard(request):
     return render(request, "jobPortalApp/admin/admin_dashboard.html")
 
 
+def manage_user(request):
+    return render(request, "jobPortalApp/admin/manage_user.html")
+
+
+def company(request):
+    return render(request, "jobPortalApp/admin/company.html")
+
+
+def jobs(request):
+    return render(request, "jobPortalApp/admin/jobs.html")
+
 # job provider
+
+
 def provider_no_info(request):
     return render(request, "jobPortalApp/pages/profile/provider/no-info.html")
 
@@ -46,4 +59,3 @@ def provider_edit_job(request):
 
 def provider_show_applicant(request):
     return render(request, "jobPortalApp/pages/profile/provider/show-applicant.html")
-
