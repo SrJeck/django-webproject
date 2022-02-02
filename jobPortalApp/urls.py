@@ -11,6 +11,12 @@ urlpatterns = [
 urlpatterns += [
     path('seeker-info/', views.seeker_no_info, name="seeker_no_info"),
 ]
+# maverick
+# register
+urlpatterns += [
+    path('register/', views.register, name="register"),
+    path('login/', views.login, name="login"),
+]
 # mohammed
 # administrator
 urlpatterns += [

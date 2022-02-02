@@ -1,3 +1,5 @@
+{% extends "jobPortalApp/index.html" %}
+{% block content%}
 <body class="flex flex-col items-center justify-center flex-grow bg-very-pale-blue h-full">
 
     <div class="flex items-center justify-center my-[50px]">
@@ -29,9 +31,10 @@
             </div>
             <div class="flex items-center gap-x-1 self-center">
                 <span class="text-sm">Do not have an account yet?</span>
-                <a href="#" class="text-sm text-vivid-blue">Sign Up</a>
+                <a href="../register/" class="text-sm text-vivid-blue">Sign Up</a>
             </div>
         </div>
     </div>
 
 </body>
+{% endblock content%}

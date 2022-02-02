@@ -1,5 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.contrib import messages
+from .forms import UserRegisterForm
+from django.contrib.auth.models import User
+from .models import *
 
 
 # Create your views here.
@@ -59,3 +63,29 @@ def provider_edit_job(request):
 
 def provider_show_applicant(request):
     return render(request, "jobPortalApp/pages/profile/provider/show-applicant.html")
+
+def login(request):
+    return render(request, "jobPortalApp/pages/login.html")
+
+# maverick
+def register(request):
+    if request.method == 'POST':
+        type = request.POST['user-type']
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            if User.objects.filter(email=email).exists():
+                Message = "Email already Used"
+                return render(request, 'jobPortalApp/pages/register.html',{'form':form,'Message':Message})
+            else:
+                if type == 'Job Seeker':
+                    username = form.cleaned_data.get('username')
+                    SEEKER.objects.create(username=username,email=email)
+                elif type == 'Job Provider':
+                    username = form.cleaned_data.get('username')
+                    COMPANY.objects.create(username=username,email=email)
+                form.save()
+                # return redirect()
+    else:
+        form = form = UserRegisterForm()
+    return render(request, 'jobPortalApp/pages/register.html',{'form':form})

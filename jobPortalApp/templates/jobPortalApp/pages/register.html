@@ -1,3 +1,5 @@
+{% extends "jobPortalApp/index.html" %}
+{% block content%}
 <body class="flex flex-col items-center justify-center flex-grow bg-very-pale-blue h-full">
 
     <div class="flex items-center justify-center my-[50px]">
@@ -12,41 +14,47 @@
         </div>
         <div class="flex flex-col gap-y-[32px] bg-white text-[38px] p-[29px] rounded-[6px] w-[451px] -ml-[300px]">
             <h1 class="font-semibold">Register</h1>
+            <form method="POST">
             <div class="flex flex-col gap-y-[32px]">
                 <div class="flex flex-col gap-y-[16px]">
+                   
                     <div class="flex flex-col gap-y-1">
                         <label for="*" class="label">Username</label>
-                        <input type="text" placeholder="Enter username" class="input-2px">
+                        {{ form.username}}
                     </div>
                     <div class="flex flex-col gap-y-1">
                         <label for="*" class="label">Email</label>
-                        <input type="email" placeholder="Enter email" class="input-2px">
+                         {{ form.email}}
                     </div>
                     <div class="flex flex-col gap-y-1">
                         <label for="*" class="label">User Type</label>
                         <select name="user-type" id="" required class="select">
-                            <option value="">Job Seeker</option>
-                            <option value="">Job Provider</option>
+                            <option value="" selected disabled hidden>Select User Type</option>
+                            <option value="Job Seeker">Job Seeker</option>
+                            <option value="Job Provider">Job Provider</option>
                         </select>
                     </div>
                     <div class="flex flex-col gap-y-1">
                         <label for="*" class="label">Password</label>
-                        <input type="text" placeholder="Username" class="input-2px">
+                        {{ form.password1}}
                     </div>
                     <div class="flex flex-col gap-y-1">
                         <label for="*" class="label">Confirm Password</label>
-                        <input type="text" placeholder="Username" class="input-2px">
+                        {{ form.password2}}
                     </div>
                 </div>
-                <button class="btn">
+                <button class="btn" type="submit">
                     Login
                 </button>
             </div>
+            </form>
             <div class="flex items-center gap-x-1 self-center">
                 <span class="text-sm">Already have an account?</span>
-                <a href="#" class="text-sm text-vivid-blue">Sign Up</a>
+                <a href="../login/" class="text-sm text-vivid-blue">Sign Up</a>
             </div>
         </div>
     </div>
 
 </body>
+
+{% endblock content%}
