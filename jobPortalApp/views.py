@@ -67,6 +67,9 @@ def provider_show_applicant(request):
 def login(request):
     return render(request, "jobPortalApp/pages/login.html")
 
+
+def profile(request):
+    return render(request, "jobPortalApp/pages/login.html")
 # maverick
 def register(request):
     if request.method == 'POST':
