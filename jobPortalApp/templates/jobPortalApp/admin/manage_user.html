@@ -405,9 +405,8 @@
                                     <th>Actions</th>
                                 </tr>
                             </thead>
+                            {% for i in seeker%}
                             <tbody>
-
-
                                 <tr>
                                     <td>
                                         <span class="custom-checkbox">
@@ -415,10 +414,10 @@
                                             <label for="checkbox5"></label>
                                         </span>
                                     </td>
-                                    <td>Juan Dela Cruz</td>
-                                    <td>juan.delacruz@gmail.com</td>
-                                    <td>Malolos Bulacan</td>
-                                    <td>09126315426</td>
+                                    <td>{{i.username}}</td>
+                                    <td>{{i.email}}</td>
+                                    <td>{{i.fullname}}</td>
+                                    <td>{{i.experience}}</td>
                                     <td>
                                         <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i
                                                 class="material-icons" data-toggle="tooltip"
@@ -430,6 +429,7 @@
                                     </td>
                                 </tr>
                             </tbody>
+                            {% endfor %}
                         </table>
                         <div class="clearfix">
                             <ul class="pagination">
