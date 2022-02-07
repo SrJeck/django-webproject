@@ -1,5 +1,6 @@
 {% extends "jobPortalApp/index.html" %}
 {% block content%}
+
 <body class="flex flex-col items-center justify-center flex-grow bg-very-pale-blue h-full">
 
     <div class="flex items-center justify-center my-[50px]">
@@ -18,7 +19,6 @@
                 {% csrf_token %}
             <div class="flex flex-col gap-y-[32px]">
                 <div class="flex flex-col gap-y-[16px]">
-                   
                     <div class="flex flex-col gap-y-1">
                         <label for="*" class="label">Username</label>
                         {{ form.username}}

@@ -30,7 +30,9 @@ def admin_dashboard(request):
 
 
 def manage_user(request):
-    return render(request, "jobPortalApp/admin/manage_user.html")
+    seeker = SEEKER.objects.all() 
+    return render(request, 'jobPortalApp/admin/manage_user.html',{'seeker':seeker})   
+    #return render(request, "jobPortalApp/admin/manage_user.html")
 
 
 def company(request):
