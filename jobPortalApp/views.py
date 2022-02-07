@@ -139,6 +139,18 @@ def profile(request):
             if COMPANY.objects.filter(user_id=user_id).exists():
                 company_details = COMPANY.objects.get(user_id=user_id)
                 company_jobs = JOB.objects.filter(company_id=user_id)
+                company_jobs_ids = []
+                skillnames_per_jobs = {}
+                for company_job in company_jobs:
+                    company_jobs_ids.append(company_job.id)
+
+                for company_jobs_id in company_jobs_ids:
+                    job_skillnames_per_jobs = []
+                    job_skills_per_jobs = JOBSKILL.objects.filter(job_id=company_jobs_id)
+                    for job_skills_per_job in job_skills_per_jobs:
+                        skills = SKILL.objects.get(id=job_skills_per_job.skill_id)
+                        job_skillnames_per_jobs.append(skills.skillname)
+                    skillnames_per_jobs[company_jobs_id] = job_skillnames_per_jobs
                 # applicants_count = []
                 # skills_per_jobs = {}
                 # for i in range(len(company_jobs)):
@@ -148,7 +160,7 @@ def profile(request):
                 #         skill = SKILL.objects.get(id=i.skill_id)
                 #         skills_per_jobs[company_job_id] = skill.skillname
                 
-                return render(request,'jobPortalApp/pages/profile/provider/with-info.html',{'company_details':company_details,'user_details':user_details,'user_type':job_type,'company_jobs':company_jobs})
+                return render(request,'jobPortalApp/pages/profile/provider/with-info.html',{'company_details':company_details,'user_details':user_details,'user_type':job_type,'company_jobs':company_jobs,'skillnames_per_jobs':skillnames_per_jobs})
 
 @xframe_options_sameorigin
 def seekerView(request):

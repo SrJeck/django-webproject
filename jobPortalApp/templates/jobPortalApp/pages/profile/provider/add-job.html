@@ -59,11 +59,11 @@
                             <div class="flex flex-col gap-y-[5px]">
                                 <span class="label">Name</span>
                                 <input type="text" name="job-name" id="job-name" placeholder="Enter job name"
-                                    class="input-1px w-[250px]">
+                                    class="input-1px w-[250px]" required>
                             </div>
                             <div class="flex flex-col gap-y-[5px]">
                                 <span class="label">Type</span>
-                                <select name="job-types" id="job-types" required class="select-2 w-[250px]">
+                                <select name="job-types" id="job-types" required class="select-2 w-[250px]" required>
                                     <option value="" disabled selected hidden>Select Type</option>
                                     <option value="Full-time job" >Full-time job</option>
                                     <option value="Part-time job" >Part-time job</option>
@@ -71,7 +71,7 @@
                             </div>
                             <div class="flex flex-col gap-y-[5px]">
                                 <span class="label">Salary (in $)</span>
-                                <input type="number" name="salary" id="salary" placeholder="Enter salary" class="input-1px w-[250px]">
+                                <input type="number" name="salary" id="salary" placeholder="Enter salary" class="input-1px w-[250px]" required>
                             </div>
                         </div>
                         <div class="flex flex-col gap-y-[24px]">
@@ -87,7 +87,7 @@
                         <div class="flex flex-col gap-y-[5px]">
                             <span class="label">Description</span>
                             <textarea name="job-description" id="job-description" rows="8" placeholder="Enter informations about the job provider"
-                                class="input-1px"></textarea>
+                                class="input-1px" required></textarea>
                         </div>
                     </div>
                     </form>

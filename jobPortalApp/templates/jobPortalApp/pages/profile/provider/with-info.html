@@ -107,9 +107,7 @@
             </div>
             
             <div class="flex flex-col gap-y-[41px] px-[70px] py-[20px] max-h-[700px] overflow-auto">
-                {% for skills_per_job in skills_per_jobs%}
-                    <span>{{skills_per_job}}</span>
-                {% endfor %}
+                
                 {% for company_job in company_jobs %}
                     <div class="flex flex-col p-[23px] shadow-[0_0_20px_0_rgba(24,47,67,0.2)] rounded-[6px]">
                         <div class="flex justify-between">
@@ -129,8 +127,14 @@
                                     {{company_job.name}}
                                 </div>
                                 <div class="flex items-center gap-x-[8px]">
-                                    <div class="pill">Javascript</div>
-                                    <div class="pill">React</div>
+                                    {% for keys, values in skillnames_per_jobs.items%}
+                                        {% if keys ==  company_job.id %}
+                                        {% for value in values%}
+                                        <div class="pill">{{value}}</div>
+                                        
+                                        {% endfor %}
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
                             </div>
                             <div class="font-light">
