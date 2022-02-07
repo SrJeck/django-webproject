@@ -4,7 +4,40 @@
 {% block title %}Job Info{% endblock title %}
 
 {% block content %}
+<nav class="flex-shrink-0 flex justify-between items-center bg-white py-[15px] pl-[150px] pr-[50px]">
+    <a href="../home">
+        <img src="{% static 'images/logo-blue.png' %}" alt="" class="w-[120px] h-[25px]">
+    </a>
+    <div x-data="{ show: false }" class="relative">
+        <div class="inline-flex items-center gap-x-2">
+            <div class="flex flex-col items-end">
+                {% if not company_details.name%}
+                <span>Not Set</span>
+                {% else %}
+                <span>{{company_details.name}}</span>
+                {% endif%}
+                <span class="text-xs font-light">{{user_type}}</span>
+            </div>
+            <img src="{% static 'images/profile.svg' %}" alt="" class="w-[36px] h-[36px]" @click="show = ! show">
+        </div>
+        <div x-show="show"
+            class="absolute bg-white p-[12px] right-0 w-[120px] rounded-[4px] shadow-[0_0_40px_0_rgba(0,0,0,0.1)]">
+            <a href="../profile"
+                class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
+                Profile
+            </a>
+            <a id="logout-btn" class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
+                Logout
+            </a>
+        </div>
+    </div>
+</nav>
      <main class="flex flex-col gap-y-[44px] flex-grow px-[200px] py-[60px]">
+        <div id="logout-div" style="display: none;">
+            <h3>Are you sure about that?</h3>
+            <a href="../logout"><button class="btn-outline">Yes</button></a>
+            <button class="btn-outline" id="close-logout">No</button>
+        </div>
         <section class="flex-grow flex flex-col gap-y-[43px] bg-white min-h-[400px] p-[36px]">
             <div class="flex-shrink-0 flex justify-between items-start">
                 <a href="#" class="flex items-center gap-x-2">
@@ -87,5 +120,20 @@
             </div>
         </section>
     </main>
+    
+<script>
+    logout_open = document.getElementById('logout-btn');
+    logout_close = document.getElementById('close-logout');
+
+    logout_open.onclick = function() {
+        document.getElementById('logout-div').style.display = "Block";
+        };
+    logout_close.onclick = function() {
+        document.getElementById('logout-div').style.display = "None";
+        };
+    // window.onclick = function(){
+    //     document.getElementById('logout-div').style.display = "None";
+    // }
+</script>
 {% endblock content %}
 
