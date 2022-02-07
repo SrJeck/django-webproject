@@ -1,0 +1,75 @@
+{#for job provider/company edit job post#}
+{% extends "jobPortalApp/base.html" %}
+{% load static %}
+{% block title %}Edit Job Info{% endblock title %}
+
+{% block content %}
+     <main class="flex flex-col gap-y-[44px] flex-grow px-[200px] py-[60px]">
+        <section class="flex-grow flex flex-col gap-y-[55px] bg-white min-h-[400px] p-[36px]">
+            <div class="flex-shrink-0 flex flex-col gap-y-[36px]">
+                <div class="flex justify-between items-start">
+                    <a href="../profile" class="flex items-center gap-x-2">
+                        <span><img src="{% static 'images/chevron-left.svg' %}" alt=""></span>
+                        <span class="uppercase text-sm font-light">Go Back</span>
+                    </a>
+                </div>
+                <div class="text-[28px] font-semibold italic ml-[42px]">Creating a Job</div>
+            </div>
+            <div class="flex flex-col gap-y-[50px] px-[42px]">
+                <div class="flex flex-col gap-y-[34px]">
+                    <form action="../profile/seeker-add-job-process" id="job-form" method="POST" >
+                        
+                        {% csrf_token %}
+                    <div class="text-[22px] font-semibold italic">Role Information</div>
+                    <div class="flex flex-col gap-y-[24px]">
+                        <div class="grid grid-cols-3">
+                            <div class="flex flex-col gap-y-[5px]">
+                                <span class="label">Name</span>
+                                <input type="text" name="job-name" id="job-name" placeholder="Enter job name"
+                                    class="input-1px w-[250px]">
+                            </div>
+                            <div class="flex flex-col gap-y-[5px]">
+                                <span class="label">Type</span>
+                                <select name="job-types" id="job-types" required class="select-2 w-[250px]">
+                                    <option value="" disabled selected hidden>Select Type</option>
+                                    <option value="Full-time job" >Full-time job</option>
+                                    <option value="Part-time job" >Part-time job</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col gap-y-[5px]">
+                                <span class="label">Salary (in $)</span>
+                                <input type="number" name="salary" id="salary" placeholder="Enter salary" class="input-1px w-[250px]">
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-y-[24px]">
+                            <div >
+                                <span class="label">Required skill(s)</span>
+                                <br><span class="label">Skills</span><br>
+                                {% for skill in skills %}
+                                    <input type="checkbox" value="{{skill.id}}" class="skill_check" id="{{skill.id}}" name="skill">
+                                    <label for="{{skill.id}}">{{skill.skillname}}</label><br>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-y-[5px]">
+                            <span class="label">Description</span>
+                            <textarea name="job-description" id="job-description" rows="8" placeholder="Enter informations about the job provider"
+                                class="input-1px"></textarea>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            <button class="btn self-end" id="submit-job">Save</button>
+        </section>
+    </main>
+    <script>
+
+        btn_save = document.getElementById('submit-job');
+
+            btn_save.onclick = function () {
+                document.getElementById('job-form').submit();
+            };
+
+    </script>
+{% endblock content %}

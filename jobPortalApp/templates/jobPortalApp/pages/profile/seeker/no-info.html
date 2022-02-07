@@ -4,29 +4,53 @@
 {#{% block title %}Seeker Info{% endblock title %}#}
 
 {% block content %}
+    <nav class="flex-shrink-0 flex justify-between items-center bg-white py-[15px] pl-[150px] pr-[50px]">
+        <a href="../home">
+            <img src="{% static 'images/logo-blue.png' %}" alt="" class="w-[120px] h-[25px]">
+        </a>
+        <div x-data="{ show: false }" class="relative">
+            <div class="inline-flex items-center gap-x-2">
+                <div class="flex flex-col items-end">
+                    <span>{{seeker_details.fullname}}</span>
+                    <span class="text-xs font-light">{{user_type}}</span>
+                </div>
+                <img src="{% static 'images/profile.svg' %}" alt="" class="w-[36px] h-[36px]" @click="show = ! show">
+            </div>
+            <div x-show="show"
+                class="absolute bg-white p-[12px] right-0 w-[120px] rounded-[4px] shadow-[0_0_40px_0_rgba(0,0,0,0.1)]">
+                <a href="../profile"
+                    class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
+                    Profile
+                </a>
+                <a href=""
+                    class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
+                    Logout
+                </a>
+            </div>
+        </div>
+    </nav>
    <main class="flex flex-col gap-y-[44px] flex-grow px-[200px] py-[60px]">
         <section class="flex-shrink-0 flex items-center justify-between bg-white p-[36px]">
             <div class="flex items-center gap-x-[48px]">
-                <img src="{% static "images/profile.svg" %}" alt="" class="w-[90px] h-[90px]">
+                <img src="{% static 'images/profile.svg' %}" alt="" class="w-[90px] h-[90px]">
                 <div class="flex flex-col gap-y-[12px]">
-                    <span class="font-semibold text-[22px]">timothyperez999</span>
-                    <span class="font-light">timothyperez999@gmail.com</span>
+                    <span class="font-semibold text-[22px]">{{ user_details.username }}</span>
+                    <span class="font-light">{{ user_details.email }}</span>
                 </div>
-            </div>
-            <div>
-                <button class="btn-outline">Edit</button>
             </div>
         </section>
 
         <section class="flex-grow flex flex-col bg-white min-h-[400px] p-[36px]">
             <div class="flex-shrink-0 text-[22px] font-semibold italic text-left">Personal Information</div>
             <div class="flex-grow flex items-center justify-center">
+                <a href="../profile/seeker-add-profile">
                 <button class="btn-with-icon">
                     <span>
-                        <img src="{% static "images/add.svg" %}">
+                        <img src="{% static 'images/add.svg' %}">
                     </span>
                     <span>Setup Information</span>
                 </button>
+                </a>
             </div>
         </section>
     </main>
@@ -36,14 +60,14 @@
 {# I comment up the nav part since it already exist in base.html #}
 {#<body class="flex flex-col bg-very-pale-blue">#}
 {#    <nav class="flex-shrink-0 flex justify-between items-center bg-white py-[15px] pl-[150px] pr-[50px]">#}
-{#        <img src="{% static "images/logo-blue.png" %}" alt="" class="w-[120px] h-[25px]">#}
+{#        <img src="{% static 'images/logo-blue.png' %}" alt="" class="w-[120px] h-[25px]">#}
 {#        <div x-data="{ show: false }" class="relative">#}
 {#            <div class="inline-flex items-center gap-x-2">#}
 {#                <div class="flex flex-col items-end">#}
 {#                    <span>Sarah Morrison</span>#}
 {#                    <span class="text-xs font-light">Job Title</span>#}
 {#                </div>#}
-{#                <img src="{% static "images/profile.svg" %}" alt="" class="w-[36px] h-[36px]" @click="show = ! show">#}
+{#                <img src="{% static 'images/profile.svg' %}" alt="" class="w-[36px] h-[36px]" @click="show = ! show">#}
 {#            </div>#}
 {#            <div x-show="show"#}
 {#                class="absolute bg-white p-[12px] right-0 w-[120px] rounded-[4px] shadow-[0_0_40px_0_rgba(0,0,0,0.1)]">#}

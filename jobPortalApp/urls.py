@@ -1,10 +1,13 @@
 from django.urls import path, include
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
-    path('', views.home, name="Home"),
+    path('home/', views.home, name="Home"),
     path('creatt/', views.index),
 ]
+
 
 # benitez
 # for job seeker profile
@@ -16,6 +19,17 @@ urlpatterns += [
 urlpatterns += [
     path('register/', views.register, name="register"),
     path('login/', views.login, name="login"),
+    path('logout/', views.logout, name="logout"),
+    path('profile/', views.profile, name="profile"),
+    path('profile/seeker-edit-profile', views.seekerEdit, name="seekerEdit"),
+    path('profile/seeker-edit-process', views.seekerEditProcess, name="seekerEditProcess"),
+    path('seeker-resume/', views.seekerView, name="seekerView"),
+    path('profile/provider-edit-profile', views.providerEdit, name="providerEdit"),
+    path('profile/provider-edit-process', views.providerEditProcess, name="providerEditProcess"),
+    path('profile/provider-add-job', views.providerAddJob, name="providerAddJob"),
+    path('profile/seeker-add-job-process', views.providerAddJobProcess, name="providerAddJobProcess"),
+    path('fileupload/', views.fileupload, name="fileupload"),
+    path('filedisplay/', views.filedisplay, name="filedisplay"),
 ]
 # mohammed
 # administrator

@@ -15,6 +15,7 @@
         <div class="flex flex-col gap-y-[32px] bg-white text-[38px] p-[29px] rounded-[6px] w-[451px] -ml-[300px]">
             <h1 class="font-semibold">Register</h1>
             <form method="POST">
+                {% csrf_token %}
             <div class="flex flex-col gap-y-[32px]">
                 <div class="flex flex-col gap-y-[16px]">
                    
@@ -44,7 +45,7 @@
                     </div>
                 </div>
                 <button class="btn" type="submit">
-                    Login
+                    Register
                 </button>
             </div>
             </form>

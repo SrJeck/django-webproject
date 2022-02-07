@@ -1,92 +1,142 @@
+{#for seeker no info#}
+{% extends "jobPortalApp/base.html" %}
+{% load static %}
+{#{% block title %}Seeker Info{% endblock title %}#}
+
+{% block content %}
 <body class="flex flex-col bg-very-pale-blue">
     <nav class="flex-shrink-0 flex justify-between items-center bg-white py-[15px] pl-[150px] pr-[50px]">
-        <img src="assets/logo-blue.png" alt="" class="w-[120px] h-[25px]">
+        <a href="../home">
+            <img src="{% static 'images/logo-blue.png' %}" alt="" class="w-[120px] h-[25px]">
+        </a>
         <div x-data="{ show: false }" class="relative">
             <div class="inline-flex items-center gap-x-2">
                 <div class="flex flex-col items-end">
-                    <span>Sarah Morrison</span>
-                    <span class="text-xs font-light">Job Title</span>
+                    {% if not seeker_details.fullname%}
+                    <span>Not Set</span>
+                    {% else %}
+                    <span>{{seeker_details.fullname}}</span>
+                    {% endif%}
+                    <span class="text-xs font-light">{{user_type}}</span>
                 </div>
-                <img src="assets/profile.svg" alt="" class="w-[36px] h-[36px]" @click="show = ! show">
+                <img src="{% static 'images/profile.svg' %}" alt="" class="w-[36px] h-[36px]" @click="show = ! show">
             </div>
             <div x-show="show"
                 class="absolute bg-white p-[12px] right-0 w-[120px] rounded-[4px] shadow-[0_0_40px_0_rgba(0,0,0,0.1)]">
-                <a href="" class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
+                <a href="../profile"
+                    class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
                     Profile
                 </a>
-                <a href="" class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
+                <a id="logout-btn" class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
                     Logout
                 </a>
             </div>
         </div>
     </nav>
     <main class="flex flex-col gap-y-[44px] flex-grow px-[200px] py-[60px]">
+        <div id="logout-div" style="display: none;">
+            <h3>Are you sure about that?</h3>
+            <a href="../logout"><button class="btn-outline">Yes</button></a>
+            <button class="btn-outline" id="close-logout">No</button>
+        </div>
         <section class="flex-shrink-0 flex items-center justify-between bg-white p-[36px]">
             <div class="flex items-center gap-x-[48px]">
-                <img src="assets/profile.svg" alt="" class="w-[90px] h-[90px]">
+                <img src="{% static 'images/profile.svg' %}" alt="" class="w-[90px] h-[90px]">
                 <div class="flex flex-col gap-y-[12px]">
-                    <span class="font-semibold text-[22px]">timothyperez999</span>
-                    <span class="font-light">timothyperez999@gmail.com</span>
+                    <span class="font-semibold text-[22px]">{{user_details.username}}</span>
+                    <span class="font-light">{{user_details.email}}</span>
                 </div>
             </div>
             <div>
-                <button class="btn-outline">Edit</button>
+               
             </div>
         </section>
 
         <section class="flex-grow flex flex-col gap-y-[43px] bg-white min-h-[400px] p-[36px]">
             <div class="flex-shrink-0 flex justify-between items-center">
                 <div class="text-[22px] font-semibold italic text-left">Personal Information</div>
-                <button class="btn-outline">Edit</button>
+                <a href="../profile/seeker-edit-profile"><button class="btn-outline">Edit</button></a>
             </div>
             <div class="flex-grow grid grid-cols-3 gap-x-8">
                 <div class="flex flex-col gap-y-[34px]">
                     <div class="flex flex-col gap-y-[8px]">
                         <div class="label-2">Fullname</div>
-                        <div class="info">
-                            Timothy Ryeyn Lim Perez
-                        </div>
+                            {% if not seeker_details.fullname %}
+                            <div class="info"></div>
+                            Not Set
+                            </div>
+                            {% else %}
+                            <div class="info"></div>
+                            {{ seeker_details.fullname }}
+                            </div>
+                            {% endif %}
                     </div>
                     <div class="flex flex-col gap-y-[8px]">
                         <div class="label-2">Skills</div>
                         <div class="info prose">
                             <ul>
-                                <li>Foo</li>
-                                <li>Foo</li>
-                                <li>Foo</li>
+                                {% if seeker_skills %}
+                                {% for seeker_skill in seeker_skills %}
+                                    <li> {{ seeker_skill }}</li>
+                                {% endfor %}
+                                {% else %}
+                                    <li> No Skills</li>
+                                {% endif %}
                             </ul>
                         </div>
                     </div>
                     <div class="inline-flex flex-col items-start gap-y-[8px]">
                         <div class="label-2">Resume</div>
-                        <button class="btn">View Resume</button>
+                        
+                        {% if seeker_resume.resume %}
+                        <div class="info"></div>
+                        <a href="../seeker-resume" ><button class="btn">View Resume</button></a>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="col-span-2 flex flex-col gap-y-[34px]">
                     <div class="flex flex-col gap-y-[8px]">
                         <div class="label-2">About Me</div>
-                        <div class="info prose">
-                            BS Information Technology or BS Computer Science or BS Electronics Engineering
-                            Exposure on developing web solutions in Drupal and PHP implementations in a LAMP
-                            environment as well as user interfaces
-                            for websites and or web application
-                            Ability to architect enterprise Drupal solutions including data, display, and
-                            information
+                        {% if not seeker_details.about %}
+                        <div class="info prose"></div>
+                        Not Set
                         </div>
+                        {% else %}
+                        <div class="info"></div>
+                        {{seeker_details.about}}
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="flex flex-col gap-y-[8px]">
                         <div class="label-2">Experience</div>
-                        <div class="info prose">
-                            BS Information Technology or BS Computer Science or BS Electronics Engineering
-                            Exposure on developing web solutions in Drupal and PHP implementations in a LAMP
-                            environment as well as user interfaces
-                            for websites and or web application
-                            Ability to architect enterprise Drupal solutions including data, display, and
-                            information
+                        {% if not seeker_details.experience %}
+                        <div class="info prose"></div>
+                        Not Set
                         </div>
+                        {% else %}
+                        <div class="info"></div>
+                        {{seeker_details.experience}}
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </section>
     </main>
 </body>
+<script>
+    logout_open = document.getElementById('logout-btn');
+    logout_close = document.getElementById('close-logout');
+
+    logout_open.onclick = function() {
+        document.getElementById('logout-div').style.display = "Block";
+        };
+    logout_close.onclick = function() {
+        document.getElementById('logout-div').style.display = "None";
+        };
+    // window.onclick = function(){
+    //     document.getElementById('logout-div').style.display = "None";
+    // }
+</script>
+{% endblock content %}{# part to singit template #}

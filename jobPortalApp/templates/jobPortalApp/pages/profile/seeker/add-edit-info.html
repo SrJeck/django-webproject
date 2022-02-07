@@ -1,82 +1,133 @@
+{% extends "jobPortalApp/base.html" %}
+{% load static %}
+{% block content %}
 <body class="flex flex-col bg-very-pale-blue">
     <nav class="flex-shrink-0 flex justify-between items-center bg-white py-[15px] pl-[150px] pr-[50px]">
-        <img src="assets/logo-blue.png" alt="" class="w-[120px] h-[25px]">
+        <a href="../home">
+            <img src="{% static 'images/logo-blue.png' %}" alt="" class="w-[120px] h-[25px]">
+        </a>
         <div x-data="{ show: false }" class="relative">
             <div class="inline-flex items-center gap-x-2">
                 <div class="flex flex-col items-end">
-                    <span>Sarah Morrison</span>
-                    <span class="text-xs font-light">Job Title</span>
+                    <span>{{seeker_details.fullname}}</span>
+                    <span class="text-xs font-light">{{user_type}}</span>
                 </div>
-                <img src="assets/profile.svg" alt="" class="w-[36px] h-[36px]" @click="show = ! show">
+                <img src="{% static 'images/profile.svg' %}" alt="" class="w-[36px] h-[36px]" @click="show = ! show">
             </div>
             <div x-show="show"
                 class="absolute bg-white p-[12px] right-0 w-[120px] rounded-[4px] shadow-[0_0_40px_0_rgba(0,0,0,0.1)]">
-                <a href="" class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
+                <a href="../profile"
+                    class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
                     Profile
                 </a>
-                <a href="" class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
+                <a id="logout-btn"
+                    class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
                     Logout
                 </a>
             </div>
         </div>
     </nav>
     <main class="flex flex-col gap-y-[44px] flex-grow px-[200px] py-[60px]">
+        <div id="logout-div" style="display: none;">
+            <h3>Are you sure about that?</h3>
+            <a href="../logout"><button class="btn-outline">Yes</button></a>
+            <button class="btn-outline" id="close-logout">No</button>
+        </div>
         <section class="flex-grow flex flex-col gap-y-[55px] bg-white min-h-[400px] p-[36px]">
             <div class="flex-shrink-0 flex flex-col gap-y-[36px]">
                 <div class="flex justify-between items-start">
-                    <a href="#" class="flex items-center gap-x-2">
+                    <a href="../profile" class="flex items-center gap-x-2">
                         <span><img src="assets/chevron-left.svg" alt=""></span>
                         <span class="uppercase text-sm font-light">Go Back</span>
                     </a>
                 </div>
                 <div class="text-[28px] font-semibold italic ml-[42px]">Setting Up Information</div>
             </div>
-            <div class="flex flex-col gap-y-[50px] px-[42px]">
+            <form id="edit-form" action="../profile/seeker-edit-process" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
                 <div class="flex flex-col gap-y-[34px]">
                     <div class="text-[22px] font-semibold italic">Pesonal Information</div>
                     <div class="flex flex-col gap-y-[24px]">
                         <div class="flex flex-col gap-y-[5px]">
                             <span class="label">Fullname</span>
-                            <input type="text" name="" id="" placeholder="Enter full name" class="input-1px w-[250px]">
+                            {% if not seeker_details.fullname %}
+                            <input type="text" name="fullname" id="fullname" placeholder="Enter full name" class="input-1px w-[250px]">
+                            {% else %}
+                            <input type="text" name="fullname" id="fullname" value="{{seeker_details.fullname}}" class="input-1px w-[250px]">
+                            {% endif %}
                         </div>
                         <div class="flex flex-col gap-y-[5px]">
                             <span class="label">About Me</span>
-                            <textarea name="" id="" rows="8" placeholder="Enter informations to know you more"
+                            {% if not seeker_details.about %}
+                            <textarea name="about" id="about" rows="8" placeholder="Enter informations to know you more"
                                 class="input-1px"></textarea>
+                            {% else %}
+                            <textarea name="about" id="about" rows="8" value="{{seeker_details.about}}"
+                                class="input-1px"></textarea>
+                            {% endif %}
+                            
                         </div>
                     </div>
                 </div>
                 <div class="flex flex-col gap-y-[34px]">
                     <div class="text-[22px] font-semibold italic">Career Information</div>
-                    <div class="flex flex-col gap-y-[24px]">
-                        <div class="flex flex-col gap-y-[5px]">
-                            <span class="label">Fullname</span>
-                            <div class="flex items-center gap-y-1">
-                                <select name="" id="" required class="select-2 w-[250px]">
-                                    <option value="" disabled selected hidden>Select from the options</option>
-                                </select>
-                                <button class="btn-no-outline">Remove</button>
-                            </div>
+                        <div>
+                            <span class="label">Current Skills</span><br>
+                            {% if not seeker_skills %}
+                            <h5>None</h5>
+                            {% else %}
+                                {% for seeker_skill in seeker_skills %}
+                                <h5>{{seeker_skill}}</h5>
+                                {% endfor %}
+                            {% endif %}
+
+                            <br><span class="label">Skills</span><br>
+                            {% for skill in skills %}
+                                <input type="checkbox" value="{{skill.id}}" class="skill_check" id="{{skill.id}}" name="skill">
+                                <label for="{{skill.id}}">{{skill.skillname}}</label><br>
+                            {% endfor %}
                         </div>
-                        <button class="btn-with-icon w-[175px]">
-                            <span>
-                                <img src="assets/add.svg">
-                            </span>
-                            <span>Add Another</span>
-                        </button>
-                    </div>
                     <div class="flex flex-col gap-y-[5px]">
                         <span class="label">Experience</span>
-                        <textarea name="" id="" rows="8" placeholder="Enter informations about your work experiences"
+                        
+                        {% if not seeker_details.experience %}
+                        <textarea name="experience" id="experience" rows="8" placeholder="Enter informations about your work experiences"
                             class="input-1px"></textarea>
+                        {% else %}
+                        <textarea name="experience" id="experience" rows="8" value="{{seeker_details.experience}}"
+                            class="input-1px"></textarea>
+                        {% endif %}
                     </div>
                     <div class="flex flex-col gap-y-[5px]">
                         <span class="label">Resume</span>
-                        <input type="file" name="" id="" class="input-1px w-max">
+                        {{seeker_resume.resume}}
+                        {{form.resume}}
                     </div>
                 </div>
+            </form>
+            <button class="btn self-end" id="edit-save">Save</button> 
+            <div class="flex flex-col gap-y-[50px] px-[42px]">
+                
             </div>
-            <button class="btn self-end">Save</button>
         </section>
     </main>
 </body>
+<script>
+    btn_save = document.getElementById('edit-save');
+
+    btn_save.onclick = function () {
+        document.getElementById('edit-form').submit();
+    };
+    
+    logout_open = document.getElementById('logout-btn');
+    logout_close = document.getElementById('close-logout');
+
+    logout_open.onclick = function() {
+        document.getElementById('logout-div').style.display = "Block";
+        };
+    logout_close.onclick = function() {
+        document.getElementById('logout-div').style.display = "None";
+        };
+</script>
+
+{% endblock %}

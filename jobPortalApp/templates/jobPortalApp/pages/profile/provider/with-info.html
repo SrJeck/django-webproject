@@ -4,17 +4,47 @@
 {% block title %}Provider Info{% endblock title %}
 
 {% block content %}
+<nav class="flex-shrink-0 flex justify-between items-center bg-white py-[15px] pl-[150px] pr-[50px]">
+    <a href="../home">
+        <img src="{% static 'images/logo-blue.png' %}" alt="" class="w-[120px] h-[25px]">
+    </a>
+    <div x-data="{ show: false }" class="relative">
+        <div class="inline-flex items-center gap-x-2">
+            <div class="flex flex-col items-end">
+                {% if not company_details.name%}
+                <span>Not Set</span>
+                {% else %}
+                <span>{{company_details.name}}</span>
+                {% endif%}
+                <span class="text-xs font-light">{{user_type}}</span>
+            </div>
+            <img src="{% static 'images/profile.svg' %}" alt="" class="w-[36px] h-[36px]" @click="show = ! show">
+        </div>
+        <div x-show="show"
+            class="absolute bg-white p-[12px] right-0 w-[120px] rounded-[4px] shadow-[0_0_40px_0_rgba(0,0,0,0.1)]">
+            <a href="../profile"
+                class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
+                Profile
+            </a>
+            <a id="logout-btn" class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
+                Logout
+            </a>
+        </div>
+    </div>
+</nav>
     <main class="flex flex-col gap-y-[44px] flex-grow px-[200px] py-[60px]">
+        <div id="logout-div" style="display: none;">
+            <h3>Are you sure about that?</h3>
+            <a href="../logout"><button class="btn-outline">Yes</button></a>
+            <button class="btn-outline" id="close-logout">No</button>
+        </div>
         <section class="flex-shrink-0 flex items-center justify-between bg-white p-[36px]">
             <div class="flex items-center gap-x-[48px]">
-                 <img src="{% static "images/profile.svg" %}" alt="" class="w-[90px] h-[90px]">
+                 <img src="{% static 'images/profile.svg' %}" alt="" class="w-[90px] h-[90px]">
                 <div class="flex flex-col gap-y-[12px]">
-                    <span class="font-semibold text-[22px]">timothyperez999</span>
-                    <span class="font-light">timothyperez999@gmail.com</span>
+                    <span class="font-semibold text-[22px]">{{user_details.username}}</span>
+                    <span class="font-light">{{user_details.email}}</span>
                 </div>
-            </div>
-            <div>
-                <button class="btn-outline">Edit</button>
             </div>
         </section>
 
@@ -22,34 +52,49 @@
         <section class="flex-grow flex flex-col gap-y-[43px] bg-white min-h-[400px] p-[36px]">
             <div class="flex-shrink-0 flex justify-between items-center">
                 <div class="text-[22px] font-semibold italic text-left">Job Provider/Company Information</div>
-                <button class="btn-outline">Edit</button>
+                <a href="../profile/provider-edit-profile"><button class="btn-outline">Edit</button></a>
             </div>
             <div class="flex-grow grid grid-cols-3 gap-x-8">
                 <div class="flex flex-col gap-y-[34px]">
                     <div class="flex flex-col gap-y-[8px]">
                         <div class="label-2">Company Name</div>
+                        {% if not company_details.name%}
                         <div class="info">
-                            Foobar
+                            Not Set
                         </div>
+                        {% else %}
+                        <div class="info">
+                            {{company_details.name}}
+                        </div>
+                        {% endif%}
                     </div>
                     <div class="flex flex-col gap-y-[8px]">
                         <div class="label-2">City - Country</div>
+                        
+                        {% if not company_details.city and not company_details.country %}
                         <div class="info">
-                            Manila - Philippines
+                            Not Set
                         </div>
+                        {% else %}
+                        <div class="info">
+                            {{company_details.city}} - {{company_details.country}}
+                        </div>
+                        {% endif%}
                     </div>
                 </div>
                 <div class="col-span-2 flex flex-col gap-y-[34px]">
                     <div class="flex flex-col gap-y-[8px]">
                         <div class="label-2">About Us</div>
+                        
+                        {% if not company_details.description%}
                         <div class="info prose">
-                            BS Information Technology or BS Computer Science or BS Electronics Engineering
-                            Exposure on developing web solutions in Drupal and PHP implementations in a LAMP
-                            environment as well as user interfaces
-                            for websites and or web application
-                            Ability to architect enterprise Drupal solutions including data, display, and
-                            information
+                            Not Set
                         </div>
+                        {% else %}
+                        <div class="info prose">
+                            {{company_details.description}}
+                        </div>
+                        {% endif%}
                     </div>
                 </div>
             </div>
@@ -58,117 +103,67 @@
         <section class="flex-grow flex flex-col gap-y-[43px] bg-white min-h-[400px] p-[36px]">
             <div class="flex-shrink-0 flex justify-between items-center">
                 <div class="text-[22px] font-semibold italic text-left">Posted Jobs</div>
-                <button class="btn-outline">Post Job</button>
+                <a href="../profile/provider-add-job"><button class="btn-outline">Post Job</button></a>
             </div>
+            
             <div class="flex flex-col gap-y-[41px] px-[70px] py-[20px] max-h-[700px] overflow-auto">
-                <div class="flex flex-col p-[23px] shadow-[0_0_20px_0_rgba(24,47,67,0.2)] rounded-[6px]">
-                    <div class="flex justify-between">
-                        <div class="flex items-center gap-x-[18px] text-xs font-light uppercase">
-                            <span>posted on</span>
-                            <span>mar 13 2020</span>
-                        </div>
-                        <div class="flex items-center gap-x-[7px]">
-                            <span class="text-xs font-light">Applicants:</span>
-                            <span class="text-[22px] font-semibold italic">5</span>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-y-[12px] mt-[14px]">
-                        <div class="flex items-center gap-x-[14px]">
-                            <div class="text-[22px] font-semibold italic">
-                                Junior Software Engineer
+                {% for skills_per_job in skills_per_jobs%}
+                    <span>{{skills_per_job}}</span>
+                {% endfor %}
+                {% for company_job in company_jobs %}
+                    <div class="flex flex-col p-[23px] shadow-[0_0_20px_0_rgba(24,47,67,0.2)] rounded-[6px]">
+                        <div class="flex justify-between">
+                            <div class="flex items-center gap-x-[18px] text-xs font-light uppercase">
+                                <span>posted on</span>
+                                <span>{{company_job.created_at|date:"M d, Y"}}</span>
+                                
                             </div>
-                            <div class="flex items-center gap-x-[8px]">
-                                <div class="pill">Javascript</div>
-                                <div class="pill">React</div>
+                            <div class="flex items-center gap-x-[7px]">
+                                <span class="text-xs font-light">Applicants:</span>
+                                <span class="text-[22px] font-semibold italic">5</span>
                             </div>
                         </div>
-                        <div class="font-light">
-                            Vel nihil cumque quos dolorem culpa. Deleniti officiis et et quisquam voluptas.
-                            Asperiores error eum saepe qui omnis at
-                            velit […]
-                        </div>
-                    </div>
-                    <div class="flex justify-between mt-[28px]">
-                        <div class="text-lg font-semibold">$18,000</div>
-                        <a href="#" class="flex items-center gap-x-2">
-                            <span class="uppercase text-sm font-light">view posting</span>
-                             <span><img src="{% static "images/chevron-right.svg" %}" alt=""></span>
-                        </a>
-                    </div>
-                </div>
-                <div class="flex flex-col p-[23px] shadow-[0_0_20px_0_rgba(24,47,67,0.2)] rounded-[6px]">
-                    <div class="flex justify-between">
-                        <div class="flex items-center gap-x-[18px] text-xs font-light uppercase">
-                            <span>posted on</span>
-                            <span>mar 13 2020</span>
-                        </div>
-                        <div class="flex items-center gap-x-[7px]">
-                            <span class="text-xs font-light">Applicants:</span>
-                            <span class="text-[22px] font-semibold italic">5</span>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-y-[12px] mt-[14px]">
-                        <div class="flex items-center gap-x-[14px]">
-                            <div class="text-[22px] font-semibold italic">
-                                Junior Software Engineer
+                        <div class="flex flex-col gap-y-[12px] mt-[14px]">
+                            <div class="flex items-center gap-x-[14px]">
+                                <div class="text-[22px] font-semibold italic">
+                                    {{company_job.name}}
+                                </div>
+                                <div class="flex items-center gap-x-[8px]">
+                                    <div class="pill">Javascript</div>
+                                    <div class="pill">React</div>
+                                </div>
                             </div>
-                            <div class="flex items-center gap-x-[8px]">
-                                <div class="pill">Javascript</div>
-                                <div class="pill">React</div>
+                            <div class="font-light">
+                                {{company_job.description}}
                             </div>
                         </div>
-                        <div class="font-light">
-                            Vel nihil cumque quos dolorem culpa. Deleniti officiis et et quisquam voluptas.
-                            Asperiores error eum saepe qui omnis at
-                            velit […]
+                        <div class="flex justify-between mt-[28px]">
+                            <div class="text-lg font-semibold">{{company_job.salary}}</div>
+                            <a href="#" class="flex items-center gap-x-2">
+                                <span class="uppercase text-sm font-light">view posting</span>
+                                <span><img src="{% static 'images/chevron-right.svg' %}" alt=""></span>
+                            </a>
                         </div>
                     </div>
-                    <div class="flex justify-between mt-[28px]">
-                        <div class="text-lg font-semibold">$18,000</div>
-                        <a href="#" class="flex items-center gap-x-2">
-                            <span class="uppercase text-sm font-light">view posting</span>
-                             <span><img src="{% static "images/chevron-right.svg" %}" alt=""></span>
-                        </a>
-                    </div>
-                </div>
-                <div class="flex flex-col p-[23px] shadow-[0_0_20px_0_rgba(24,47,67,0.2)] rounded-[6px]">
-                    <div class="flex justify-between">
-                        <div class="flex items-center gap-x-[18px] text-xs font-light uppercase">
-                            <span>posted on</span>
-                            <span>mar 13 2020</span>
-                        </div>
-                        <div class="flex items-center gap-x-[7px]">
-                            <span class="text-xs font-light">Applicants:</span>
-                            <span class="text-[22px] font-semibold italic">5</span>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-y-[12px] mt-[14px]">
-                        <div class="flex items-center gap-x-[14px]">
-                            <div class="text-[22px] font-semibold italic">
-                                Junior Software Engineer
-                            </div>
-                            <div class="flex items-center gap-x-[8px]">
-                                <div class="pill">Javascript</div>
-                                <div class="pill">React</div>
-                            </div>
-                        </div>
-                        <div class="font-light">
-                            Vel nihil cumque quos dolorem culpa. Deleniti officiis et et quisquam voluptas.
-                            Asperiores error eum saepe qui omnis at
-                            velit […]
-                        </div>
-                    </div>
-                    <div class="flex justify-between mt-[28px]">
-                        <div class="text-lg font-semibold">$18,000</div>
-                        <a href="#" class="flex items-center gap-x-2">
-                            <span class="uppercase text-sm font-light">view posting</span>
-                            <span><img src="{% static "images/chevron-right.svg" %}" alt=""></span>
-                        </a>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </section>
     </main>
+    
+<script>
+    logout_open = document.getElementById('logout-btn');
+    logout_close = document.getElementById('close-logout');
+
+    logout_open.onclick = function() {
+        document.getElementById('logout-div').style.display = "Block";
+        };
+    logout_close.onclick = function() {
+        document.getElementById('logout-div').style.display = "None";
+        };
+    // window.onclick = function(){
+    //     document.getElementById('logout-div').style.display = "None";
+    // }
+</script>
 {% endblock content %}
 
 
@@ -197,3 +192,4 @@
 {#    </nav>#}
 {#    #}
 {#</body>#}
+
