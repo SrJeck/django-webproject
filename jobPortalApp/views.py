@@ -12,6 +12,8 @@ from django.views.decorators.clickjacking import xframe_options_sameorigin
 def index(request):
     return render(request, "jobPortalApp/index.html")
 
+def redirectLogin(request):
+    return redirect('login')
 
 def home(request):
     # return HttpResponse('Home Page')
