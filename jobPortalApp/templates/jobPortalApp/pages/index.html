@@ -40,8 +40,8 @@
             <div class="flex flex-col items-start mx-auto w-max gap-y-[8px]">
                 <form action="../job-search/" method="POST">
                     {% csrf_token %}
-                <div class="flex gap-x-[16px]">
-                    <input type="search" name="job-search" id="job-search" placeholder="Search" class="input-1px w-[400px]">
+                <div class="flex gap-x-[18px]">
+                    <input type="search" name="job-search" id="job-search" placeholder="Search" class="input-1px w-[530px]">
                     <button class="btn" type="submit">Search</button>
                 </div>
                 <div class="flex gap-x-[18px]">
@@ -67,6 +67,14 @@
                             <option class="Russia" value="Beslan" style="display: block;">Beslan</option>
                             <option class="South Korea" value="Seoul" style="display: block;">Seoul</option>
                             <option class="South Korea" value="Busan" style="display: block;">Busan</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col gap-y-[5px]">
+                        <span class="label">Job Type</span>
+                        <select name="job-type" id="job-type" class="select-2 w-[200px]">
+                            <option value="" disabled selected hidden>Select Job Type</option>
+                            <option value="Full-time job" >Full-time job</option>
+                            <option value="Part-time job" >Part-time job</option>
                         </select>
                     </div>
                 </div>

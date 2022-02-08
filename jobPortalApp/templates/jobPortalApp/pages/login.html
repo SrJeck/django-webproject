@@ -1,4 +1,4 @@
-{% extends "jobPortalApp/index.html" %}
+{% extends "jobPortalApp/base.html" %}
 {% block content%}
 <body class="flex flex-col items-center justify-center flex-grow bg-very-pale-blue h-full">
 
@@ -12,10 +12,11 @@
                     tincidunt.</span>
             </div>
         </div>
-        <div class="flex flex-col gap-y-[32px] bg-white text-[38px] p-[29px] rounded-[6px] w-[451px] -ml-[300px]">
+        <div class="flex flex-col gap-y-[32px] bg-white text-[20px] p-[29px] rounded-[6px] w-[451px] -ml-[300px]">
             <h1 class="font-semibold">Login</h1>
+            <label >{{message}}</label>
             <div class="flex flex-col gap-y-[32px]">
-            <form method="POST">
+            <form id="login-form" method="POST">
                 {% csrf_token %}
                 <div class="flex flex-col gap-y-[16px]">
                     <div class="flex flex-col gap-y-1">
@@ -26,11 +27,11 @@
                         <label for="*" class="label">Password</label>
                         <input type="password" placeholder="Password" name="password" class="input-2px">
                     </div>
-                </div>
-                <button class="btn" type="submit">
-                    Login
-                </button>
+                </div><br>
             </form>
+            <button class="btn" type="submit" form="login-form">
+                Login
+            </button>
             </div>
             <div class="flex items-center gap-x-1 self-center">
                 <span class="text-sm">Do not have an account yet?</span>

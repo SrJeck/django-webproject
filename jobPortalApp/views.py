@@ -254,31 +254,168 @@ def jobSearch(request):
                 job_search = request.POST['job-search']
                 job_city = request.POST.get('job-city', False)
                 job_country = request.POST.get('job-country', False)
+                job_type = request.POST.get('job-type', False)
+                
                 is_non_empty = bool(job_search)
                 jobs = []
                 company_jobs_ids = []
                 skillnames_per_jobs = {}
                 applications_per_jobs = {}
                 searcher = ""
-                if is_non_empty != False and job_city != False and job_country != False:
+                # search city country type
+                if is_non_empty != False and job_city != False and job_country != False and job_type != False:
                     if COMPANY.objects.filter(city=job_city,country=job_country).exists():
                         company_ids = COMPANY.objects.filter(city=job_city,country=job_country)
-                    if JOB.objects.filter(name=job_search).exists():
+                    if JOB.objects.filter(name__contains=job_search).exists():
                         for company_id in company_ids:
-                            filtered_jobs = JOB.objects.filter(name=job_search,company_id=company_id.user_id)
-                            jobs.append(JOB.objects.filter(name=job_search,company_id=company_id.user_id))
+                            filtered_jobs = JOB.objects.filter(name__contains=job_search,company_id=company_id.user_id,type=job_type)
+                            jobs.append(JOB.objects.filter(name__contains=job_search,company_id=company_id.user_id,type=job_type))
                             for filtered_job in filtered_jobs:
                                 company_jobs_ids.append(filtered_job.id)
                     else:
-                        skillname = SKILL.objects.get(skillname=job_search)
-                        job_ids = JOBSKILL.objects.filter(skill_id=skillname.id)
-                        for job_id in job_ids:
-                            for company_id in company_ids:
-                                jobs.append(JOB.objects.filter(id=job_id.job_id,company_id=company_id.user_id))
-                                filtered_jobs = JOB.objects.filter(id=job_id.job_id,company_id=company_id.user_id)
+                        if SKILL.objects.filter(skillname=job_search).exists():
+                            skillname = SKILL.objects.get(skillname=job_search)
+                            job_ids = JOBSKILL.objects.filter(skill_id=skillname.id)
+                            for job_id in job_ids:
+                                for company_id in company_ids:
+                                    jobs.append(JOB.objects.filter(id=job_id.job_id,company_id=company_id.user_id,type=job_type))
+                                    filtered_jobs = JOB.objects.filter(id=job_id.job_id,company_id=company_id.user_id,type=job_type)
+                                    for filtered_job in filtered_jobs:
+                                        company_jobs_ids.append(filtered_job.id)
+                    searcher =job_search + " " + job_type + " in " + job_country + " - " + job_city 
+                # search city type
+                elif is_non_empty != False and job_type != False and job_city != False:
+                    if COMPANY.objects.filter(city=job_city).exists():
+                        company_ids = COMPANY.objects.filter(city=job_city)
+                    if JOB.objects.filter(name__contains=job_search,type=job_type).exists():
+                        for company_id in company_ids:
+                            filtered_jobs = JOB.objects.filter(name__contains=job_search,type=job_type,company_id=company_id.user_id)
+                            jobs.append(JOB.objects.filter(name__contains=job_search,type=job_type,company_id=company_id.user_id))
+                            for filtered_job in filtered_jobs:
+                                company_jobs_ids.append(filtered_job.id)
+                    else:
+                        if SKILL.objects.filter(skillname=job_search).exists():
+                            skillname = SKILL.objects.get(skillname=job_search)
+                            job_ids = JOBSKILL.objects.filter(skill_id=skillname.id)
+                            for job_id in job_ids:
+                                for company_id in company_ids:
+                                    jobs.append(JOB.objects.filter(id=job_id.job_id,type=job_type,company_id=company_id.user_id))
+                                    filtered_jobs = JOB.objects.filter(id=job_id.job_id,type=job_type,company_id=company_id.user_id)
+                                    for filtered_job in filtered_jobs:
+                                        company_jobs_ids.append(filtered_job.id)
+                    searcher = job_search+ " " + job_type + " in " + job_city
+                # search city country
+                elif is_non_empty != False and job_country != False and job_city != False:
+                    if COMPANY.objects.filter(country=job_country,city=job_city).exists():
+                        company_ids = COMPANY.objects.filter(country=job_country,city=job_city)
+                    if JOB.objects.filter(name__contains=job_search).exists():
+                        for company_id in company_ids:
+                            filtered_jobs = JOB.objects.filter(name__contains=job_search,company_id=company_id.user_id)
+                            jobs.append(JOB.objects.filter(name__contains=job_search,company_id=company_id.user_id))
+                            for filtered_job in filtered_jobs:
+                                company_jobs_ids.append(filtered_job.id)
+                    else:
+                        if SKILL.objects.filter(skillname=job_search).exists():
+                            skillname = SKILL.objects.get(skillname=job_search)
+                            job_ids = JOBSKILL.objects.filter(skill_id=skillname.id)
+                            for job_id in job_ids:
+                                for company_id in company_ids:
+                                    jobs.append(JOB.objects.filter(id=job_id.job_id,company_id=company_id.user_id))
+                                    filtered_jobs = JOB.objects.filter(id=job_id.job_id,company_id=company_id.user_id)
+                                    for filtered_job in filtered_jobs:
+                                        company_jobs_ids.append(filtered_job.id)
+                    searcher = job_search + " in " + job_country + " - " + job_city
+                # search country type
+                elif is_non_empty != False and job_type != False and job_country != False:
+                    if COMPANY.objects.filter(country=job_country).exists():
+                        company_ids = COMPANY.objects.filter(country=job_country)
+                    if JOB.objects.filter(name__contains=job_search,type=job_type).exists():
+                        for company_id in company_ids:
+                            filtered_jobs = JOB.objects.filter(name__contains=job_search,type=job_type,company_id=company_id.user_id)
+                            jobs.append(JOB.objects.filter(name__contains=job_search,type=job_type,company_id=company_id.user_id))
+                            for filtered_job in filtered_jobs:
+                                company_jobs_ids.append(filtered_job.id)
+                    else:
+                        if SKILL.objects.filter(skillname=job_search).exists():
+                            skillname = SKILL.objects.get(skillname=job_search)
+                            job_ids = JOBSKILL.objects.filter(skill_id=skillname.id)
+                            for job_id in job_ids:
+                                for company_id in company_ids:
+                                    jobs.append(JOB.objects.filter(id=job_id.job_id,type=job_type,company_id=company_id.user_id))
+                                    filtered_jobs = JOB.objects.filter(id=job_id.job_id,type=job_type,company_id=company_id.user_id)
+                                    for filtered_job in filtered_jobs:
+                                        company_jobs_ids.append(filtered_job.id)
+                    searcher = job_search + " " + job_type + " in " + job_country
+                # type city country
+                elif job_city != False and job_country != False and job_type != False:
+                    if COMPANY.objects.filter(city=job_city,country=job_country).exists():
+                        company_ids = COMPANY.objects.filter(city=job_city,country=job_country)
+                        for company_id in company_ids:
+                            jobs.append(JOB.objects.filter(type=job_type,company_id=company_id.user_id))
+                            filtered_jobs = JOB.objects.filter(type=job_type,company_id=company_id.user_id)
+                            for filtered_job in filtered_jobs:
+                                company_jobs_ids.append(filtered_job.id)
+                    searcher = job_type + " in " + job_country + " - " + job_city 
+                # search country
+                elif is_non_empty != False and job_country != False:
+                    if COMPANY.objects.filter(country=job_country).exists():
+                        company_ids = COMPANY.objects.filter(country=job_country)
+                    if JOB.objects.filter(name__contains=job_search).exists():
+                        for company_id in company_ids:
+                            filtered_jobs = JOB.objects.filter(name__contains=job_search,company_id=company_id.user_id)
+                            jobs.append(JOB.objects.filter(name__contains=job_search,company_id=company_id.user_id))
+                            for filtered_job in filtered_jobs:
+                                company_jobs_ids.append(filtered_job.id)
+                    else:
+                        if SKILL.objects.filter(skillname=job_search).exists():
+                            skillname = SKILL.objects.get(skillname=job_search)
+                            job_ids = JOBSKILL.objects.filter(skill_id=skillname.id)
+                            for job_id in job_ids:
+                                for company_id in company_ids:
+                                    jobs.append(JOB.objects.filter(id=job_id.job_id,company_id=company_id.user_id))
+                                    filtered_jobs = JOB.objects.filter(id=job_id.job_id,company_id=company_id.user_id)
+                                    for filtered_job in filtered_jobs:
+                                        company_jobs_ids.append(filtered_job.id)
+                    searcher = job_search + " in " + job_country
+                # search city
+                elif is_non_empty != False and job_city != False:
+                    if COMPANY.objects.filter(city=job_city).exists():
+                        company_ids = COMPANY.objects.filter(city=job_city)
+                    if JOB.objects.filter(name__contains=job_search).exists():
+                        for company_id in company_ids:
+                            filtered_jobs = JOB.objects.filter(name__contains=job_search,company_id=company_id.user_id)
+                            jobs.append(JOB.objects.filter(name__contains=job_search,company_id=company_id.user_id))
+                            for filtered_job in filtered_jobs:
+                                company_jobs_ids.append(filtered_job.id)
+                    else:
+                        if SKILL.objects.filter(skillname=job_search).exists():
+                            skillname = SKILL.objects.get(skillname=job_search)
+                            job_ids = JOBSKILL.objects.filter(skill_id=skillname.id)
+                            for job_id in job_ids:
+                                for company_id in company_ids:
+                                    jobs.append(JOB.objects.filter(id=job_id.job_id,company_id=company_id.user_id))
+                                    filtered_jobs = JOB.objects.filter(id=job_id.job_id,company_id=company_id.user_id)
+                                    for filtered_job in filtered_jobs:
+                                        company_jobs_ids.append(filtered_job.id)
+                    searcher = job_search + " in " + job_city 
+                # search type
+                elif is_non_empty != False and job_type != False:
+                    if JOB.objects.filter(name__contains=job_search,type=job_type).exists():
+                        jobs.append(JOB.objects.filter(name__contains=job_search,type=job_type))
+                        filtered_jobs = JOB.objects.filter(name__contains=job_search,type=job_type)
+                        for filtered_job in filtered_jobs:
+                            company_jobs_ids.append(filtered_job.id)
+                    else:
+                        if SKILL.objects.filter(skillname=job_search).exists():
+                            skillname = SKILL.objects.get(skillname=job_search)
+                            job_ids = JOBSKILL.objects.filter(skill_id=skillname.id)
+                            for job_id in job_ids:
+                                jobs.append(JOB.objects.filter(id=job_id.job_id,type=job_type))
+                                filtered_jobs = JOB.objects.filter(id=job_id.job_id,type=job_type)
                                 for filtered_job in filtered_jobs:
                                     company_jobs_ids.append(filtered_job.id)
-                    searcher = job_search + " in " + job_country + " - " + job_city 
+                    searcher = job_search + " " + job_type
+                # city country
                 elif job_city != False and job_country != False:
                     if COMPANY.objects.filter(city=job_city,country=job_country).exists():
                         company_ids = COMPANY.objects.filter(city=job_city,country=job_country)
@@ -288,6 +425,27 @@ def jobSearch(request):
                             for filtered_job in filtered_jobs:
                                 company_jobs_ids.append(filtered_job.id)
                     searcher = "Jobs in " + job_country + " - " + job_city 
+                # city type
+                elif job_city != False and job_type != False:
+                    if COMPANY.objects.filter(city=job_city).exists():
+                        company_ids = COMPANY.objects.filter(city=job_city)
+                        for company_id in company_ids:
+                            jobs.append(JOB.objects.filter(company_id=company_id.user_id,type=job_type))
+                            filtered_jobs = JOB.objects.filter(company_id=company_id.user_id,type=job_type)
+                            for filtered_job in filtered_jobs:
+                                company_jobs_ids.append(filtered_job.id)
+                    searcher = job_type+" in " + job_city 
+                # type country
+                elif job_type != False and job_country != False:
+                    if COMPANY.objects.filter(country=job_country).exists():
+                        company_ids = COMPANY.objects.filter(country=job_country)
+                        for company_id in company_ids:
+                            jobs.append(JOB.objects.filter(company_id=company_id.user_id,type=job_type))
+                            filtered_jobs = JOB.objects.filter(company_id=company_id.user_id,type=job_type)
+                            for filtered_job in filtered_jobs:
+                                company_jobs_ids.append(filtered_job.id)
+                    searcher =  job_type+" in " + job_country
+                # city
                 elif job_city != False:
                     if COMPANY.objects.filter(city=job_city).exists():
                         company_ids = COMPANY.objects.filter(city=job_city)
@@ -297,6 +455,7 @@ def jobSearch(request):
                             for filtered_job in filtered_jobs:
                                 company_jobs_ids.append(filtered_job.id)
                     searcher = "Jobs in " + job_city
+                # country
                 elif job_country != False:
                     if COMPANY.objects.filter(country=job_country).exists():
                         company_ids = COMPANY.objects.filter(country=job_country)
@@ -306,20 +465,30 @@ def jobSearch(request):
                             for filtered_job in filtered_jobs:
                                 company_jobs_ids.append(filtered_job.id)
                     searcher = "Jobs in " + job_country
+                # type
+                elif job_type != False:
+                    if JOB.objects.filter(type=job_type).exists():
+                        jobs.append(JOB.objects.filter(type=job_type))
+                        filtered_jobs = JOB.objects.filter(type=job_type)
+                        for filtered_job in filtered_jobs:
+                            company_jobs_ids.append(filtered_job.id)
+                    searcher = job_type
+                # search
                 elif is_non_empty != False:
-                    if JOB.objects.filter(name=job_search).exists():
-                        jobs.append(JOB.objects.filter(name=job_search))
-                        filtered_jobs = JOB.objects.filter(name=job_search)
+                    if JOB.objects.filter(name__contains=job_search).exists():
+                        jobs.append(JOB.objects.filter(name__contains=job_search))
+                        filtered_jobs = JOB.objects.filter(name__contains=job_search)
                         for filtered_job in filtered_jobs:
                             company_jobs_ids.append(filtered_job.id)
                     else:
-                        skillname = SKILL.objects.get(skillname=job_search)
-                        job_ids = JOBSKILL.objects.filter(skill_id=skillname.id)
-                        for job_id in job_ids:
-                            jobs.append(JOB.objects.filter(id=job_id.job_id))
-                            filtered_jobs = JOB.objects.filter(id=job_id.job_id)
-                            for filtered_job in filtered_jobs:
-                                company_jobs_ids.append(filtered_job.id)
+                        if SKILL.objects.filter(skillname=job_search).exists():
+                            skillname = SKILL.objects.get(skillname=job_search)
+                            job_ids = JOBSKILL.objects.filter(skill_id=skillname.id)
+                            for job_id in job_ids:
+                                jobs.append(JOB.objects.filter(id=job_id.job_id))
+                                filtered_jobs = JOB.objects.filter(id=job_id.job_id)
+                                for filtered_job in filtered_jobs:
+                                    company_jobs_ids.append(filtered_job.id)
                     searcher = job_search
 
                 for company_jobs_id in company_jobs_ids:
@@ -336,6 +505,7 @@ def indexViewPost(request):
         return redirect('login')
     else:
         job_type = request.session['job_type']
+        user_id = request.session['user_id']
         
         if request.method == "POST":
             job_id = request.POST['job-id']
@@ -346,8 +516,12 @@ def indexViewPost(request):
                 skills = SKILL.objects.get(id=job_skills_per_job.skill_id)
                 job_skillnames_per_jobs.append(skills.skillname)
         if job_type == "Job Seeker":
-            return render(request,'JobPortalApp/pages/view-posted-job-as-seeker.html',{'job':job,'job_skills':job_skillnames_per_jobs})
+            seeker_info = SEEKER.objects.get(user_id=user_id)
+            resume = RESUME.objects.filter(user_id=user_id)
+            seeker_skills = SEEKERSKILL.objects.filter(user_id=user_id)
+            return render(request,'JobPortalApp/pages/view-posted-job-as-seeker.html',{'job':job,'job_skills':job_skillnames_per_jobs,'seeker_info':seeker_info,'resume':resume,'seeker_skills':seeker_skills})
         elif job_type == "Job Provider":
+            provider_info = COMPANY.objects.get(user_id=user_id)
             return render(request,'JobPortalApp/pages/view-posted-job-as-provider.html',{'job':job,'job_skills':job_skillnames_per_jobs})
 
 def providerViewPost(request):
