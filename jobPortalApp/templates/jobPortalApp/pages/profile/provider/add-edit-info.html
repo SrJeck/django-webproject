@@ -88,7 +88,7 @@
                                 </select>
                                 {% else %}
                                 <select name="country" id="id_country" required class="select-2 w-[250px]" onchange="countyChoice()">
-                                    <option value="" disabled selected hidden>{{provider.country}}</option>
+                                    <option value="{{provider.country}}" selected hidden>{{provider.country}}</option>
                                     <option class="country" value="China">China</option>
                                     <option class="country" value="Russia">Russia</option>
                                     <option class="country" value="South Korea">South Korea</option>
@@ -112,7 +112,7 @@
                                 </select>
                                 {% else %}
                                 <select name="city" id="city" required class="select-2 w-[250px]">
-                                    <option value="" disabled selected hidden>{{provider.city}}</option>
+                                    <option value="{{provider.city}}" selected hidden>{{provider.city}}</option>
                                     <option class="China" value="Beijing" style="display: block;">Beijing</option>
                                     <option class="China" value="Macau" style="display: block;">Macau</option>
                                     <option class="Japan" value="Inuyama" style="display: block;">Inuyama</option>

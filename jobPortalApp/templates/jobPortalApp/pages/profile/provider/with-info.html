@@ -143,10 +143,15 @@
                         </div>
                         <div class="flex justify-between mt-[28px]">
                             <div class="text-lg font-semibold">{{company_job.salary}}</div>
-                            <a href="#" class="flex items-center gap-x-2">
+                            <form action="../profile/view-post/" id="view-post{{company_job.id}}" method="POST">
+                                {% csrf_token %}
+                                <input type="text" name="job-id" value="{{company_job.id}}" style="display: none;">
+                            </form>
+
+                            <button type="submit" form="view-post{{company_job.id}}" class="flex items-center gap-x-2">
                                 <span class="uppercase text-sm font-light">view posting</span>
                                 <span><img src="{% static 'images/chevron-right.svg' %}" alt=""></span>
-                            </a>
+                            </button>
                         </div>
                     </div>
                 {% endfor %}

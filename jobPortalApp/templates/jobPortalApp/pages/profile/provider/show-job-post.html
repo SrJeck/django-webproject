@@ -40,41 +40,45 @@
         </div>
         <section class="flex-grow flex flex-col gap-y-[43px] bg-white min-h-[400px] p-[36px]">
             <div class="flex-shrink-0 flex justify-between items-start">
-                <a href="#" class="flex items-center gap-x-2">
+                <a href="../" class="flex items-center gap-x-2">
                     <span><img src="{% static 'images/chevron-left.svg' %}" alt=""></span>
                     <span class="uppercase text-sm font-light">Go Back</span>
                 </a>
-                <button class="btn-outline">Edit</button>
+                <form id="edit-job-form" action="../provider-edit-job" method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="job-id" value="{{job.id}}" style="display: none;">
+                </form>
+                <button class="btn-outline" type="submit" form="edit-job-form">Edit</button>
             </div>
-            <div class="text-[28px] font-semibold self-center">Junior Software Engineer</div>
+            <div class="text-[28px] font-semibold self-center">{{job.name}}</div>
             <div class="flex-grow grid grid-cols-3 gap-x-8">
                 <div class="flex flex-col gap-y-[34px]">
                     <div class="flex flex-col gap-y-[8px]">
                         <div class="label-2">Type</div>
                         <div class="info">
-                            Fulltime
+                            {{job.type}}
                         </div>
                     </div>
                     <div class="flex flex-col gap-y-[8px]">
                         <div class="label-2">Salary</div>
                         <div class="info">
-                            $30,000
+                            {{job.salary}}
                         </div>
                     </div>
                     <div class="flex flex-col gap-y-[8px]">
                         <div class="label-2">Skill Requirements</div>
                         <div class="info prose">
                             <ul>
-                                <li>Foo</li>
-                                <li>Foo</li>
-                                <li>Foo</li>
+                                {% for job_skill in job_skills%}
+                                <li>{{job_skill}}</li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div>
                     <div class="flex flex-col gap-y-[8px]">
                         <div class="label-2">Posted On</div>
                         <div class="info">
-                            MAR 13 2020
+                            {{job.created_at|date:"M d, Y"}}
                         </div>
                     </div>
                 </div>
@@ -82,12 +86,7 @@
                     <div class="flex flex-col gap-y-[8px]">
                         <div class="label-2">Description</div>
                         <div class="info prose">
-                            BS Information Technology or BS Computer Science or BS Electronics Engineering
-                            Exposure on developing web solutions in Drupal and PHP implementations in a LAMP
-                            environment as well as user interfaces
-                            for websites and or web application
-                            Ability to architect enterprise Drupal solutions including data, display, and
-                            information
+                            {{job.description}}
                         </div>
                     </div>
                 </div>

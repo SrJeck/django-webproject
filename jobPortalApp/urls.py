@@ -1,3 +1,4 @@
+from unicodedata import name
 from django.urls import path, include
 from . import views
 from django.conf import settings
@@ -18,7 +19,12 @@ urlpatterns += [
 # register
 urlpatterns += [
     path('register/', views.register, name="register"),
-    path('login/', views.login, name="login"),
+]
+
+#jack
+#profile/login/
+urlpatterns += [
+ path('login/', views.login, name="login"),
     path('logout/', views.logout, name="logout"),
     path('profile/', views.profile, name="profile"),
     path('profile/seeker-edit-profile', views.seekerEdit, name="seekerEdit"),
@@ -27,10 +33,16 @@ urlpatterns += [
     path('profile/provider-edit-profile', views.providerEdit, name="providerEdit"),
     path('profile/provider-edit-process', views.providerEditProcess, name="providerEditProcess"),
     path('profile/provider-add-job', views.providerAddJob, name="providerAddJob"),
-    path('profile/seeker-add-job-process', views.providerAddJobProcess, name="providerAddJobProcess"),
+    path('profile/provider-add-job-process', views.providerAddJobProcess, name="providerAddJobProcess"),
     path('fileupload/', views.fileupload, name="fileupload"),
     path('filedisplay/', views.filedisplay, name="filedisplay"),
+    path('job-search/', views.jobSearch, name="jobSearch"),
+    path('profile/view-post/',views.providerViewPost,name="providerViewPost"),
+    path('home/view-post/',views.indexViewPost,name="indexViewPost"),
+    path('profile/provider-edit-job', views.providerEditJob, name="providerEditJob"),
+    path('profile/provider-edit-job-process', views.providerEditJobProcess, name="providerEditJob"),
 ]
+
 # mohammed
 # administrator
 urlpatterns += [

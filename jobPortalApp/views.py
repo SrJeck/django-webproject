@@ -15,7 +15,16 @@ def index(request):
 
 def home(request):
     # return HttpResponse('Home Page')
-    return render(request, "jobPortalApp/index.html")
+    if 'user_id' not in request.session:
+        return redirect('login')
+    else:
+        job_title = request.session['job_type']
+        user_id = request.session['user_id']
+        if job_title == "Job Seeker":
+            user_name = SEEKER.objects.get(user_id=user_id)
+        elif job_title == "Job Provider":
+            user_name = COMPANY.objects.get(user_id=user_id)
+        return render(request, "jobPortalApp/pages/index.html",{'user_name':user_name,'user_type':job_title})
 
 
 # job seeker
@@ -74,6 +83,7 @@ def logout(request):
     del request.session['job_type']
     request.session.modified = True
     return redirect( "login")
+
 def login(request):
     if request.method == 'POST':
         usermail = request.POST['usermail']
@@ -141,6 +151,7 @@ def profile(request):
                 company_jobs = JOB.objects.filter(company_id=user_id)
                 company_jobs_ids = []
                 skillnames_per_jobs = {}
+                applications_per_jobs = {}
                 for company_job in company_jobs:
                     company_jobs_ids.append(company_job.id)
 
@@ -150,16 +161,7 @@ def profile(request):
                     for job_skills_per_job in job_skills_per_jobs:
                         skills = SKILL.objects.get(id=job_skills_per_job.skill_id)
                         job_skillnames_per_jobs.append(skills.skillname)
-                    skillnames_per_jobs[company_jobs_id] = job_skillnames_per_jobs
-                # applicants_count = []
-                # skills_per_jobs = {}
-                # for i in range(len(company_jobs)):
-                #     company_job_id = company_jobs[i].id
-                #     skills = JOBSKILL.objects.filter(job_id=company_job_id)
-                #     for i in skills:
-                #         skill = SKILL.objects.get(id=i.skill_id)
-                #         skills_per_jobs[company_job_id] = skill.skillname
-                
+                    skillnames_per_jobs[company_jobs_id] = job_skillnames_per_jobs     
                 return render(request,'jobPortalApp/pages/profile/provider/with-info.html',{'company_details':company_details,'user_details':user_details,'user_type':job_type,'company_jobs':company_jobs,'skillnames_per_jobs':skillnames_per_jobs})
 
 @xframe_options_sameorigin
@@ -235,6 +237,168 @@ def providerAddJob(request):
         skills = SKILL.objects.all()
         return render(request,'jobPortalApp/pages/profile/provider/add-job.html',{'skills':skills})
 
+def jobSearch(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    else:
+        job_title = request.session['job_type']
+        user_id = request.session['user_id']
+        if job_title == "Job Seeker":
+            user_name = SEEKER.objects.get(user_id=user_id)
+        elif job_title == "Job Provider":
+            user_name = COMPANY.objects.get(user_id=user_id)
+        user_id = request.session['user_id']
+        if request.method == "POST":
+                job_search = request.POST['job-search']
+                job_city = request.POST.get('job-city', False)
+                job_country = request.POST.get('job-country', False)
+                is_non_empty = bool(job_search)
+                jobs = []
+                company_jobs_ids = []
+                skillnames_per_jobs = {}
+                applications_per_jobs = {}
+                searcher = ""
+                if is_non_empty != False and job_city != False and job_country != False:
+                    if COMPANY.objects.filter(city=job_city,country=job_country).exists():
+                        company_ids = COMPANY.objects.filter(city=job_city,country=job_country)
+                    if JOB.objects.filter(name=job_search).exists():
+                        for company_id in company_ids:
+                            filtered_jobs = JOB.objects.filter(name=job_search,company_id=company_id.user_id)
+                            jobs.append(JOB.objects.filter(name=job_search,company_id=company_id.user_id))
+                            for filtered_job in filtered_jobs:
+                                company_jobs_ids.append(filtered_job.id)
+                    else:
+                        skillname = SKILL.objects.get(skillname=job_search)
+                        job_ids = JOBSKILL.objects.filter(skill_id=skillname.id)
+                        for job_id in job_ids:
+                            for company_id in company_ids:
+                                jobs.append(JOB.objects.filter(id=job_id.job_id,company_id=company_id.user_id))
+                                filtered_jobs = JOB.objects.filter(id=job_id.job_id,company_id=company_id.user_id)
+                                for filtered_job in filtered_jobs:
+                                    company_jobs_ids.append(filtered_job.id)
+                    searcher = job_search + " in " + job_country + " - " + job_city 
+                elif job_city != False and job_country != False:
+                    if COMPANY.objects.filter(city=job_city,country=job_country).exists():
+                        company_ids = COMPANY.objects.filter(city=job_city,country=job_country)
+                        for company_id in company_ids:
+                            jobs.append(JOB.objects.filter(company_id=company_id.user_id))
+                            filtered_jobs = JOB.objects.filter(company_id=company_id.user_id)
+                            for filtered_job in filtered_jobs:
+                                company_jobs_ids.append(filtered_job.id)
+                    searcher = "Jobs in " + job_country + " - " + job_city 
+                elif job_city != False:
+                    if COMPANY.objects.filter(city=job_city).exists():
+                        company_ids = COMPANY.objects.filter(city=job_city)
+                        for company_id in company_ids:
+                            jobs.append(JOB.objects.filter(company_id=company_id.user_id))
+                            filtered_jobs = JOB.objects.filter(company_id=company_id.user_id)
+                            for filtered_job in filtered_jobs:
+                                company_jobs_ids.append(filtered_job.id)
+                    searcher = "Jobs in " + job_city
+                elif job_country != False:
+                    if COMPANY.objects.filter(country=job_country).exists():
+                        company_ids = COMPANY.objects.filter(country=job_country)
+                        for company_id in company_ids:
+                            jobs.append(JOB.objects.filter(company_id=company_id.user_id))
+                            filtered_jobs = JOB.objects.filter(company_id=company_id.user_id)
+                            for filtered_job in filtered_jobs:
+                                company_jobs_ids.append(filtered_job.id)
+                    searcher = "Jobs in " + job_country
+                elif is_non_empty != False:
+                    if JOB.objects.filter(name=job_search).exists():
+                        jobs.append(JOB.objects.filter(name=job_search))
+                        filtered_jobs = JOB.objects.filter(name=job_search)
+                        for filtered_job in filtered_jobs:
+                            company_jobs_ids.append(filtered_job.id)
+                    else:
+                        skillname = SKILL.objects.get(skillname=job_search)
+                        job_ids = JOBSKILL.objects.filter(skill_id=skillname.id)
+                        for job_id in job_ids:
+                            jobs.append(JOB.objects.filter(id=job_id.job_id))
+                            filtered_jobs = JOB.objects.filter(id=job_id.job_id)
+                            for filtered_job in filtered_jobs:
+                                company_jobs_ids.append(filtered_job.id)
+                    searcher = job_search
+
+                for company_jobs_id in company_jobs_ids:
+                    job_skillnames_per_jobs = []
+                    job_skills_per_jobs = JOBSKILL.objects.filter(job_id=company_jobs_id)
+                    for job_skills_per_job in job_skills_per_jobs:
+                        skills = SKILL.objects.get(id=job_skills_per_job.skill_id)
+                        job_skillnames_per_jobs.append(skills.skillname)
+                    skillnames_per_jobs[company_jobs_id] = job_skillnames_per_jobs
+        return render(request,'jobPortalApp/pages/index.html',{'jobs':jobs,'skillnames_per_jobs':skillnames_per_jobs,'searcher':searcher,'user_name':user_name,'user_type':job_title})
+
+def indexViewPost(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    else:
+        job_type = request.session['job_type']
+        
+        if request.method == "POST":
+            job_id = request.POST['job-id']
+            job = JOB.objects.get(id=job_id)
+            job_skillnames_per_jobs = []
+            job_skills_per_jobs = JOBSKILL.objects.filter(job_id=job_id)
+            for job_skills_per_job in job_skills_per_jobs:
+                skills = SKILL.objects.get(id=job_skills_per_job.skill_id)
+                job_skillnames_per_jobs.append(skills.skillname)
+        if job_type == "Job Seeker":
+            return render(request,'JobPortalApp/pages/view-posted-job-as-seeker.html',{'job':job,'job_skills':job_skillnames_per_jobs})
+        elif job_type == "Job Provider":
+            return render(request,'JobPortalApp/pages/view-posted-job-as-provider.html',{'job':job,'job_skills':job_skillnames_per_jobs})
+
+def providerViewPost(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    else:
+        if request.method == "POST":
+            job_id = request.POST['job-id']
+            job = JOB.objects.get(id=job_id)
+            job_skillnames_per_jobs = []
+            job_skills_per_jobs = JOBSKILL.objects.filter(job_id=job_id)
+            for job_skills_per_job in job_skills_per_jobs:
+                skills = SKILL.objects.get(id=job_skills_per_job.skill_id)
+                job_skillnames_per_jobs.append(skills.skillname)
+            
+        return render(request,'JobPortalApp/pages/profile/provider/show-job-post.html',{'job':job,'job_skills':job_skillnames_per_jobs})
+
+def providerEditJob(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    else:
+        user_id = request.session['user_id']
+        job_type = request.session['job_type']
+        provider_details = COMPANY.objects.get(user_id=user_id)
+        if request.method == "POST":
+            job_id = request.POST['job-id']
+            job = JOB.objects.get(id=job_id)
+            job_skillnames_per_jobs = []
+            job_skills_per_jobs = JOBSKILL.objects.filter(job_id=job_id)
+            for job_skills_per_job in job_skills_per_jobs:
+                skills = SKILL.objects.get(id=job_skills_per_job.skill_id)
+                job_skillnames_per_jobs.append(skills.skillname)
+            skills = SKILL.objects.all()
+        return render(request,'jobPortalApp/pages/profile/provider/edit-job.html',{'skills':skills,'provider_details':provider_details,'job_skills':job_skillnames_per_jobs,'user_type':job_type,'job':job})
+
+def providerEditJobProcess(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    else:
+        user_id = request.session['user_id']
+        provider_details = COMPANY.objects.get(user_id=user_id)
+        if request.method == "POST":
+            job_id = request.POST['job-id']
+            job_type = request.session['job_type']
+            job = JOB.objects.get(id=job_id)
+            job_skills = []
+            if JOBSKILL.objects.filter(job_id=job_id).exists():
+                job_skills_ids = JOBSKILL.objects.filter(job_id=job_id)
+                for job_skills_id in job_skills_ids:
+                    skill_name = SKILL.objects.get(id=job_skills_id.skill_id)
+                    job_skills.append(skill_name)
+            skills = SEEKER.objects.all()
+            return render(request,'jobPortalApp/pages/profile/provider/edit-job.html',{'skills':skills,'provider_details':provider_details,'job_skills':job_skills,'user_type':job_type,'job':job})
 
 def providerAddJobProcess(request):
     if 'user_id' not in request.session:
