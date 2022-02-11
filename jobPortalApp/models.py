@@ -51,3 +51,7 @@ class JOB(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
         return self.name
+
+class APPLICATION(models.Model):
+    user_id=models.IntegerField(null=True)
+    job_id=models.IntegerField(null=True)

@@ -5,7 +5,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('home/', views.home, name="Home"),
+    path('home/', views.home, name="home"),
     path('', views.redirectLogin, name="redirectLogin"),
     path('creatt/', views.index),
 ]
@@ -42,6 +42,7 @@ urlpatterns += [
     path('home/view-post/',views.indexViewPost,name="indexViewPost"),
     path('profile/provider-edit-job', views.providerEditJob, name="providerEditJob"),
     path('profile/provider-edit-job-process', views.providerEditJobProcess, name="providerEditJob"),
+    path('home/apply-job', views.applyJob, name="applyJob"),
 ]
 
 # mohammed

@@ -70,8 +70,18 @@
                             {{job.description}}
                         </div>
                     </div>
-                    {% if seeker_info.fullname and seeker_info.experience and seeker_info.about and resume and seeker_skills %}
-                    <button class="btn self-end">Apply</button>
+                    <form id="apply-form" action="../apply-job" method="POST">
+                        {% csrf_token %}
+                        <input type="text" name="job-id" value="{{job.id}}" style="display: none;">
+                    </form>
+                    {% if not application_check %}
+                        {% if seeker_info.fullname and seeker_info.experience and seeker_info.about and resume and seeker_skills %}
+                        <button class="btn self-end" type="submit" form="apply-form">Apply</button>
+                        {% else %}
+                        <label class="self-end">Fill All Necessary Information To Apply</label>
+                        {% endif %}
+                    {% else %}
+                        <label class="self-end">{{application_check}} </label>
                     {% endif %}
                 </div>
             </div>

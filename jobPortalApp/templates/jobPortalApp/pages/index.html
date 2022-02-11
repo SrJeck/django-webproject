@@ -9,10 +9,12 @@
         <div x-data="{ show: false }" class="relative">
             <div class="inline-flex items-center gap-x-2">
                 <div class="flex flex-col items-end">
-                    {% if not user_name.name%}
+                    {% if not provider_name and not  seeker_name%}
                     <span>Not Set</span>
-                    {% else %}
-                    <span>{{user_name.name}}</span>
+                    {% elif  provider_name %}
+                    <span>{{provider_name.name}}</span>
+                    {% elif seeker_name.fullname %}
+                    <span>{{seeker_name.fullname}}</span>
                     {% endif%}
                     <span class="text-xs font-light">{{user_type}}</span>
                 </div>
@@ -41,22 +43,50 @@
                 <form action="../job-search/" method="POST">
                     {% csrf_token %}
                 <div class="flex gap-x-[18px]">
+                    {% if job_search %}
+                    <input type="search" name="job-search" id="job-search" value="{{job_search}}" class="input-1px w-[530px]">
+                    {% else %}
                     <input type="search" name="job-search" id="job-search" placeholder="Search" class="input-1px w-[530px]">
+                    {% endif %}
                     <button class="btn" type="submit">Search</button>
                 </div>
                 <div class="flex gap-x-[18px]">
                     <div class="flex flex-col gap-y-[5px]">
                         <span class="label">Country</span>
-                        <select name="job-country" id="job-country" class="select-2 w-[200px]"  onchange="countyChoice()">
-                            <option value="" disabled selected hidden>Select Country</option>
-                            <option class="country" value="China">China</option>
-                            <option class="country" value="Russia">Russia</option>
-                            <option class="country" value="South Korea">South Korea</option>
-                            <option class="country" value="Japan">Japan</option>
-                        </select>
+                    {% if job_country %}
+                    <select name="job-country" id="job-country" class="select-2 w-[200px]"  onchange="countyChoice()">
+                        <option value="{{job_country}}" selected hidden>{{job_country}}</option>
+                        <option class="country" value="China">China</option>
+                        <option class="country" value="Russia">Russia</option>
+                        <option class="country" value="South Korea">South Korea</option>
+                        <option class="country" value="Japan">Japan</option>
+                    </select>
+                    {% else %}
+                    <select name="job-country" id="job-country" class="select-2 w-[200px]"  onchange="countyChoice()">
+                        <option value="" disabled selected hidden>Select Country</option>
+                        <option class="country" value="China">China</option>
+                        <option class="country" value="Russia">Russia</option>
+                        <option class="country" value="South Korea">South Korea</option>
+                        <option class="country" value="Japan">Japan</option>
+                    </select>
+                    {% endif %}
+                        
                     </div>
                     <div class="flex flex-col gap-y-[5px]">
                         <span class="label">City</span>
+                        {% if job_city %}
+                        <select name="job-city" id="job-city" class="select-2 w-[200px]">
+                            <option value="{{job_city}}" selected hidden>{{job_city}}</option>
+                            <option class="China" value="Beijing" style="display: block;">Beijing</option>
+                            <option class="China" value="Macau" style="display: block;">Macau</option>
+                            <option class="Japan" value="Inuyama" style="display: block;">Inuyama</option>
+                            <option class="Japan" value="Toyota" style="display: block;">Toyota</option>
+                            <option class="Russia" value="Abakan" style="display: block;">Abakan</option>
+                            <option class="Russia" value="Beslan" style="display: block;">Beslan</option>
+                            <option class="South Korea" value="Seoul" style="display: block;">Seoul</option>
+                            <option class="South Korea" value="Busan" style="display: block;">Busan</option>
+                        </select>
+                        {% else %}
                         <select name="job-city" id="job-city" class="select-2 w-[200px]">
                             <option value="" disabled selected hidden>Select City</option>
                             <option class="China" value="Beijing" style="display: block;">Beijing</option>
@@ -68,14 +98,23 @@
                             <option class="South Korea" value="Seoul" style="display: block;">Seoul</option>
                             <option class="South Korea" value="Busan" style="display: block;">Busan</option>
                         </select>
+                        {% endif %}
                     </div>
                     <div class="flex flex-col gap-y-[5px]">
                         <span class="label">Job Type</span>
+                        {% if job_type %}
+                        <select name="job-type" id="job-type" class="select-2 w-[200px]">
+                            <option value="{{job_type}}" selected hidden>{{job_type}}</option>
+                            <option value="Full-time job" >Full-time job</option>
+                            <option value="Part-time job" >Part-time job</option>
+                        </select>
+                        {% else %}
                         <select name="job-type" id="job-type" class="select-2 w-[200px]">
                             <option value="" disabled selected hidden>Select Job Type</option>
                             <option value="Full-time job" >Full-time job</option>
                             <option value="Part-time job" >Part-time job</option>
                         </select>
+                        {% endif %}
                     </div>
                 </div>
                 </form>
