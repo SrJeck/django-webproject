@@ -135,9 +135,13 @@
                                         </div>
                                         <div class="flex items-center gap-x-[7px]">
                                             <span class="text-xs font-light">Applicants:</span>
-                                            <span class="text-[22px] font-semibold italic">5</span>
+                                            {% for keys,values in applications_per_jobs.items %}
+                                                {% if keys ==  jo.id %}
+                                                    <span class="text-[22px] font-semibold italic">{{values}}</span>
+                                                {% endif %}
+                                            {% endfor%}
                                         </div>
-                                    </div>
+                                    </div>  
                                     <div class="flex flex-col gap-y-[12px] mt-[14px]">
                                         <div class="flex items-center gap-x-[14px]">
                                             <div class="text-[22px] font-semibold italic">

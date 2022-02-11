@@ -29,10 +29,7 @@ def home(request):
         elif job_title == "Job Provider":
             provider_name = COMPANY.objects.get(user_id=user_id)
         
-        # request.session['job-search'] = job_search
-        #         request.session['job-city'] = job_city
-        #         request.session['job-country'] = job_country
-        #         request.session['job-type'] = job_type
+        # if 'job-search' and 'job-type'  and 'job-country' and 'job-city' in request.session
         job_search = request.session['job-search']
         job_type = request.session['job-type']
         job_country = request.session['job-country']
@@ -41,6 +38,7 @@ def home(request):
         jobs = []
         company_jobs_ids = []
         skillnames_per_jobs = {}
+        applications_per_jobs = {}
         applications_per_jobs = {}
         searcher = ""
         # search city country type
@@ -287,11 +285,13 @@ def home(request):
         for company_jobs_id in company_jobs_ids:
             job_skillnames_per_jobs = []
             job_skills_per_jobs = JOBSKILL.objects.filter(job_id=company_jobs_id)
+            application_per_jobs = APPLICATION.objects.filter(job_id=company_jobs_id).count()
+            applications_per_jobs[company_jobs_id] = str(application_per_jobs)
             for job_skills_per_job in job_skills_per_jobs:
                 skills = SKILL.objects.get(id=job_skills_per_job.skill_id)
                 job_skillnames_per_jobs.append(skills.skillname)
             skillnames_per_jobs[company_jobs_id] = job_skillnames_per_jobs
-        return render(request,'jobPortalApp/pages/index.html',{'jobs':jobs,'skillnames_per_jobs':skillnames_per_jobs,'searcher':searcher,'seeker_name':seeker_name,'provider_name':provider_name,'user_type':job_title,'job_search':job_search,'job_type':job_type,'job_city':job_city,'job_country':job_country})
+        return render(request,'jobPortalApp/pages/index.html',{'jobs':jobs,'skillnames_per_jobs':skillnames_per_jobs,'searcher':searcher,'seeker_name':seeker_name,'provider_name':provider_name,'user_type':job_title,'job_search':job_search,'job_type':job_type,'job_city':job_city,'job_country':job_country,'applications_per_jobs':applications_per_jobs})
 
 
 # job seeker
@@ -425,11 +425,13 @@ def profile(request):
                 for company_jobs_id in company_jobs_ids:
                     job_skillnames_per_jobs = []
                     job_skills_per_jobs = JOBSKILL.objects.filter(job_id=company_jobs_id)
+                    application_per_jobs = APPLICATION.objects.filter(job_id=company_jobs_id).count()
+                    applications_per_jobs[company_jobs_id] = str(application_per_jobs)
                     for job_skills_per_job in job_skills_per_jobs:
                         skills = SKILL.objects.get(id=job_skills_per_job.skill_id)
                         job_skillnames_per_jobs.append(skills.skillname)
                     skillnames_per_jobs[company_jobs_id] = job_skillnames_per_jobs     
-                return render(request,'jobPortalApp/pages/profile/provider/with-info.html',{'company_details':company_details,'user_details':user_details,'user_type':job_type,'company_jobs':company_jobs,'skillnames_per_jobs':skillnames_per_jobs})
+                return render(request,'jobPortalApp/pages/profile/provider/with-info.html',{'company_details':company_details,'user_details':user_details,'user_type':job_type,'company_jobs':company_jobs,'skillnames_per_jobs':skillnames_per_jobs,'applications_per_jobs':applications_per_jobs})
 
 @xframe_options_sameorigin
 def seekerView(request):
