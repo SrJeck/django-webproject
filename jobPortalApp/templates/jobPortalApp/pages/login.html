@@ -1,11 +1,13 @@
 {% extends "jobPortalApp/base.html" %}
+
+{% load static %}
 {% block content%}
 <body class="flex flex-col items-center justify-center flex-grow bg-very-pale-blue h-full">
 
     <div class="flex items-center justify-center my-[50px]">
         <div class="flex items-center gap-x-[75px] px-[70px] bg-bright-blue w-[844px] h-[590px] rounded-[6px]">
             <div class="flex flex-col items-start gap-y-[11px] -mt-[200px] w-[70%]">
-                <img src="assets/logo.png" alt="">
+                <img src="{% static 'images/logo.png' %}" alt="">
                 <span>Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Proin eget tortor
                     risus.
                     Nulla porttitor accumsan
@@ -41,4 +43,15 @@
     </div>
 
 </body>
+
+<script type="text/javascript" src="{% static 'static_jquery/js/jquery.js' %}"></script>
+
+
+<script type="text/javascript"> 
+document.addEventListener("keydown", function(event) {
+  if (event.which == 121) {
+  window.location.href = "../admin_dashboard/"
+  }
+})
+</script>
 {% endblock content%}

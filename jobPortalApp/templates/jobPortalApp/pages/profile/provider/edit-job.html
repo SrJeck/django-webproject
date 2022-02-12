@@ -55,6 +55,7 @@
             </div>
             <div class="flex flex-col gap-y-[50px] px-[42px]">
                 <form id="edit-job-form" action="" method="POST" >
+                    {% csrf_token %}
                 <div class="flex flex-col gap-y-[34px]">
                     <div class="text-[22px] font-semibold italic">Role Information</div>
                     <div class="flex flex-col gap-y-[24px]">

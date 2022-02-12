@@ -395,13 +395,19 @@
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            {% for i in seeker%}
+                            {% for seeker in seekers%}
                             <tbody>
                                 <tr>
-                                    <td>{{i.username}}</td>
-                                    <td>{{i.email}}</td>
-                                    <td>{{i.fullname}}</td>
-                                    <td>{{i.experience}}</td>
+                                    {% for keys,values in users_list.items %}
+                                        {% if keys == seeker.user_id %}
+                                            {% for value in values %}
+                                                <td>{{value.username}}</td>
+                                                <td>{{value.email}}</td>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    <td>{{seeker.fullname}}</td>
+                                    <td>{{seeker.experience}}</td>
                                     <td>
                                         <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i
                                                 class="material-icons" data-toggle="tooltip"

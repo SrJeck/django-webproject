@@ -60,6 +60,7 @@
                         <option class="country" value="Russia">Russia</option>
                         <option class="country" value="South Korea">South Korea</option>
                         <option class="country" value="Japan">Japan</option>
+                        <option value="" >None</option>
                     </select>
                     {% else %}
                     <select name="job-country" id="job-country" class="select-2 w-[200px]"  onchange="countyChoice()">
@@ -85,6 +86,7 @@
                             <option class="Russia" value="Beslan" style="display: block;">Beslan</option>
                             <option class="South Korea" value="Seoul" style="display: block;">Seoul</option>
                             <option class="South Korea" value="Busan" style="display: block;">Busan</option>
+                            <option value="" >None</option>
                         </select>
                         {% else %}
                         <select name="job-city" id="job-city" class="select-2 w-[200px]">
@@ -107,6 +109,7 @@
                             <option value="{{job_type}}" selected hidden>{{job_type}}</option>
                             <option value="Full-time job" >Full-time job</option>
                             <option value="Part-time job" >Part-time job</option>
+                            <option value="" >None</option>
                         </select>
                         {% else %}
                         <select name="job-type" id="job-type" class="select-2 w-[200px]">

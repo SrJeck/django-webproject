@@ -28,12 +28,15 @@ def home(request):
             seeker_name = SEEKER.objects.get(user_id=user_id)
         elif job_title == "Job Provider":
             provider_name = COMPANY.objects.get(user_id=user_id)
-        
-        # if 'job-search' and 'job-type'  and 'job-country' and 'job-city' in request.session
-        job_search = request.session['job-search']
-        job_type = request.session['job-type']
-        job_country = request.session['job-country']
-        job_city = request.session['job-city']
+        job_search = ""
+        job_type = ""
+        job_country = ""
+        job_city = ""
+        if 'job-search' and 'job-type'  and 'job-country' and 'job-city' in request.session:
+            job_search = request.session['job-search']
+            job_type = request.session['job-type']
+            job_country = request.session['job-country']
+            job_city = request.session['job-city']
         is_non_empty = bool(job_search)
         jobs = []
         company_jobs_ids = []
@@ -306,13 +309,20 @@ def admin_dashboard(request):
 
 
 def manage_user(request):
-    seeker = SEEKER.objects.all() 
-    return render(request, 'jobPortalApp/admin/manage_user.html',{'seeker':seeker})   
+    users_list = {}
+    seekers = SEEKER.objects.all() 
+    for seeker in seekers:
+                users_list[seeker.user_id] = User.objects.filter(id=seeker.user_id) 
+    return render(request, 'jobPortalApp/admin/manage_user.html',{'seekers':seekers,'users_list':users_list})   
     #return render(request, "jobPortalApp/admin/manage_user.html")
 
 
 def company(request):
-    return render(request, "jobPortalApp/admin/company.html")
+    users_list = {}
+    companys = COMPANY.objects.all()
+    for company in companys:
+                users_list[company.user_id] = User.objects.filter(id=company.user_id) 
+    return render(request, "jobPortalApp/admin/company.html",{'companys':companys,'users_list':users_list})
 
 
 def jobs(request):
