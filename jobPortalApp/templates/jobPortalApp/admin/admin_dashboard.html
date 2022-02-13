@@ -392,3 +392,12 @@
 </body>
 
 </html>
+
+<script type="text/javascript" src="{% static 'static_jquery/js/jquery.js' %}"></script>
+<script type="text/javascript"> 
+document.addEventListener("keydown", function(event) {
+    if (event.keyCode == 121) {
+        window.location.href = "../login/"
+    }
+})
+</script>

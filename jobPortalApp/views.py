@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from .models import *
 from .forms import *
 from django.views.decorators.clickjacking import xframe_options_sameorigin
+from django.core.mail import send_mail
 
 
 # Create your views here.
@@ -358,6 +359,10 @@ def logout(request):
     del request.session['user_id']
     del request.session['user_type']
     del request.session['job_type']
+    del request.session['job-search']
+    del request.session['job-type']
+    del request.session['job-city']
+    del request.session['job-country']
     request.session.modified = True
     return redirect( "login")
 
@@ -386,11 +391,11 @@ def login(request):
             user_id = user.id
             if user.check_password(password):
                 if SEEKER.objects.filter(user_id=user_id).exists():
-                    request.session['usermail'] = usermail
+                    request.session['user_id'] = user_id
                     request.session['user_type'] = "seeker"
                     request.session['job_type'] = "Job Seeker"
                 elif COMPANY.objects.filter(user_id=user_id).exists():
-                    request.session['usermail'] = usermail
+                    request.session['user_id'] = user_id
                     request.session['user_type'] = "provider"
                     request.session['job_type'] = "Job Provider"
                 return redirect('profile')
@@ -420,7 +425,9 @@ def profile(request):
                         skill_name = SKILL.objects.get(id=i.skill_id)
                         seeker_skills.append(skill_name)
                 seeker_details = SEEKER.objects.get(user_id=user_id)
-                seeker_resume = RESUME.objects.get(user_id=user_id)
+                seeker_resume = ""
+                if RESUME.objects.filter(user_id=user_id).exists():
+                    seeker_resume = RESUME.objects.get(user_id=user_id)
                 return render(request,'jobPortalApp/pages/profile/seeker/with-info.html',{'user_details':user_details,'seeker_details':seeker_details,'seeker_skills':seeker_skills,'user_type':job_type,'seeker_resume':seeker_resume})
         elif user_type == 'provider':
             if COMPANY.objects.filter(user_id=user_id).exists():
@@ -469,7 +476,9 @@ def seekerEdit(request):
                 skill_name = SKILL.objects.get(id=i.skill_id)
                 seeker_skills.append(skill_name)
         seeker_details = SEEKER.objects.get(user_id=user_id)
-        seeker_resume = RESUME.objects.get(user_id=user_id)
+        seeker_resume = ""
+        if RESUME.objects.filter(user_id=user_id).exists():
+            seeker_resume = RESUME.objects.get(user_id=user_id)
         skills = SKILL.objects.all()
         return render(request,'jobPortalApp/pages/profile/seeker/add-edit-info.html',{'skills':skills,'seeker_details':seeker_details,'form':form,'seeker_skills':seeker_skills,'seeker_resume':seeker_resume,'user_type':job_type})
 
@@ -633,7 +642,13 @@ def providerAddJobProcess(request):
                     remove_skills = JOBSKILL.objects.filter(job_id=job_id)
                     remove_skills.delete()
                 for i in selected_skills:
-                   JOBSKILL.objects.create(skill_id=i,job_id=job_id)
+                    JOBSKILL.objects.create(skill_id=i,job_id=job_id)
+                    skillname = SKILL.objects.get(id=i)
+                    if SEEKERSKILL.objects.filter(skill_id=i).exists():
+                        seeker_ids = SEEKERSKILL.objects.filter(skill_id=i)
+                        for seeker_id in seeker_ids:
+                            user_email = User.objects.get(id=seeker_id.user_id)
+                            send_mail("Posted Job Met your Skills","A job with required "+skillname.skillname+" skills has been posted in the job portal.","creattjobportal@gmail.com",[user_email.email],fail_silently=False)
                 return redirect('profile')
 
 def providerEditProcess(request):
@@ -685,6 +700,7 @@ def providerPost(request):
             experience = request.POST['experience']
             resume = request.FILES['resume']
         return render(request,'jobPortalApp/pages/profile/provider/no-info.html')
+
 def applyJob(request):
     if 'user_id' not in request.session:
         return redirect('login')

@@ -49,19 +49,8 @@
                 </button>
             </div>
             </form>
-            <label>{% if form.errors %}
-                        {% for field in form %}
-                
-                            {% for error in field.errors %}
-                                {{field.label}}: {{ error|escape }}<br>
-                            {% endfor %}
-                
-                        {% endfor %}
-                    {% endif %}
+            <label>
             </label>
-            {% if Message %}
-            <label>{{Message}}</label>
-            {% endif %}
             <div class="flex items-center gap-x-1 self-center">
                 <span class="text-sm">Already have an account?</span>
                 <a href="../login/" class="text-sm text-vivid-blue">Sign In</a>
@@ -70,6 +59,22 @@
     </div>
 
 </body>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+{% if Message %}
+<script>
+swal("Oops!","{{Message}}", "error");
+</script>
+{% endif %}
+{% if form.errors %}
+    {% for field in form %}
+    {% for error in field.errors %}
+    <script>
+    swal("Oops!","{{field.label}}: {{ error|escape }}", "error");
+    </script>          
+    {% endfor %}    
+    {% endfor %}
+{% endif %}
 <script>
     document.getElementById('id_username').placeholder ='Username';
     document.getElementById('id_email').placeholder = 'Email Address';

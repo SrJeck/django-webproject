@@ -16,7 +16,8 @@
         </div>
         <div class="flex flex-col gap-y-[32px] bg-white text-[20px] p-[29px] rounded-[6px] w-[451px] -ml-[300px]">
             <h1 class="font-semibold">Login</h1>
-            <label >{{message}}</label>
+            
+            <!-- <label >{{message}}</label> -->
             <div class="flex flex-col gap-y-[32px]">
             <form id="login-form" method="POST">
                 {% csrf_token %}
@@ -43,15 +44,21 @@
     </div>
 
 </body>
-
 <script type="text/javascript" src="{% static 'static_jquery/js/jquery.js' %}"></script>
-
-
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% if message %}
+<script>
+swal("Oops!","{{message}}", "error");
+</script>
+{% endif %}
 <script type="text/javascript"> 
 document.addEventListener("keydown", function(event) {
-  if (event.which == 121) {
+  if (event.keyCode == 121) {
   window.location.href = "../admin_dashboard/"
+  }if (event.keyCode == 122) {
+  window.location.href = "../admin/"
   }
+// alert(event.which)
 })
 </script>
 {% endblock content%}
