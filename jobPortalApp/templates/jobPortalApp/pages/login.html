@@ -2,6 +2,7 @@
 
 {% load static %}
 {% block content%}
+
 <body class="flex flex-col items-center justify-center flex-grow bg-very-pale-blue h-full">
 
     <div class="flex items-center justify-center my-[50px]">
@@ -16,25 +17,25 @@
         </div>
         <div class="flex flex-col gap-y-[32px] bg-white text-[20px] p-[29px] rounded-[6px] w-[451px] -ml-[300px]">
             <h1 class="font-semibold">Login</h1>
-            
+
             <!-- <label >{{message}}</label> -->
             <div class="flex flex-col gap-y-[32px]">
-            <form id="login-form" method="POST">
-                {% csrf_token %}
-                <div class="flex flex-col gap-y-[16px]">
-                    <div class="flex flex-col gap-y-1">
-                        <label for="*" class="label">Username or Email</label>
-                        <input type="text" placeholder="Username or Email" name="usermail" class="input-2px">
-                    </div>
-                    <div class="flex flex-col gap-y-1">
-                        <label for="*" class="label">Password</label>
-                        <input type="password" placeholder="Password" name="password" class="input-2px">
-                    </div>
-                </div><br>
-            </form>
-            <button class="btn" type="submit" form="login-form">
-                Login
-            </button>
+                <form id="login-form" method="POST">
+                    {% csrf_token %}
+                    <div class="flex flex-col gap-y-[16px]">
+                        <div class="flex flex-col gap-y-1">
+                            <label for="*" class="label">Username or Email</label>
+                            <input type="text" placeholder="Username or Email" name="usermail" class="input-2px">
+                        </div>
+                        <div class="flex flex-col gap-y-1">
+                            <label for="*" class="label">Password</label>
+                            <input type="password" placeholder="Password" name="password" class="input-2px">
+                        </div>
+                    </div><br>
+                </form>
+                <button class="btn" type="submit" form="login-form">
+                    Login
+                </button>
             </div>
             <div class="flex items-center gap-x-1 self-center">
                 <span class="text-sm">Do not have an account yet?</span>
@@ -48,17 +49,17 @@
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 {% if message %}
 <script>
-swal("Oops!","{{message}}", "error");
+    swal("Oops!", "{{message}}", "error");
 </script>
 {% endif %}
-<script type="text/javascript"> 
-document.addEventListener("keydown", function(event) {
-  if (event.keyCode == 121) {
-  window.location.href = "../admin_dashboard/"
-  }if (event.keyCode == 120) {
-  window.location.href = "../admin/"
-  }
-// alert(event.which)
-})
+<script type="text/javascript">
+    document.addEventListener("keydown", function (event) {
+        if (event.keyCode == 121) {
+            window.location.href = "../manage_user/"
+        } if (event.keyCode == 120) {
+            window.location.href = "../admin/"
+        }
+        // alert(event.which)
+    })
 </script>
 {% endblock content%}

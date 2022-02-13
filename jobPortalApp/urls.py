@@ -22,33 +22,38 @@ urlpatterns += [
     path('register/', views.register, name="register"),
 ]
 
-#jack
-#profile/login/
+# jack
+# profile/login/
 urlpatterns += [
- path('login/', views.login, name="login"),
+    path('login/', views.login, name="login"),
     path('logout/', views.logout, name="logout"),
     path('profile/', views.profile, name="profile"),
     path('profile/seeker-edit-profile', views.seekerEdit, name="seekerEdit"),
-    path('profile/seeker-edit-process', views.seekerEditProcess, name="seekerEditProcess"),
+    path('profile/seeker-edit-process',
+         views.seekerEditProcess, name="seekerEditProcess"),
     path('seeker-resume/', views.seekerView, name="seekerView"),
-    path('profile/provider-edit-profile', views.providerEdit, name="providerEdit"),
-    path('profile/provider-edit-process', views.providerEditProcess, name="providerEditProcess"),
+    path('profile/provider-edit-profile',
+         views.providerEdit, name="providerEdit"),
+    path('profile/provider-edit-process',
+         views.providerEditProcess, name="providerEditProcess"),
     path('profile/provider-add-job', views.providerAddJob, name="providerAddJob"),
-    path('profile/provider-add-job-process', views.providerAddJobProcess, name="providerAddJobProcess"),
+    path('profile/provider-add-job-process',
+         views.providerAddJobProcess, name="providerAddJobProcess"),
     path('fileupload/', views.fileupload, name="fileupload"),
     path('filedisplay/', views.filedisplay, name="filedisplay"),
     path('job-search/', views.jobSearch, name="jobSearch"),
-    path('profile/view-post/',views.providerViewPost,name="providerViewPost"),
-    path('home/view-post/',views.indexViewPost,name="indexViewPost"),
-    path('profile/provider-edit-job', views.providerEditJob, name="providerEditJob"),
-    path('profile/provider-edit-job-process', views.providerEditJobProcess, name="providerEditJob"),
+    path('profile/view-post/', views.providerViewPost, name="providerViewPost"),
+    path('home/view-post/', views.indexViewPost, name="indexViewPost"),
+    path('profile/provider-edit-job',
+         views.providerEditJob, name="providerEditJob"),
+    path('profile/provider-edit-job-process',
+         views.providerEditJobProcess, name="providerEditJob"),
     path('home/apply-job', views.applyJob, name="applyJob"),
 ]
 
 # mohammed
 # administrator
 urlpatterns += [
-    path('admin_dashboard/', views.admin_dashboard, name="admin_dashboard"),
     path('manage_user/', views.manage_user, name="manage_user"),
     path('company/', views.company, name="company"),
     path('jobs/', views.jobs, name="jobs"),
