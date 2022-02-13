@@ -359,54 +359,58 @@ def logout(request):
     del request.session['user_id']
     del request.session['user_type']
     del request.session['job_type']
-    del request.session['job-search']
-    del request.session['job-type']
-    del request.session['job-city']
-    del request.session['job-country']
+    if 'job-search' and 'job-type'  and 'job-country' and 'job-city' in request.session:
+        del request.session['job-search']
+        del request.session['job-type']
+        del request.session['job-city']
+        del request.session['job-country']
     request.session.modified = True
     return redirect( "login")
 
 def login(request):
-    if request.method == 'POST':
-        usermail = request.POST['usermail']
-        password = request.POST['password']
-        if User.objects.filter(username=usermail).exists():
-            user = User.objects.get(username=usermail)
-            user_id = user.id
-            if user.check_password(password):
-                if SEEKER.objects.filter(user_id=user_id).exists():
-                    request.session['user_id'] = user_id
-                    request.session['user_type'] = "seeker"
-                    request.session['job_type'] = "Job Seeker"
-                elif COMPANY.objects.filter(user_id=user_id).exists():
-                    request.session['user_id'] = user_id
-                    request.session['user_type'] = "provider"
-                    request.session['job_type'] = "Job Provider"
-                return redirect('profile')
+    if 'user_id' in request.session:
+        return redirect('profile')
+    else:
+        if request.method == 'POST':
+            usermail = request.POST['usermail']
+            password = request.POST['password']
+            if User.objects.filter(username=usermail).exists():
+                user = User.objects.get(username=usermail)
+                user_id = user.id
+                if user.check_password(password):
+                    if SEEKER.objects.filter(user_id=user_id).exists():
+                        request.session['user_id'] = user_id
+                        request.session['user_type'] = "seeker"
+                        request.session['job_type'] = "Job Seeker"
+                    elif COMPANY.objects.filter(user_id=user_id).exists():
+                        request.session['user_id'] = user_id
+                        request.session['user_type'] = "provider"
+                        request.session['job_type'] = "Job Provider"
+                    return redirect('profile')
+                else:
+                    message = "Wrong Password"
+                    return render(request, 'jobPortalApp/pages/login.html',{'message':message})
+            elif User.objects.filter(email=usermail).exists():
+                user = User.objects.get(username=usermail)
+                user_id = user.id
+                if user.check_password(password):
+                    if SEEKER.objects.filter(user_id=user_id).exists():
+                        request.session['user_id'] = user_id
+                        request.session['user_type'] = "seeker"
+                        request.session['job_type'] = "Job Seeker"
+                    elif COMPANY.objects.filter(user_id=user_id).exists():
+                        request.session['user_id'] = user_id
+                        request.session['user_type'] = "provider"
+                        request.session['job_type'] = "Job Provider"
+                    return redirect('profile')
+                else:
+                    message = "Wrong Password"
+                    return render(request, 'jobPortalApp/pages/login.html',{'message':message})
             else:
-                message = "Wrong Password"
+                message = "Wrong Email or Username"
                 return render(request, 'jobPortalApp/pages/login.html',{'message':message})
-        elif User.objects.filter(email=usermail).exists():
-            user = User.objects.get(username=usermail)
-            user_id = user.id
-            if user.check_password(password):
-                if SEEKER.objects.filter(user_id=user_id).exists():
-                    request.session['user_id'] = user_id
-                    request.session['user_type'] = "seeker"
-                    request.session['job_type'] = "Job Seeker"
-                elif COMPANY.objects.filter(user_id=user_id).exists():
-                    request.session['user_id'] = user_id
-                    request.session['user_type'] = "provider"
-                    request.session['job_type'] = "Job Provider"
-                return redirect('profile')
-            else:
-                message = "Wrong Password"
-                return render(request, 'jobPortalApp/pages/login.html',{'message':message})
-        else:
-            message = "Wrong Email or Username"
-            return render(request, 'jobPortalApp/pages/login.html',{'message':message})
 
-    return render(request, "jobPortalApp/pages/login.html")
+        return render(request, "jobPortalApp/pages/login.html")
 
 def profile(request):
     if 'user_id' not in request.session:
@@ -641,6 +645,7 @@ def providerAddJobProcess(request):
                 if len(selected_skills) > 0:
                     remove_skills = JOBSKILL.objects.filter(job_id=job_id)
                     remove_skills.delete()
+                seeker_id_emails = []
                 for i in selected_skills:
                     JOBSKILL.objects.create(skill_id=i,job_id=job_id)
                     skillname = SKILL.objects.get(id=i)
@@ -648,7 +653,8 @@ def providerAddJobProcess(request):
                         seeker_ids = SEEKERSKILL.objects.filter(skill_id=i)
                         for seeker_id in seeker_ids:
                             user_email = User.objects.get(id=seeker_id.user_id)
-                            send_mail("Posted Job Met your Skills","A job with required "+skillname.skillname+" skills has been posted in the job portal.","creattjobportal@gmail.com",[user_email.email],fail_silently=False)
+                            seeker_id_emails.append(user_email.email)
+                send_mail("Posted Job Met your Skills","A job with required "+skillname.skillname+" skills has been posted in the job portal.","creattjobportal@gmail.com",seeker_id_emails,fail_silently=False)
                 return redirect('profile')
 
 def providerEditProcess(request):
