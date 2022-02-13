@@ -49,8 +49,11 @@
                     <span class="font-light">{{user_details.email}}</span>
                 </div>
             </div>
+            <form id="delete-account-form" action="../" method="POST">
+                <input type="text" value="{{seeker_details.user_id}}" style="display: none;">
+            </form>
             <div>
-                <button class="btn-outline-danger">Delete</button>
+                <button class="btn-outline-danger" id="delete-account">Delete</button>
             </div>
         </section>
 
@@ -127,9 +130,24 @@
         </section>
     </main>
 </body>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
+    
     logout_open = document.getElementById('logout-btn');
     logout_close = document.getElementById('close-logout');
+    delete_acc = document.getElementById('delete-account');
+    
+    delete_acc.onclick = function () {
+        swal({
+          title: "Delete Account",
+          text: "Are you sure you want to Delete you Account?",
+          icon: "error"
+        }).then((willDelete) => {
+          if (willDelete) {
+            document.getElementById('delete-account-form').submit();
+          }
+        });
+    };
 
     logout_open.onclick = function () {
         document.getElementById('logout-div').style.display = "Block";
