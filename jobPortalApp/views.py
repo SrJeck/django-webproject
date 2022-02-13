@@ -645,17 +645,23 @@ def providerAddJobProcess(request):
                 if len(selected_skills) > 0:
                     remove_skills = JOBSKILL.objects.filter(job_id=job_id)
                     remove_skills.delete()
-                seeker_id_emails = []
+                
+                seeker_emails_dict = {}
                 for i in selected_skills:
                     JOBSKILL.objects.create(skill_id=i,job_id=job_id)
                     skillname = SKILL.objects.get(id=i)
+                    seeker_emails = []
                     if SEEKERSKILL.objects.filter(skill_id=i).exists():
                         seeker_ids = SEEKERSKILL.objects.filter(skill_id=i)
                         for seeker_id in seeker_ids:
                             user_email = User.objects.get(id=seeker_id.user_id)
-                            seeker_id_emails.append(user_email.email)
-                send_mail("Posted Job Met your Skills","A job with required "+skillname.skillname+" skills has been posted in the job portal.","creattjobportal@gmail.com",seeker_id_emails,fail_silently=False)
-                return redirect('profile')
+                            seeker_emails.append(user_email.email)
+                    seeker_emails_dict[skillname.skillname] = seeker_emails
+
+                for keys, values in seeker_emails_dict.items():
+                    send_mail("Posted Job Met your Skills","A job with required "+keys+" skills has been posted in the job portal.","creattjobportal@gmail.com",values,fail_silently=False)
+
+                return redirect('profile',)
 
 def providerEditProcess(request):
     if 'user_id' not in request.session:
