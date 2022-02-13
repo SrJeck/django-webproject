@@ -4,6 +4,7 @@
 {#{% block title %}Seeker Info{% endblock title %}#}
 
 {% block content %}
+
 <body class="flex flex-col bg-very-pale-blue">
     <nav class="flex-shrink-0 flex justify-between items-center bg-white py-[15px] pl-[150px] pr-[50px]">
         <a href="../home">
@@ -27,7 +28,8 @@
                     class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
                     Profile
                 </a>
-                <a id="logout-btn" class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
+                <a id="logout-btn"
+                    class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
                     Logout
                 </a>
             </div>
@@ -48,7 +50,7 @@
                 </div>
             </div>
             <div>
-               
+                <button class="btn-outline-danger">Delete</button>
             </div>
         </section>
 
@@ -61,66 +63,66 @@
                 <div class="flex flex-col gap-y-[34px]">
                     <div class="flex flex-col gap-y-[8px]">
                         <div class="label-2">Fullname</div>
-                            {% if not seeker_details.fullname %}
-                            <div class="info"></div>
-                            Not Set
-                            </div>
-                            {% else %}
-                            <div class="info"></div>
-                            {{ seeker_details.fullname }}
-                            </div>
-                            {% endif %}
-                    </div>
-                    <div class="flex flex-col gap-y-[8px]">
-                        <div class="label-2">Skills</div>
-                        <div class="info prose">
-                            <ul>
-                                {% if seeker_skills %}
-                                {% for seeker_skill in seeker_skills %}
-                                    <li> {{ seeker_skill }}</li>
-                                {% endfor %}
-                                {% else %}
-                                    <li> No Skills</li>
-                                {% endif %}
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="inline-flex flex-col items-start gap-y-[8px]">
-                        <div class="label-2">Resume</div>
-                        
-                        {% if seeker_resume.resume %}
+                        {% if not seeker_details.fullname %}
                         <div class="info"></div>
-                        <a href="../seeker-resume" ><button class="btn">View Resume</button></a>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="col-span-2 flex flex-col gap-y-[34px]">
-                    <div class="flex flex-col gap-y-[8px]">
-                        <div class="label-2">About Me</div>
-                        {% if not seeker_details.about %}
-                        <div class="info prose"></div>
                         Not Set
-                        </div>
-                        {% else %}
-                        <div class="info"></div>
-                        {{seeker_details.about}}
-                        </div>
-                        {% endif %}
                     </div>
-                    <div class="flex flex-col gap-y-[8px]">
-                        <div class="label-2">Experience</div>
-                        {% if not seeker_details.experience %}
-                        <div class="info prose"></div>
-                        Not Set
-                        </div>
-                        {% else %}
-                        <div class="info"></div>
-                        {{seeker_details.experience}}
-                        </div>
-                        {% endif %}
-                    </div>
+                    {% else %}
+                    <div class="info"></div>
+                    {{ seeker_details.fullname }}
                 </div>
+                {% endif %}
+            </div>
+            <div class="flex flex-col gap-y-[8px]">
+                <div class="label-2">Skills</div>
+                <div class="info prose">
+                    <ul>
+                        {% if seeker_skills %}
+                        {% for seeker_skill in seeker_skills %}
+                        <li> {{ seeker_skill }}</li>
+                        {% endfor %}
+                        {% else %}
+                        <li> No Skills</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            <div class="inline-flex flex-col items-start gap-y-[8px]">
+                <div class="label-2">Resume</div>
+
+                {% if seeker_resume.resume %}
+                <div class="info"></div>
+                <a href="../seeker-resume"><button class="btn">View Resume</button></a>
+            </div>
+            {% endif %}
+            </div>
+            </div>
+            <div class="col-span-2 flex flex-col gap-y-[34px]">
+                <div class="flex flex-col gap-y-[8px]">
+                    <div class="label-2">About Me</div>
+                    {% if not seeker_details.about %}
+                    <div class="info prose"></div>
+                    Not Set
+                </div>
+                {% else %}
+                <div class="info"></div>
+                {{seeker_details.about}}
+            </div>
+            {% endif %}
+            </div>
+            <div class="flex flex-col gap-y-[8px]">
+                <div class="label-2">Experience</div>
+                {% if not seeker_details.experience %}
+                <div class="info prose"></div>
+                Not Set
+            </div>
+            {% else %}
+            <div class="info"></div>
+            {{seeker_details.experience}}
+            </div>
+            {% endif %}
+            </div>
+            </div>
             </div>
         </section>
     </main>
@@ -129,12 +131,12 @@
     logout_open = document.getElementById('logout-btn');
     logout_close = document.getElementById('close-logout');
 
-    logout_open.onclick = function() {
+    logout_open.onclick = function () {
         document.getElementById('logout-div').style.display = "Block";
-        };
-    logout_close.onclick = function() {
+    };
+    logout_close.onclick = function () {
         document.getElementById('logout-div').style.display = "None";
-        };
+    };
     // window.onclick = function(){
     //     document.getElementById('logout-div').style.display = "None";
     // }

@@ -2,44 +2,47 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-         <title>{% block title %}{% endblock title %}</title>{# dynamic title #}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title %}</title>{# dynamic title #}
 
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link
-            href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-            rel="stylesheet">
-        <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-        <script src="https://cdn.tailwindcss.com/?plugins=typography"></script>
-        <script>
-            tailwind.config = {
-                theme: {
-                    fontFamily: {
-                        'sans': ['Poppins', 'sans-serif'],
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.tailwindcss.com/?plugins=typography"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                fontFamily: {
+                    'sans': ['Poppins', 'sans-serif'],
+                },
+                extend: {
+                    colors: {
+                        'light-grayish-blue': '#C1D6E9',
+                        'lighter-grayish-blue': '#EBF2F8',
+                        'very-dark-blue': '#182F43',
+                        'vivid-blue': '#0F43F9',
+                        'moderate-blue': '#4685BD',
+                        'slightly-desaturated-blue': '#84AED3',
+                        'dark-moderate-blue': '#2E5A81',
+                        'bright-blue': '#3F69FA',
+                        'very-pale-blue': '#F3FAFF',
                     },
-                    extend: {
-                        colors: {
-                            'light-grayish-blue': '#C1D6E9',
-                            'lighter-grayish-blue': '#EBF2F8',
-                            'very-dark-blue': '#182F43',
-                            'vivid-blue': '#0F43F9',
-                            'moderate-blue': '#4685BD',
-                            'slightly-desaturated-blue': '#84AED3',
-                            'dark-moderate-blue': '#2E5A81',
-                            'bright-blue': '#3F69FA',
-                            'very-pale-blue': '#F3FAFF',
-                        },
-                    },
-                }
+                },
             }
-        </script>
-        <style type="text/tailwindcss">
-            .btn {
+        }
+    </script>
+    <style type="text/tailwindcss">
+        .btn {
                 @apply font-light text-[16px] text-white bg-vivid-blue rounded-md border border-vivid-blue py-[10px] px-[16px];
+            }
+            .btn-outline-danger {
+                @apply font-light text-red-500 bg-transparent rounded-md border border-red-500 py-[10px] px-[16px];
             }
             .btn-with-icon {
                 @apply flex justify-center items-center gap-x-2 font-light text-white bg-vivid-blue rounded-md border border-vivid-blue py-[10px] px-[16px];
@@ -81,12 +84,12 @@
                 @apply text-sm font-light text-very-dark-blue;
             }
         </style>
-    </head>
+</head>
 
-    <body class="flex flex-col bg-very-pale-blue">
-        
-        {% block content %}{% endblock content %}{# part to singit template #}
-        {% block script %}{% endblock script %}{# part to singit template #}
-    </body>
+<body class="flex flex-col bg-very-pale-blue">
+
+    {% block content %}{% endblock content %}{# part to singit template #}
+    {% block script %}{% endblock script %}{# part to singit template #}
+</body>
 
 </html>
