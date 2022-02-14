@@ -1095,6 +1095,7 @@ def users_report(request):
     seeker = SEEKER.objects.all()
     users = []
     for user in seeker:
+        users.append("List of Users")
         users.append(user.fullname)
 
     canv.drawText()
@@ -1114,6 +1115,7 @@ def activity_report(request):
     activity = ACTIVITY.objects.all()
     activity_log = []
     for act in activity:
+        activity_log.append("Activity Logs")
         activity_log.append(act.name)
         activity_log.append(act.user_id)
 
@@ -1134,6 +1136,7 @@ def job_report(request):
     job = JOB.objects.all()
     job_list = []
     for jobs in job:
+        job_list.append("Job List")
         job_list.append(jobs.name)
         job_list.append(jobs.description)
         job_list.append(jobs.type)
@@ -1156,6 +1159,7 @@ def company_report(request):
     company = COMPANY.objects.all()
     company_list = []
     for comp in company:
+        company_list.append("List of Companies")
         company_list.append(comp.name)
         company_list.append(comp.description)
         company_list.append(comp.city)
