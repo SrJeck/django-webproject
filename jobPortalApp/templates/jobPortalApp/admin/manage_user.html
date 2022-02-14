@@ -345,7 +345,12 @@
                     <span class="links_name">Jobs</span>
                 </a>
             </li>
-
+            <li>
+                <a href="{% url 'activity_logs'%}">
+                    <i class='bx bx-refresh'></i>
+                    <span class="links_name">Activity Logs</span>
+                </a>
+            </li>
             <li class="log_out">
                 <a href="#">
                     <i class='bx bx-log-out'></i>
@@ -407,9 +412,9 @@
                                         <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i
                                                 class="material-icons" data-toggle="tooltip"
                                                 title="Edit">&#xE254;</i></a>
-                                        <a href="#deleteEmployeeModal" class="delete" onclick="deactivateAccount('{{seeker.user_id}}')"><i
-                                                class="material-icons" data-toggle="tooltip"
-                                                title="Deactivate">&#xe5c9;</i></a>
+                                        <a href="#deleteEmployeeModal" class="delete"
+                                            onclick="deactivateAccount('{{seeker.user_id}}')"><i class="material-icons"
+                                                data-toggle="tooltip" title="Deactivate">&#xe5c9;</i></a>
 
                                     </td>
                                 </tr>
@@ -663,10 +668,10 @@
         </div>
     </section>
 
-    <script> 
+    <script>
 
         function deactivateAccount(params) {
-            document.getElementById('deleteEmployeeModal'+params).style.display = "Block"
+            document.getElementById('deleteEmployeeModal' + params).style.display = "Block"
             //alert(params)
         }
         let sidebar = document.querySelector(".sidebar");
