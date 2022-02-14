@@ -379,20 +379,32 @@ def admin_edit_user(request):
 
 
 def admin_activate_user(request):
-    return
+    if request.method == "POST":
+        user_id = request.POST['user-id']
+        SEEKER.objects.filter(user_id=user_id).update(status="Activated")
+    return redirect('manage_user')
 
 
 def admin_deactivate_user(request):
-    return
+    if request.method == "POST":
+        user_id = request.POST['user-id']
+        SEEKER.objects.filter(user_id=user_id).update(status="Deactivated")
+    return redirect('manage_user')
 # company
 
 
 def admin_deactivate_company(request):
-    return
+    if request.method == "POST":
+        user_id = request.POST['user-id']
+        COMPANY.objects.filter(user_id=user_id).update(status="Deactivated")
+    return redirect('company')
 
 
 def admin_activate_company(request):
-    return
+    if request.method == "POST":
+        user_id = request.POST['user-id']
+        COMPANY.objects.filter(user_id=user_id).update(status="Activated")
+    return redirect('company')
 
 
 def admin_edit_company(request):
@@ -405,11 +417,17 @@ def admin_edit_jobs(request):
 
 
 def admin_activate_jobs(request):
-    return
+    if request.method == "POST":
+        job_id = request.POST['job-id']
+        JOB.objects.filter(id=job_id).update(status="Activated")
+    return redirect('jobs')
 
 
 def admin_deactivate_jobs(request):
-    return
+    if request.method == "POST":
+        job_id = request.POST['job-id']
+        JOB.objects.filter(id=job_id).update(status="Deactivated")
+    return redirect('jobs')
 
 
 def manage_user(request):
@@ -453,15 +471,90 @@ def jobs(request):
 
 
 def admin_edit_user(request):
-    return render(request, "jobPortalApp/admin/admin-edit-user.html")
+    user_id = ""
+    if request.method == 'POST':
+        user_id = request.POST['user-id']
+    skills = SKILL.objects.all()
+    skillnames = []
+    seeker = SEEKER.objects.get(user_id=user_id)
+    seekerskills = SEEKERSKILL.objects.filter(user_id=user_id)
+    for seekerskill in seekerskills:
+        skill = SKILL.objects.get(id=seekerskill.skill_id)
+        skillnames.append(skill.skillname)
+    return render(request, "jobPortalApp/admin/admin-edit-user.html",{'seeker':seeker,'skillnames':skillnames,'skills':skills})
+
+def admin_edit_user_process(request):
+    user_id = ""
+    if request.method == 'POST':
+        user_id = request.POST['edit-id']
+        user_fullname = request.POST['edit-fullname']
+        user_about = request.POST['edit-about']
+        user_experience = request.POST['edit-experience']
+        job_skills = request.POST.getlist('skill')
+        SEEKER.objects.filter(user_id=user_id).update(fullname=user_fullname)
+        SEEKER.objects.filter(user_id=user_id).update(about=user_about)
+        SEEKER.objects.filter(user_id=user_id).update(experience=user_experience)
+        if len(job_skills) > 0:
+            past_skills = SEEKERSKILL.objects.filter(user_id=user_id)
+            past_skills.delete()
+        for job_skill in job_skills:
+            SEEKERSKILL.objects.create(user_id=user_id,skill_id=job_skill)
+    return redirect('manage_user')
 
 
 def admin_edit_company(request):
-    return render(request, "jobPortalApp/admin/admin-edit-company.html")
+    user_id = ""
+    if request.method == 'POST':
+        user_id = request.POST['user-id']
+    provider = COMPANY.objects.get(user_id=user_id)
+    return render(request, "jobPortalApp/admin/admin-edit-company.html",{'provider':provider})
+
+def admin_edit_company_process(request):
+    if request.method == 'POST':
+        user_id = request.POST['edit-id']
+        user_name = request.POST['edit-name']
+        user_description = request.POST['edit-description']
+        user_city = request.POST['edit-city']
+        user_country = request.POST['edit-country']
+        COMPANY.objects.filter(user_id=user_id).update(name=user_name)
+        COMPANY.objects.filter(user_id=user_id).update(description=user_description)
+        COMPANY.objects.filter(user_id=user_id).update(city=user_city)
+        COMPANY.objects.filter(user_id=user_id).update(country=user_country)
+    return redirect('company')
 
 
 def admin_edit_job(request):
-    return render(request, "jobPortalApp/admin/admin-edit-job.html")
+    job_id = ""
+    if request.method == 'POST':
+        job_id = request.POST['job-id']
+    skills = SKILL.objects.all()
+    skillnames = []
+    job = JOB.objects.get(id=job_id)
+    seekerskills = JOBSKILL.objects.filter(job_id=job_id)
+    for seekerskill in seekerskills:
+        skill = SKILL.objects.get(id=seekerskill.skill_id)
+        skillnames.append(skill.skillname)
+    return render(request, "jobPortalApp/admin/admin-edit-job.html",{'job':job,'skills':skills,'skillnames':skillnames})
+
+def admin_edit_job_process(request):
+    if request.method == 'POST':
+        job_id = request.POST['job-id']
+        job_name = request.POST['job-name']
+        job_salary = request.POST['job-salary']
+        job_description = request.POST['job-description']
+        job_type = request.POST['job-type']
+        job_skills = request.POST.getlist('skill')
+        
+        JOB.objects.filter(id=job_id).update(name=job_name)
+        JOB.objects.filter(id=job_id).update(description=job_description)
+        JOB.objects.filter(id=job_id).update(salary=job_salary)
+        JOB.objects.filter(id=job_id).update(type=job_type)
+        if len(job_skills) > 0:
+            past_skills = JOBSKILL.objects.filter(user_id=job_id)
+            past_skills.delete()
+        for job_skill in job_skills:
+            JOBSKILL.objects.create(userjob_id_id=job_id,skill_id=job_skill)
+    return redirect('jobs')
 
 
 def activity_logs(request):
