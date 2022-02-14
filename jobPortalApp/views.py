@@ -35,6 +35,7 @@ def home(request):
     else:
         job_title = request.session['job_type']
         user_id = request.session['user_id']
+        profile = PROFILE.objects.filter(user_id=user_id)
         provider_name = ""
         seeker_name = ""
         if job_title == "Job Seeker":
@@ -363,7 +364,7 @@ def home(request):
                 skills = SKILL.objects.get(id=job_skills_per_job.skill_id)
                 job_skillnames_per_jobs.append(skills.skillname)
             skillnames_per_jobs[company_jobs_id] = job_skillnames_per_jobs
-        return render(request, 'jobPortalApp/pages/index.html', {'jobs': jobs, 'skillnames_per_jobs': skillnames_per_jobs, 'searcher': searcher, 'seeker_name': seeker_name, 'provider_name': provider_name, 'user_type': job_title, 'job_search': job_search, 'job_type': job_type, 'job_city': job_city, 'job_country': job_country, 'applications_per_jobs': applications_per_jobs, 'results': results})
+        return render(request, 'jobPortalApp/pages/index.html', {'jobs': jobs, 'skillnames_per_jobs': skillnames_per_jobs, 'searcher': searcher, 'seeker_name': seeker_name, 'provider_name': provider_name, 'user_type': job_title, 'job_search': job_search, 'job_type': job_type, 'job_city': job_city, 'job_country': job_country, 'applications_per_jobs': applications_per_jobs, 'results': results,'profile':profile})
 
 
 # job seeker
@@ -627,8 +628,8 @@ def loginProcess(request):
                         status = SEEKER.objects.get(user_id=user_id)
                         if status.status == "Activated":
                             request.session['user_id'] = user_id
-                            request.session['user_type'] = "provider"
-                            request.session['job_type'] = "Job Provider"
+                            request.session['user_type'] = "seeker"
+                            request.session['job_type'] = "Job Seeker"
                             ACTIVITY.objects.create(name="Logged", description="Logged In", user_id=user_id)
                             return redirect('profile')
                         else:
@@ -656,8 +657,8 @@ def loginProcess(request):
                         status = SEEKER.objects.get(user_id=user_id)
                         if status.status == "Activated":
                             request.session['user_id'] = user_id
-                            request.session['user_type'] = "provider"
-                            request.session['job_type'] = "Job Provider"
+                            request.session['user_type'] = "seeker"
+                            request.session['job_type'] = "Job Seeker"
                             ACTIVITY.objects.create(name="Logged", description="Logged In", user_id=user_id)
                             return redirect('profile')
                         else:
@@ -696,8 +697,7 @@ def profile(request):
             if SEEKER.objects.filter(user_id=user_id).exists():
                 seeker_skills = []
                 if SEEKERSKILL.objects.filter(user_id=user_id).exists():
-                    seeker_skills_id = SEEKERSKILL.objects.filter(
-                        user_id=user_id)
+                    seeker_skills_id = SEEKERSKILL.objects.filter(user_id=user_id)
                     for i in seeker_skills_id:
                         skill_name = SKILL.objects.get(id=i.skill_id)
                         seeker_skills.append(skill_name)
@@ -740,6 +740,7 @@ def seekerView(request):
         user_id = request.session['user_id']
         job_type = request.session['job_type']
         seeker_details = SEEKER.objects.get(user_id=user_id)
+        profile = PROFILE.objects.filter(user_id=user_id)
         seeker = RESUME.objects.get(user_id=user_id)
         return render(request, 'jobPortalApp/pages/profile/seeker/view-resume.html', {'seeker': seeker, 'user_type': job_type, 'seeker_details': seeker_details})
 
@@ -749,8 +750,10 @@ def seekerEdit(request):
         return redirect('login')
     else:
         user_id = request.session['user_id']
-        job_type = request.session['job_type']
         seeker = SEEKER.objects.get(user_id=user_id)
+        job_type = request.session['job_type']
+        profile = PROFILE.objects.filter(user_id=user_id)
+        seeker_details = SEEKER.objects.get(user_id=user_id)
         form = resumeForm(use_required_attribute=False)
         seeker_skills = []
         if SEEKERSKILL.objects.filter(user_id=user_id).exists():
@@ -758,12 +761,11 @@ def seekerEdit(request):
             for i in seeker_skills_id:
                 skill_name = SKILL.objects.get(id=i.skill_id)
                 seeker_skills.append(skill_name)
-        seeker_details = SEEKER.objects.get(user_id=user_id)
         seeker_resume = ""
         if RESUME.objects.filter(user_id=user_id).exists():
             seeker_resume = RESUME.objects.get(user_id=user_id)
         skills = SKILL.objects.all()
-        return render(request, 'jobPortalApp/pages/profile/seeker/add-edit-info.html', {'skills': skills, 'seeker_details': seeker_details, 'form': form, 'seeker_skills': seeker_skills, 'seeker_resume': seeker_resume, 'user_type': job_type})
+        return render(request, 'jobPortalApp/pages/profile/seeker/add-edit-info.html', {'skills': skills, 'seeker_details': seeker_details, 'form': form, 'seeker_skills': seeker_skills, 'seeker_resume': seeker_resume, 'user_type': job_type,'profile':profile})
 
 
 def providerEdit(request):
@@ -771,8 +773,10 @@ def providerEdit(request):
         return redirect('login')
     else:
         user_id = request.session['user_id']
+        user_type = request.session['job_type']
+        profile = PROFILE.objects.filter(user_id=user_id)
         provider = COMPANY.objects.get(user_id=user_id)
-        return render(request, 'jobPortalApp/pages/profile/provider/add-edit-info.html', {'provider': provider})
+        return render(request, 'jobPortalApp/pages/profile/provider/add-edit-info.html', {'provider': provider,'user_type':user_type,'profile':profile})
 
 
 def providerAddJob(request):
@@ -780,8 +784,11 @@ def providerAddJob(request):
         return redirect('login')
     else:
         user_id = request.session['user_id']
+        user_type = request.session['job_type']
+        profile = PROFILE.objects.filter(user_id=user_id)
+        provider = COMPANY.objects.get(user_id=user_id)
         skills = SKILL.objects.all()
-        return render(request, 'jobPortalApp/pages/profile/provider/add-job.html', {'skills': skills})
+        return render(request, 'jobPortalApp/pages/profile/provider/add-job.html', {'skills': skills,'user_type':user_type,'profile':profile,'provider':provider})
 
 def providerDeactivateJob(request):
     if 'user_id' not in request.session:
@@ -844,6 +851,8 @@ def indexViewPost(request):
     else:
         job_type = request.session['job_type']
         user_id = request.session['user_id']
+        user = User.objects.filter(id=user_id)
+        profile = PROFILE.objects.filter(user_id=user_id)
         if request.method == "POST":
             id = request.POST['job-id']
             request.session['prev_job'] = id
@@ -863,24 +872,28 @@ def indexViewPost(request):
             application_check = ""
             if APPLICATION.objects.filter(user_id=user_id, job_id=job_id).exists():
                 application_check = "Already Applied"
-            return render(request, 'JobPortalApp/pages/view-posted-job-as-seeker.html', {'job': job, 'job_skills': job_skillnames_per_jobs, 'seeker_info': seeker_info, 'resume': resume, 'seeker_skills': seeker_skills, 'application_check': application_check})
+            return render(request, 'JobPortalApp/pages/view-posted-job-as-seeker.html', {'job': job, 'job_skills': job_skillnames_per_jobs, 'seeker_info': seeker_info, 'resume': resume, 'seeker_skills': seeker_skills, 'application_check': application_check,'job_type':job_type,'user':user,'profile':profile})
 
         elif job_type == "Job Provider":
             provider_info = COMPANY.objects.get(user_id=user_id)
-            return render(request, 'JobPortalApp/pages/view-posted-job-as-provider.html', {'job': job, 'job_skills': job_skillnames_per_jobs})
+            return render(request, 'JobPortalApp/pages/view-posted-job-as-provider.html', {'job': job, 'job_skills': job_skillnames_per_jobs,'job_type':job_type,'provider_info':provider_info,'profile':profile})
 
 
 def providerViewApplicantResume(request):
     if 'user_id' not in request.session:
         return redirect('login')
     else:
+        company_id = request.session['user_id']
+        profile = PROFILE.objects.filter(user_id=company_id)
+        provider = COMPANY.objects.get(user_id=company_id)
+        user_type = request.session['job_type']
         if request.method == "POST":
             job_type = request.session['job_type']
             user_id = request.session['user_id']
             applicant_id = request.POST['applicant-id']
             seeker_details = COMPANY.objects.get(user_id=user_id)
             seeker = RESUME.objects.get(user_id=applicant_id)
-            return render(request, 'jobPortalApp/pages/profile/provider/view-resume.html', {'seeker': seeker, 'user_type': job_type, 'seeker_details': seeker_details})
+            return render(request, 'jobPortalApp/pages/profile/provider/view-resume.html', {'seeker': seeker, 'user_type': job_type, 'seeker_details': seeker_details,'profile':profile,'provider':provider,'user_type':user_type})
 
 
 def providerViewApplicant(request):
@@ -890,6 +903,11 @@ def providerViewApplicant(request):
         seeker = ""
         skillnames = []
         resume = ""
+        user_id = ""
+        company_id = request.session['user_id']
+        profile = PROFILE.objects.filter(user_id=company_id)
+        provider = COMPANY.objects.get(user_id=company_id)
+        user_type = request.session['job_type']
         if request.method == "POST":
             user_id = request.POST['applicant-id']
             if SEEKER.objects.filter(user_id=user_id).exists():
@@ -901,14 +919,17 @@ def providerViewApplicant(request):
                     skillnames.append(skill.skillname)
             if RESUME.objects.filter(user_id=user_id).exists():
                 resume = RESUME.objects.get(user_id=user_id)
-
-        return render(request, 'JobPortalApp/pages/profile/provider/show-applicant.html', {'seeker': seeker, 'skillnames': skillnames, 'resume': resume})
+        return render(request, 'JobPortalApp/pages/profile/provider/show-applicant.html', {'seeker': seeker, 'skillnames': skillnames, 'resume': resume,'user_type':user_type,'profile':profile,'provider':provider})
 
 
 def providerViewPost(request):
     if 'user_id' not in request.session:
         return redirect('login')
     else:
+        company_id = request.session['user_id']
+        profile = PROFILE.objects.filter(user_id=company_id)
+        provider = COMPANY.objects.get(user_id=company_id)
+        user_type = request.session['job_type']
         if request.method == "POST":
             job_id = request.POST['job-id']
             job = JOB.objects.get(id=job_id)
@@ -926,7 +947,7 @@ def providerViewPost(request):
                 skills = SKILL.objects.get(id=job_skills_per_job.skill_id)
                 job_skillnames_per_jobs.append(skills.skillname)
 
-        return render(request, 'JobPortalApp/pages/profile/provider/show-job-post.html', {'job': job, 'job_skills': job_skillnames_per_jobs, 'applicants': applicants, 'applicants_date': applicants_date})
+        return render(request, 'JobPortalApp/pages/profile/provider/show-job-post.html', {'job': job, 'job_skills': job_skillnames_per_jobs, 'applicants': applicants, 'applicants_date': applicants_date,'profile':profile,'provider':provider,'user_type':user_type})
 
 
 def seekerEditProcess(request):
@@ -1145,6 +1166,9 @@ def seekerChangeProfle(request):
         return redirect('login')
     else:
         user_id = request.session['user_id']
+        user_type = request.session['job_type']
+        profile = PROFILE.objects.filter(user_id=user_id)
+        seeker_details = SEEKER.objects.get(user_id=user_id)
         form = profileForm()
         profile = PROFILE.objects.filter(user_id=user_id)
         if request.method == 'POST':
@@ -1154,7 +1178,7 @@ def seekerChangeProfle(request):
             object = PROFILE.objects.create(user_id=user_id, profile=profile)
             object.save()
             return redirect('profile')
-        return render(request, 'jobPortalApp/pages/profile/seeker/change-profile.html', {'form': form, 'profile': profile})
+        return render(request, 'jobPortalApp/pages/profile/seeker/change-profile.html', {'form': form, 'profile': profile,'user_type':user_type,'seeker_details':seeker_details})
 
 
 def providerChangeProfle(request):
@@ -1162,8 +1186,10 @@ def providerChangeProfle(request):
         return redirect('login')
     else:
         user_id = request.session['user_id']
-        form = profileForm()
+        user_type = request.session['job_type']
+        provider = COMPANY.objects.get(user_id=user_id)
         profile = PROFILE.objects.filter(user_id=user_id)
+        form = profileForm()
         if request.method == 'POST':
             profile = request.FILES['profile']
             refresh = PROFILE.objects.filter(user_id=user_id)
@@ -1171,7 +1197,7 @@ def providerChangeProfle(request):
             object = PROFILE.objects.create(user_id=user_id, profile=profile)
             object.save()
             return redirect('profile')
-        return render(request, 'jobPortalApp/pages/profile/provider/change-profile.html', {'form': form, 'profile': profile})
+        return render(request, 'jobPortalApp/pages/profile/provider/change-profile.html', {'form': form, 'profile': profile,'user_type':user_type,'provider':provider})
 
 
 def seekerChangePassword(request):
@@ -1179,6 +1205,9 @@ def seekerChangePassword(request):
         return redirect('login')
     else:
         user_id = request.session['user_id']
+        user_type = request.session['job_type']
+        profile = PROFILE.objects.filter(user_id=user_id)
+        seeker_details = SEEKER.objects.get(user_id=user_id)
         if request.method == 'POST':
             old_pass = request.POST['old_password']
             new_pass = request.POST['new_password']
@@ -1198,7 +1227,7 @@ def seekerChangePassword(request):
                 user.set_password(new_pass)
                 user.save()
                 return redirect('profile')
-        return render(request, 'jobPortalApp/pages/profile/seeker/change-password.html')
+        return render(request, 'jobPortalApp/pages/profile/seeker/change-password.html',{'user_type':user_type,'profile':profile,'seeker_details':seeker_details})
 
 
 def providerChangePassword(request):
@@ -1206,6 +1235,9 @@ def providerChangePassword(request):
         return redirect('login')
     else:
         user_id = request.session['user_id']
+        user_type = request.session['job_type']
+        profile = PROFILE.objects.filter(user_id=user_id)
+        provider = COMPANY.objects.get(user_id=user_id)
         if request.method == 'POST':
             old_pass = request.POST['old_password']
             new_pass = request.POST['new_password']
@@ -1225,7 +1257,7 @@ def providerChangePassword(request):
                 user.set_password(new_pass)
                 user.save()
                 return redirect('profile')
-        return render(request, 'jobPortalApp/pages/profile/provider/change-password.html')
+        return render(request, 'jobPortalApp/pages/profile/provider/change-password.html',{'user_type':user_type,'profile':profile,'provider':provider})
 
 #markjoseph
 def users_report(request):

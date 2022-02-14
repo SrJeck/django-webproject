@@ -3,6 +3,7 @@
 {% extends "jobPortalApp/base.html" %}
 {% load static %}
 {% block content %}
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <body class="flex flex-col bg-very-pale-blue">
     <nav class="flex-shrink-0 flex justify-between items-center bg-white py-[15px] pl-[150px] pr-[50px]">
         <a href="../home">
@@ -11,10 +12,22 @@
         <div x-data="{ show: false }" class="relative">
             <div class="inline-flex items-center gap-x-2">
                 <div class="flex flex-col items-end">
+                    
+                    {% if seeker_details %}
                     <span>{{seeker_details.fullname}}</span>
+                    {% else %}
+                    <span>Not Set</span>
+                    {% endif %}
                     <span class="text-xs font-light">{{user_type}}</span>
                 </div>
+                
+                {% if not profile %}
                 <img src="{% static 'images/profile.svg' %}" alt="" class="w-[36px] h-[36px]" @click="show = ! show">
+                {% else %}
+                {% for prof in profile  %}
+                <img src="{{prof.profile.url}}" alt="" class="w-[36px] h-[36px]" @click="show = ! show">
+                {% endfor %}
+                {% endif %}
             </div>
             <div x-show="show"
                 class="absolute bg-white p-[12px] right-0 w-[120px] rounded-[4px] shadow-[0_0_40px_0_rgba(0,0,0,0.1)]">

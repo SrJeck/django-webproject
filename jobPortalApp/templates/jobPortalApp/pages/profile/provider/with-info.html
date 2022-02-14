@@ -18,7 +18,14 @@
                 {% endif%}
                 <span class="text-xs font-light">{{user_type}}</span>
             </div>
+            
+            {% if profile %}
+            {% for prof in profile%}
+            <img src="{{prof.profile.url}}" alt="" class="w-[36px] h-[36px]" @click="show = ! show">
+            {% endfor %}
+            {% else %}
             <img src="{% static 'images/profile.svg' %}" alt="" class="w-[36px] h-[36px]" @click="show = ! show">
+            {% endif %}
         </div>
         <div x-show="show"
             class="absolute bg-white p-[12px] right-0 w-[120px] rounded-[4px] shadow-[0_0_40px_0_rgba(0,0,0,0.1)]">
