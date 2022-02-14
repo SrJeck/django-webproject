@@ -60,7 +60,13 @@
         <section class="flex-grow flex flex-col gap-y-[43px] bg-white min-h-[400px] p-[36px]">
             <div class="flex-shrink-0 flex justify-between items-center">
                 <div class="text-[22px] font-semibold italic text-left">Personal Information</div>
-                <a href="../profile/seeker-edit-profile"><button class="btn-outline">Edit</button></a>
+                <!-- <a href=""><button class="btn-outline">Edit</button></a> -->
+                <select  class="btn-outline" id="settings" style="appearance: none;text-align: center;">
+                    <option value="" disabled hidden selected >Settings</option>
+                    <option value="edit">Edit Information</option>
+                    <option value="pass">Change Password</option>
+                    <option value="pic">Change Profile Picture</option>
+                </select>
             </div>
             <div class="flex-grow grid grid-cols-3 gap-x-8">
                 <div class="flex flex-col gap-y-[34px]">
@@ -93,8 +99,8 @@
             <div class="inline-flex flex-col items-start gap-y-[8px]">
                 <div class="label-2">Resume</div>
 
-                {% if seeker_resume.resume %}
-                <div class="info"></div>
+            {% if seeker_resume.resume %}
+            <div class="info"></div>
                 <a href="../seeker-resume"><button class="btn">View Resume</button></a>
             </div>
             {% endif %}
@@ -135,25 +141,66 @@
     
     logout_open = document.getElementById('logout-btn');
     logout_close = document.getElementById('close-logout');
+    settings_choice = document.getElementById('settings');
+
+    
+
     delete_acc = document.getElementById('delete-account');
     
     delete_acc.onclick = function () {
         swal({
-          title: "Delete Account",
-          text: "Are you sure you want to Delete you Account?",
-          icon: "error"
-        }).then((willDelete) => {
-          if (willDelete) {
-            document.getElementById('delete-account-form').submit();
-          }
+            title: "Delete Account",
+            text: "Are you sure you want to delete your account?",
+            icon: "warning",
+                buttons: {
+                yes: {
+                    text: "Yes",
+                    value: "yes"
+                },
+                no: {
+                    text: "No",
+                    value: "no",
+                }
+                }
+        }).then((value) => {
+                if (value === "yes") {
+                // Add Your Custom Code for CRUD
+                alert("yes")
+                }
         });
-    };
+    }
+
+    settings_choice.onchange = function name() {
+        if (settings_choice.value == "pass") {
+            window.location.href = "../profile/seeker-change-password"
+        }else if (settings_choice.value == "edit") {
+            window.location.href = "../profile/seeker-edit-profile"
+        } else if (settings_choice.value == "pic") {
+            
+        }
+    }
 
     logout_open.onclick = function () {
-        document.getElementById('logout-div').style.display = "Block";
-    };
-    logout_close.onclick = function () {
-        document.getElementById('logout-div').style.display = "None";
+        swal({
+            title: "Logout",
+            text: "Are you sure you want to logout?",
+            icon: "info",
+                buttons: {
+                yes: {
+                    text: "Yes",
+                    value: "yes"
+                },
+                no: {
+                    text: "No",
+                    value: "no",
+                }
+                }
+        }).then((value) => {
+                if (value === "yes") {
+                // Add Your Custom Code for CRUD
+                window.location.href="../logout"
+                }
+        });
     };
     // window.onclick = function(){
     //     document.getElementById('logout-div').style.display = "None";

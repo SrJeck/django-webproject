@@ -1,0 +1,65 @@
+{% extends "jobPortalApp/base.html" %}
+
+{% load static %}
+{% block content%}
+
+<body class="flex flex-col items-center justify-center flex-grow bg-very-pale-blue h-full">
+
+    <div class="flex items-center justify-center my-[50px]">
+        <div class="flex items-center gap-x-[75px] px-[70px] bg-bright-blue w-[844px] h-[590px] rounded-[6px]">
+            <div class="flex flex-col items-start gap-y-[11px] -mt-[200px] w-[70%]">
+                <img src="{% static 'images/logo.png' %}" alt="">
+                <span>Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Proin eget tortor
+                    risus.
+                    Nulla porttitor accumsan
+                    tincidunt.</span>
+            </div>
+        </div>
+        <div class="flex flex-col gap-y-[32px] bg-white text-[20px] p-[29px] rounded-[6px] w-[451px] -ml-[300px]">
+            <h1 class="font-semibold">Login</h1>
+
+            <!-- <label >{{message}}</label> -->
+            <div class="flex flex-col gap-y-[32px]">
+                <form id="login-form" method="POST">
+                    {% csrf_token %}
+                    <div class="flex flex-col gap-y-[16px]">
+                        <div class="flex flex-col gap-y-1">
+                            <label for="*" class="label">Username or Email</label>
+                            <input type="text" placeholder="Username or Email" name="usermail" class="input-2px">
+                        </div>
+                        <div class="flex flex-col gap-y-1">
+                            <label for="*" class="label">Password</label>
+                            <input type="password" placeholder="Password" name="password" class="input-2px">
+                        </div>
+                    </div><br>
+                </form>
+                <button class="btn" type="submit" form="login-form">
+                    Login
+                </button>
+            </div>
+            <div class="flex items-center gap-x-1 self-center">
+                <span class="text-sm">Do not have an account yet?</span>
+                <a href="../register/" class="text-sm text-vivid-blue">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script type="text/javascript" src="{% static 'static_jquery/js/jquery.js' %}"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% if message %}
+<script>
+    swal("Oops!", "{{message}}", "error");
+</script>
+{% endif %}
+<script type="text/javascript">
+    document.addEventListener("keydown", function (event) {
+        if (event.keyCode == 121) {
+            window.location.href = "../manage_user/"
+        } if (event.keyCode == 120) {
+            window.location.href = "../admin/"
+        }
+        // alert(event.which)
+    })
+</script>
+{% endblock content%}

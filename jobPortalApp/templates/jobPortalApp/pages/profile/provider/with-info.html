@@ -191,11 +191,27 @@
         });
     };
     logout_open.onclick = function() {
-        document.getElementById('logout-div').style.display = "Block";
-        };
-    logout_close.onclick = function() {
-        document.getElementById('logout-div').style.display = "None";
-        };
+        swal({
+            title: "Logout",
+            text: "Are you sure you want to logout?",
+            icon: "info",
+                buttons: {
+                yes: {
+                    text: "Yes",
+                    value: "yes"
+                },
+                no: {
+                    text: "No",
+                    value: "no",
+                }
+                }
+        }).then((value) => {
+                if (value === "yes") {
+                // Add Your Custom Code for CRUD
+                window.location.href="../logout"
+                }
+        });
+    };
     // window.onclick = function(){
     //     document.getElementById('logout-div').style.display = "None";
     // }

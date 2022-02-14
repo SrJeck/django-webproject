@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Manage JobSeeker</title>
+    <title>Manage Company</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -328,13 +328,13 @@
         <ul class="nav-links">
 
             <li>
-                <a href="#" class="active">
+                <a href="{% url 'manage_user'%}">
                     <i class='bx bx-user'></i>
                     <span class="links_name">Job Seeker</span>
                 </a>
             </li>
             <li>
-                <a href="{% url 'company'%}">
+                <a href="{% url 'company'%}" class="active">
                     <i class='bx bx-building'></i>
                     <span class="links_name">Company</span>
                 </a>
@@ -343,6 +343,12 @@
                 <a href="{% url 'jobs'%}">
                     <i class='bx bx-briefcase-alt-2'></i>
                     <span class="links_name">Jobs</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="active">
+                    <i class='bx bx-building'></i>
+                    <span class="links_name">Activity Logs</span>
                 </a>
             </li>
 
@@ -358,7 +364,7 @@
         <nav>
             <div class="sidebar-button">
                 <i class='bx bx-menu sidebarBtn'></i>
-                <span class="dashboard">Manage Job Seeker</span>
+                <span class="dashboard">Manage Company</span>
             </div>
 
             <div class="profile-details">
@@ -374,7 +380,7 @@
                         <div class="table-title">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <h2>Active <b>Users</b></h2>
+                                    <h2>Active <b>Companies</b></h2>
                                 </div>
 
                             </div>
@@ -382,39 +388,42 @@
                         <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
-
                                     <th>Username</th>
                                     <th>Email</th>
-                                    <th>Full Name</th>
-                                    <th>Job Experience</th>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>City</th>
+                                    <th>Country</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            {% for activated_seeker in activated_seekers%}
+                            {% for activated_company in activated_companys%}
                             <tbody>
                                 <tr>
-                                    {% for keys,values in activated_users_list.items %}
-                                    {% if keys == activated_seeker.user_id %}
+                                    {% for keys,values in activated_company_list.items %}
+                                    {% if keys == activated_company.user_id %}
                                     {% for value in values %}
                                     <td>{{value.username}}</td>
                                     <td>{{value.email}}</td>
                                     {% endfor %}
                                     {% endif %}
                                     {% endfor %}
-                                    <td>{{activated_seeker.fullname}}</td>
-                                    <td>{{activated_seeker.experience}}</td>
+                                    <td>{{activated_company.name}}</td>
+                                    <td>{{activated_company.description}}</td>
+                                    <td>{{activated_company.city}}</td>
+                                    <td>{{activated_company.country}}</td>
                                     <td>
                                         <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i
                                                 class="material-icons" data-toggle="tooltip"
                                                 title="Edit">&#xE254;</i></a>
-                                        <a href="#deleteEmployeeModal" class="delete" onclick="deactivateAccount('{{seeker.user_id}}')"><i
+                                        <a href="#deleteEmployeeModal" class="delete" data-id="1" data-toggle="modal"><i
                                                 class="material-icons" data-toggle="tooltip"
                                                 title="Deactivate">&#xe5c9;</i></a>
 
                                     </td>
                                 </tr>
                             </tbody>
-                            <div id="deleteEmployeeModal{{activated_seeker.user_id}}" style="display: none;">
+                            <div id="deleteEmployeeModal{{activated_company.user_id}}" class="modal fade">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <form>
@@ -522,7 +531,7 @@
                         <div class="table-title">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <h2>Inactive <b>Users</b></h2>
+                                    <h2>Inactive <b>Companies</b></h2>
                                 </div>
 
                             </div>
@@ -530,27 +539,30 @@
                         <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
-
                                     <th>Username</th>
                                     <th>Email</th>
-                                    <th>Full Name</th>
-                                    <th>Job Experience</th>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>City</th>
+                                    <th>Country</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            {% for deactivated_seeker in deactivated_seekers%}
+                            {% for deactivated_company in deactivated_companys%}
                             <tbody>
                                 <tr>
-                                    {% for keys,values in deactivated_users_list.items %}
-                                    {% if keys == deactivated_seeker.user_id %}
+                                    {% for keys,values in deactivated_company_list.items %}
+                                    {% if keys == deactivated_company.user_id %}
                                     {% for value in values %}
                                     <td>{{value.username}}</td>
                                     <td>{{value.email}}</td>
                                     {% endfor %}
                                     {% endif %}
                                     {% endfor %}
-                                    <td>{{deactivated_seeker.fullname}}</td>
-                                    <td>{{deactivated_seeker.experience}}</td>
+                                    <td>{{deactivated_company.name}}</td>
+                                    <td>{{deactivated_company.description}}</td>
+                                    <td>{{deactivated_company.city}}</td>
+                                    <td>{{deactivated_company.country}}</td>
                                     <td>
 
                                         <button type="submit"><i class="material-icons" data-toggle="tooltip"
@@ -663,12 +675,7 @@
         </div>
     </section>
 
-    <script> 
-
-        function deactivateAccount(params) {
-            document.getElementById('deleteEmployeeModal'+params).style.display = "Block"
-            //alert(params)
-        }
+    <script>
         let sidebar = document.querySelector(".sidebar");
         let sidebarBtn = document.querySelector(".sidebarBtn");
         sidebarBtn.onclick = function () {

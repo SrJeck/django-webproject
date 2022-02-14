@@ -16,3 +16,8 @@ class resumeForm(forms.ModelForm):
     class Meta:
         model = RESUME
         fields = ('resume',)
+
+class profileForm(forms.ModelForm):
+    class Meta:
+        model = PROFILE
+        fields = ('profile',)

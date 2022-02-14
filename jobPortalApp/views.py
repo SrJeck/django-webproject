@@ -1,3 +1,5 @@
+from pydoc import describe
+import re
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
@@ -421,6 +423,8 @@ def provider_show_applicant(request):
 
 
 def logout(request):
+    user_id = request.session['user_id']
+    ACTIVITY.objects.create(name="Logged",description="Logged Out",user_id=user_id)
     del request.session['user_id']
     del request.session['user_type']
     del request.session['job_type']
@@ -452,6 +456,7 @@ def login(request):
                         request.session['user_id'] = user_id
                         request.session['user_type'] = "provider"
                         request.session['job_type'] = "Job Provider"
+                    ACTIVITY.objects.create(name="Logged",description="Logged In",user_id=user_id)
                     return redirect('profile')
                 else:
                     message = "Wrong Password"
@@ -487,6 +492,7 @@ def profile(request):
         user_type = request.session['user_type']
         job_type = request.session['job_type']
         user_details = User.objects.get(id=user_id)
+        all_user = User.objects.filter(is_staff=True)
         if user_type == 'seeker':
             if SEEKER.objects.filter(user_id=user_id).exists():
                 seeker_skills = []
@@ -500,7 +506,7 @@ def profile(request):
                 seeker_resume = ""
                 if RESUME.objects.filter(user_id=user_id).exists():
                     seeker_resume = RESUME.objects.get(user_id=user_id)
-                return render(request, 'jobPortalApp/pages/profile/seeker/with-info.html', {'user_details': user_details, 'seeker_details': seeker_details, 'seeker_skills': seeker_skills, 'user_type': job_type, 'seeker_resume': seeker_resume})
+                return render(request, 'jobPortalApp/pages/profile/seeker/with-info.html', {'user_details': user_details, 'seeker_details': seeker_details, 'seeker_skills': seeker_skills, 'user_type': job_type, 'seeker_resume': seeker_resume,'all_user':all_user})
         elif user_type == 'provider':
             if COMPANY.objects.filter(user_id=user_id).exists():
                 company_details = COMPANY.objects.get(user_id=user_id)
@@ -561,33 +567,7 @@ def seekerEdit(request):
         return render(request, 'jobPortalApp/pages/profile/seeker/add-edit-info.html', {'skills': skills, 'seeker_details': seeker_details, 'form': form, 'seeker_skills': seeker_skills, 'seeker_resume': seeker_resume, 'user_type': job_type})
 
 
-def seekerEditProcess(request):
-    if 'user_id' not in request.session:
-        return redirect('login')
-    else:
-        user_id = request.session['user_id']
-        if request.method == "POST":
-            selected_skills = request.POST.getlist('skill')
-            fullname = request.POST['fullname']
-            about = request.POST['about']
-            experience = request.POST['experience']
-            resume = request.FILES.get('resume', False)
-            if len(selected_skills) > 0:
-                remove_skills = SEEKERSKILL.objects.filter(user_id=user_id)
-                remove_skills.delete()
-                for i in selected_skills:
-                    SEEKERSKILL.objects.create(skill_id=i, user_id=user_id)
 
-            SEEKER.objects.filter(user_id=user_id).update(fullname=fullname)
-            SEEKER.objects.filter(user_id=user_id).update(about=about)
-            SEEKER.objects.filter(user_id=user_id).update(
-                experience=experience)
-            if resume != False:
-                refresh = RESUME.objects.filter(user_id=user_id)
-                refresh.delete()
-                object = RESUME.objects.create(user_id=user_id, resume=resume)
-                object.save()
-            return redirect('profile')
 
 
 def providerEdit(request):
@@ -606,6 +586,26 @@ def providerAddJob(request):
         user_id = request.session['user_id']
         skills = SKILL.objects.all()
         return render(request, 'jobPortalApp/pages/profile/provider/add-job.html', {'skills': skills})
+
+
+def providerEditJob(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    else:
+        user_id = request.session['user_id']
+        job_type = request.session['job_type']
+        provider_details = COMPANY.objects.get(user_id=user_id)
+        if request.method == "POST":
+            job_id = request.POST['job-id']
+            job = JOB.objects.get(id=job_id)
+            job_skillnames_per_jobs = []
+            job_skills_per_jobs = JOBSKILL.objects.filter(job_id=job_id)
+            for job_skills_per_job in job_skills_per_jobs:
+                skills = SKILL.objects.get(id=job_skills_per_job.skill_id)
+                job_skillnames_per_jobs.append(skills.skillname)
+            skills = SKILL.objects.all()
+        return render(request, 'jobPortalApp/pages/profile/provider/edit-job.html', {'skills': skills, 'provider_details': provider_details, 'job_skills': job_skillnames_per_jobs, 'user_type': job_type, 'job': job})
+
 
 
 def jobSearch(request):
@@ -656,6 +656,38 @@ def indexViewPost(request):
             provider_info = COMPANY.objects.get(user_id=user_id)
             return render(request, 'JobPortalApp/pages/view-posted-job-as-provider.html', {'job': job, 'job_skills': job_skillnames_per_jobs})
 
+def providerViewApplicantResume(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    else:
+        if request.method == "POST":
+            job_type = request.session['job_type']
+            user_id = request.session['user_id']
+            applicant_id = request.POST['applicant-id']
+            seeker_details = COMPANY.objects.get(user_id=user_id)
+            seeker = RESUME.objects.get(user_id=applicant_id)
+            return render(request, 'jobPortalApp/pages/profile/provider/view-resume.html', {'seeker': seeker, 'user_type': job_type, 'seeker_details': seeker_details})
+
+def providerViewApplicant(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    else:
+        seeker =  ""
+        skillnames = []
+        resume = ""
+        if request.method == "POST":
+            user_id = request.POST['applicant-id']
+            if SEEKER.objects.filter(user_id=user_id).exists():
+                seeker = SEEKER.objects.get(user_id=user_id)
+            if SEEKERSKILL.objects.filter(user_id=user_id).exists():
+                seeker_skills = SEEKERSKILL.objects.filter(user_id=user_id)
+                for seeker_skill in seeker_skills:
+                    skill = SKILL.objects.get(id=seeker_skill.skill_id)
+                    skillnames.append(skill.skillname)
+            if RESUME.objects.filter(user_id=user_id).exists():
+                resume = RESUME.objects.get(user_id=user_id)
+            
+        return render(request, 'JobPortalApp/pages/profile/provider/show-applicant.html', {'seeker': seeker, 'skillnames': skillnames,'resume':resume})
 
 def providerViewPost(request):
     if 'user_id' not in request.session:
@@ -666,50 +698,49 @@ def providerViewPost(request):
             job = JOB.objects.get(id=job_id)
             job_skillnames_per_jobs = []
             job_skills_per_jobs = JOBSKILL.objects.filter(job_id=job_id)
+            applicants = []
+            applicants_date = {}
+            if APPLICATION.objects.filter(job_id=job_id).exists():
+                applicant_ids = APPLICATION.objects.filter(job_id=job_id)
+                for applicant_id in applicant_ids:
+                    applicants.append(SEEKER.objects.filter(user_id=applicant_id.user_id))
+                    applicants_date[applicant_id.user_id] = applicant_ids
             for job_skills_per_job in job_skills_per_jobs:
                 skills = SKILL.objects.get(id=job_skills_per_job.skill_id)
                 job_skillnames_per_jobs.append(skills.skillname)
 
-        return render(request, 'JobPortalApp/pages/profile/provider/show-job-post.html', {'job': job, 'job_skills': job_skillnames_per_jobs})
+        return render(request, 'JobPortalApp/pages/profile/provider/show-job-post.html', {'job': job, 'job_skills': job_skillnames_per_jobs,'applicants':applicants,'applicants_date':applicants_date})
 
 
-def providerEditJob(request):
+def seekerEditProcess(request):
     if 'user_id' not in request.session:
         return redirect('login')
     else:
         user_id = request.session['user_id']
-        job_type = request.session['job_type']
-        provider_details = COMPANY.objects.get(user_id=user_id)
         if request.method == "POST":
-            job_id = request.POST['job-id']
-            job = JOB.objects.get(id=job_id)
-            job_skillnames_per_jobs = []
-            job_skills_per_jobs = JOBSKILL.objects.filter(job_id=job_id)
-            for job_skills_per_job in job_skills_per_jobs:
-                skills = SKILL.objects.get(id=job_skills_per_job.skill_id)
-                job_skillnames_per_jobs.append(skills.skillname)
-            skills = SKILL.objects.all()
-        return render(request, 'jobPortalApp/pages/profile/provider/edit-job.html', {'skills': skills, 'provider_details': provider_details, 'job_skills': job_skillnames_per_jobs, 'user_type': job_type, 'job': job})
+            selected_skills = request.POST.getlist('skill')
+            fullname = request.POST['fullname']
+            about = request.POST['about']
+            experience = request.POST['experience']
+            resume = request.FILES.get('resume', False)
+            if len(selected_skills) > 0:
+                remove_skills = SEEKERSKILL.objects.filter(user_id=user_id)
+                remove_skills.delete()
+                for i in selected_skills:
+                    SEEKERSKILL.objects.create(skill_id=i, user_id=user_id)
 
+            SEEKER.objects.filter(user_id=user_id).update(fullname=fullname)
+            SEEKER.objects.filter(user_id=user_id).update(about=about)
+            SEEKER.objects.filter(user_id=user_id).update(
+                experience=experience)
+            if resume != False:
+                refresh = RESUME.objects.filter(user_id=user_id)
+                refresh.delete()
+                object = RESUME.objects.create(user_id=user_id, resume=resume)
+                object.save()
+            ACTIVITY.objects.create(name="EDIT",description="Edited Seeker Information",user_id=user_id)
+            return redirect('profile')
 
-def providerEditJobProcess(request):
-    if 'user_id' not in request.session:
-        return redirect('login')
-    else:
-        user_id = request.session['user_id']
-        provider_details = COMPANY.objects.get(user_id=user_id)
-        if request.method == "POST":
-            job_id = request.POST['job-id']
-            job_type = request.session['job_type']
-            job = JOB.objects.get(id=job_id)
-            job_skills = []
-            if JOBSKILL.objects.filter(job_id=job_id).exists():
-                job_skills_ids = JOBSKILL.objects.filter(job_id=job_id)
-                for job_skills_id in job_skills_ids:
-                    skill_name = SKILL.objects.get(id=job_skills_id.skill_id)
-                    job_skills.append(skill_name)
-            skills = SEEKER.objects.all()
-            return render(request, 'jobPortalApp/pages/profile/provider/edit-job.html', {'skills': skills, 'provider_details': provider_details, 'job_skills': job_skills, 'user_type': job_type, 'job': job})
 
 
 def providerAddJobProcess(request):
@@ -726,6 +757,8 @@ def providerAddJobProcess(request):
 
             JOB.objects.create(name=job_name, description=job_description,
                                salary=salary, type=job_types, company_id=user_id)
+            
+            ACTIVITY.objects.create(name="POST",description="Posted New Job",user_id=user_id)
             job_id = (JOB.objects.last()).id
             if len(selected_skills) > 0:
                 remove_skills = JOBSKILL.objects.filter(job_id=job_id)
@@ -747,8 +780,35 @@ def providerAddJobProcess(request):
                 send_mail("Posted Job Met your Skills", "A job with required "+keys +
                           " skills has been posted in the job portal.", "creattjobportal@gmail.com", values, fail_silently=False)
 
-            return redirect('profile',)
+            return redirect('profile')
 
+
+def providerEditJobProcess(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    else:
+        user_id = request.session['user_id']
+        provider_details = COMPANY.objects.get(user_id=user_id)
+        if request.method == "POST":
+            selected_skills = request.POST.getlist('skill')
+            job_name = request.POST['job-name']
+            job_description = request.POST['job-description']
+            job_types = request.POST['job-type']
+            salary = request.POST['job-salary']
+            job_id = request.POST['job-id']
+
+            if len(selected_skills) > 0:
+                job_skills = JOBSKILL.objects.filter(job_id=job_id)
+                job_skills.delete()
+            for selected_skill in selected_skills:
+                JOBSKILL.objects.create(skill_id=selected_skill, job_id=job_id)
+            JOB.objects.filter(id=job_id).update(name=job_name)
+            JOB.objects.filter(id=job_id).update(description=job_description)
+            JOB.objects.filter(id=job_id).update(type=job_types)
+            JOB.objects.filter(id=job_id).update(salary=salary)
+            
+            ACTIVITY.objects.create(name="EDIT",description="Edited Job Detail/s",user_id=user_id)
+            return redirect('profile')
 
 def providerEditProcess(request):
     if 'user_id' not in request.session:
@@ -767,6 +827,7 @@ def providerEditProcess(request):
                 COMPANY.objects.filter(user_id=user_id).update(city=city)
             if country != False:
                 COMPANY.objects.filter(user_id=user_id).update(country=country)
+            ACTIVITY.objects.create(name="EDIT",description="Edited Company Information",user_id=user_id)
             return redirect('profile')
 
 
@@ -857,6 +918,57 @@ def fileupload(request):
         object.save()
     return redirect('profile')
 
+def seekerChangeProfle(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    else:
+        user_id = request.session['user_id']
+        form = resumeForm()
+        if request.method == 'POST':
+            profile = request.FILES['resume']
+            refresh = PROFILE.objects.filter(user_id=user_id)
+            refresh.delete()
+            object = PROFILE.objects.create(user_id=user_id, profile=profile)
+            object.save()
+            return redirect('profile')
+        return render(request,'jobPortalApp/pages/register.html')
+    
+
+def seekerChangePassword(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    else:
+        user_id = request.session['user_id']
+        if request.method == 'POST':
+            old_pass = request.POST['old_password']
+            new_pass = request.POST['new_password']
+            con_pass = request.POST['confirm_password']
+            message = ""
+            user = User.objects.get(id=user_id)
+            if user.check_password(old_pass) == False:
+                message = "Old password doesn't match in Database"
+            if old_pass == new_pass:
+                message = "New password is same with Old password"
+            if new_pass != con_pass:
+                message = "New password doesn't match Confirm password"
+            is_non_empty = bool(message)
+            if is_non_empty != False:
+                return render(request,'jobPortalApp/pages/profile/seeker/change-password.html',{'message':message})
+            else:
+                user.set_password(new_pass)
+                user.save()
+                return redirect('profile')
+        return render(request,'jobPortalApp/pages/profile/seeker/change-password.html')
+
+def providerChangePassword(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    else:
+        if request.method == 'POST':
+            old_pass = request.POST['old_password']
+            new_pass = request.POST['new_password']
+            con_pass = request.POST['confirm_password']
+            return redirect('profile')
 
 def filedisplay(request):
 

@@ -94,28 +94,40 @@
         </section>
         <section class="flex-grow flex flex-col gap-y-[43px] bg-white min-h-[400px] p-[36px]">
             <div class="flex-shrink-0 flex justify-between items-center">
-                <div class="text-[22px] font-semibold italic text-left">Posted Jobs</div>
-                <button class="btn-outline">Post Job</button>
+                <div class="text-[22px] font-semibold italic text-left">Applicants</div>
             </div>
             <div class="flex flex-col gap-y-[41px] px-[70px] py-[20px] max-h-[700px] overflow-auto">
-                <div
-                    class="flex justify-between items-center p-[23px] shadow-[0_0_20px_0_rgba(24,47,67,0.2)] rounded-[6px]">
-                    <div class="flex flex-col gap-x-[14px]">
-                        <div class="text-[22px] font-semibold italic">
-                            Timothy Ryeyn Perez
+                {% for applicant in applicants %}
+                    {% for appli in applicant %}
+                    <div class="flex justify-between items-center p-[23px] shadow-[0_0_20px_0_rgba(24,47,67,0.2)] rounded-[6px]">
+                        <div class="flex flex-col gap-x-[14px]">
+                            <div class="text-[22px] font-semibold italic">
+                                {{appli.fullname}}
+                            </div>
+                            <div class="flex items-center gap-x-[18px] text-xs font-light uppercase">
+                                <span>posted on</span>
+                                {% for keys, values in applicants_date.items %}
+                                {% if keys == appli.user_id %}
+                                {% for value in values %}
+                                <span>{{value.created_at}}</span>
+                                {% endfor %}
+                                {% endif %}
+                                {% endfor %}
+                            </div>
                         </div>
-                        <div class="flex items-center gap-x-[18px] text-xs font-light uppercase">
-                            <span>posted on</span>
-                            <span>mar 13 2020</span>
+                        <div>
+                            <form action="../../../profile/view-applicant" id="view-applicant" method="POST">
+                                {% csrf_token %}
+                                <input type="text" name="applicant-id" value="{{appli.user_id}}" style="display: none;">
+                            </form>
+                            
+                                
+                                <span><button type="submit" form="view-applicant" class="uppercase text-sm font-light">view profile</button><img src="{% static 'images/chevron-right.svg' %}" alt=""></span>
+                            
                         </div>
                     </div>
-                    <div>
-                        <a href="#" class="flex items-center gap-x-2">
-                            <span class="uppercase text-sm font-light">view profile</span>
-                            <span><img src="{% static 'images/chevron-right.svg' %}" alt=""></span>
-                        </a>
-                    </div>
-                </div>
+                    {% endfor %}
+                {% endfor %}
             </div>
         </section>
     </main>

@@ -41,67 +41,18 @@
                         <span class="uppercase text-sm font-light">Go Back</span>
                     </a>
                 </div>
-                <div class="text-[28px] font-semibold italic ml-[42px]">Setting Up Information</div>
+                <div class="text-[28px] font-semibold italic ml-[42px]">Change Profile Picture</div>
             </div>
             <form id="edit-form" action="../profile/seeker-edit-process" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="flex flex-col gap-y-[34px]">
-                    <div class="text-[22px] font-semibold italic">Pesonal Information</div>
-                    <div class="flex flex-col gap-y-[24px]">
-                        <div class="flex flex-col gap-y-[5px]">
-                            <span class="label">Fullname</span>
-                            {% if not seeker_details.fullname %}
-                            <input type="text" name="fullname" id="fullname" placeholder="Enter full name" class="input-1px w-[250px]">
-                            {% else %}
-                            <input type="text" name="fullname" id="fullname" value="{{seeker_details.fullname}}" class="input-1px w-[250px]">
-                            {% endif %}
-                        </div>
-                        <div class="flex flex-col gap-y-[5px]">
-                            <span class="label">About Me</span>
-                            {% if not seeker_details.about %}
-                            <textarea name="about" id="about" rows="8" placeholder="Enter informations to know you more"
-                                class="input-1px"></textarea>
-                            {% else %}
-                            <textarea name="about" id="about" rows="8"
-                                class="input-1px">{{seeker_details.about}}</textarea>
-                            {% endif %}
-                            
-                        </div>
-                    </div>
-                </div>
-                <div class="flex flex-col gap-y-[34px]">
                     <div class="text-[22px] font-semibold italic">Career Information</div>
-                        <div>
-                            <span class="label">Current Skills</span><br>
-                            {% if not seeker_skills %}
-                            <h5>None</h5>
-                            {% else %}
-                                {% for seeker_skill in seeker_skills %}
-                                <h5>{{seeker_skill}}</h5>
-                                {% endfor %}
-                            {% endif %}
-
-                            <br><span class="label">Skills</span><br>
-                            {% for skill in skills %}
-                                <input type="checkbox" value="{{skill.id}}" class="skill_check" id="{{skill.id}}" name="skill">
-                                <label for="{{skill.id}}">{{skill.skillname}}</label><br>
-                            {% endfor %}
-                        </div>
-                    <div class="flex flex-col gap-y-[5px]">
-                        <span class="label">Experience</span>
-                        
-                        {% if not seeker_details.experience %}
-                        <textarea name="experience" id="experience" rows="8" placeholder="Enter informations about your work experiences"
-                            class="input-1px"></textarea>
-                        {% else %}
-                        <textarea name="experience" id="experience" rows="8" 
-                            class="input-1px">{{seeker_details.experience}}</textarea>
-                        {% endif %}
-                    </div>
+                    
+                    <img src="{% static 'images/profile.svg' %}" alt="" class="w-[90px] h-[90px]">
                     <div class="flex flex-col gap-y-[5px]">
                         <span class="label">Resume</span>
-                        {{seeker_resume.resume}}
-                        {{form.resume}}
+                        
+                        {{form.profile}}
                     </div>
                 </div>
             </form>

@@ -71,3 +71,15 @@ class JOB(models.Model):
 class APPLICATION(models.Model):
     user_id = models.IntegerField(null=True)
     job_id = models.IntegerField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+
+
+class PROFILE(models.Model):
+    user_id = models.IntegerField(null=True)
+    profile = models.FileField(upload_to=settings.MEDIA_ROOT, null=True)
+
+class ACTIVITY(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField(null=True)
+    user_id = models.IntegerField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
