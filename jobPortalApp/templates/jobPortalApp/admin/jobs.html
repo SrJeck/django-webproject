@@ -404,8 +404,7 @@
                                     <td>{{activated_job.type}}</td>
                                     <td>{{activated_job.created_at}}</td>
                                     <td>
-                                        <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i
-                                                class="material-icons" data-toggle="tooltip"
+                                        <a href="{% url 'admin-edit-job'%}" class="edit"><i class="material-icons"
                                                 title="Edit">&#xE254;</i></a>
                                         <a href="#deleteEmployeeModal" class="delete" data-id="1" data-toggle="modal"><i
                                                 class="material-icons" data-toggle="tooltip"

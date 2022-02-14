@@ -37,7 +37,7 @@
         <section class="flex-grow flex flex-col gap-y-[55px] bg-white min-h-[400px] p-[36px]">
             <div class="flex-shrink-0 flex flex-col gap-y-[36px]">
                 <div class="flex justify-between items-start">
-                    <a href="../jobs" class="flex items-center gap-x-2">
+                    <a href="../manage_user" class="flex items-center gap-x-2">
                         <span><img src="assets/chevron-left.svg" alt=""></span>
                         <span class="uppercase text-sm font-light">Go Back</span>
                     </a>
@@ -47,12 +47,12 @@
             <form id="edit-form" action="../profile/seeker-edit-process" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="flex flex-col gap-y-[34px]">
-                    <div class="text-[22px] font-semibold italic">Job Information</div>
+                    <div class="text-[22px] font-semibold italic">User Information</div>
                     <div class="flex flex-col gap-y-[24px]">
                         <div class="flex flex-col gap-y-[5px]">
-                            <span class="label">Name</span>
-                            {% if not seeker_details.name %}
-                            <input type="text" name="fullname" id="fullname" placeholder="Enter Name"
+                            <span class="label">Username</span>
+                            {% if not seeker_details.username %}
+                            <input type="text" name="fullname" id="fullname" placeholder="Enter Username"
                                 class="input-1px w-[250px]">
                             {% else %}
                             <input type="text" name="fullname" id="fullname" value="{{seeker_details.fullname}}"
@@ -60,19 +60,29 @@
                             {% endif %}
                         </div>
                         <div class="flex flex-col gap-y-[5px]">
-                            <span class="label">Description</span>
-                            {% if not job.description %}
-                            <textarea name="job-description" id="job-description" rows="8"
-                                placeholder="Enter informations about the job provider" class="input-1px"></textarea>
+                            <span class="label">Email</span>
+                            {% if not seeker_details.email %}
+                            <input type="text" name="fullname" id="fullname" placeholder="Enter Email"
+                                class="input-1px w-[250px]">
                             {% else %}
-                            <textarea name="job-description" id="job-description" rows="8"
-                                class="input-1px">{{job.description}}</textarea>
+                            <input type="text" name="fullname" id="fullname" value="{{seeker_details.fullname}}"
+                                class="input-1px w-[250px]">
                             {% endif %}
                         </div>
                         <div class="flex flex-col gap-y-[5px]">
-                            <span class="label">Salary</span>
-                            {% if not seeker_details.salary %}
-                            <input type="text" name="fullname" id="fullname" placeholder="Enter Salary"
+                            <span class="label">Fullname</span>
+                            {% if not seeker_details.fullname %}
+                            <input type="text" name="fullname" id="fullname" placeholder="Enter Fullname"
+                                class="input-1px w-[250px]">
+                            {% else %}
+                            <input type="text" name="fullname" id="fullname" value="{{seeker_details.fullname}}"
+                                class="input-1px w-[250px]">
+                            {% endif %}
+                        </div>
+                        <div class="flex flex-col gap-y-[5px]">
+                            <span class="label">Job Experience</span>
+                            {% if not seeker_details.experience %}
+                            <input type="text" name="fullname" id="fullname" placeholder="Enter Job Experience"
                                 class="input-1px w-[250px]">
                             {% else %}
                             <input type="text" name="fullname" id="fullname" value="{{seeker_details.fullname}}"

@@ -409,8 +409,7 @@
                                     <td>{{activated_seeker.fullname}}</td>
                                     <td>{{activated_seeker.experience}}</td>
                                     <td>
-                                        <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i
-                                                class="material-icons" data-toggle="tooltip"
+                                        <a href="{% url 'admin-edit-user'%}" class="edit"><i class="material-icons"
                                                 title="Edit">&#xE254;</i></a>
                                         <a href="#deleteEmployeeModal" class="delete"
                                             onclick="deactivateAccount('{{seeker.user_id}}')"><i class="material-icons"
