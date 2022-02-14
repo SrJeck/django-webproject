@@ -650,7 +650,7 @@ def loginProcess(request):
                     message = "Wrong Password"
                     return render(request, 'jobPortalApp/pages/login.html', {'message': message})
             elif User.objects.filter(email=usermail).exists():
-                user = User.objects.get(username=usermail)
+                user = User.objects.get(email=usermail)
                 user_id = user.id
                 if user.check_password(password):
                     if SEEKER.objects.filter(user_id=user_id).exists():
@@ -1139,10 +1139,10 @@ def register(request):
                 user = User.objects.get(username=username)
                 user_id = user.id
                 if type == 'Job Seeker':
-                    SEEKER.objects.create(user_id=user_id, username=username)
+                    SEEKER.objects.create(user_id=user_id, username=username,status="Activated")
                     return redirect('login')
                 elif type == 'Job Provider':
-                    COMPANY.objects.create(user_id=user_id, username=username)
+                    COMPANY.objects.create(user_id=user_id, username=username,status="Activated")
                     return redirect('login')
     else:
         form = UserRegisterForm()
