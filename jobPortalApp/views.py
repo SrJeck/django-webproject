@@ -334,7 +334,9 @@ def home(request):
                         for filtered_job in filtered_jobs:
                             company_jobs_ids.append(filtered_job.id)
             searcher = job_search
-
+            results = ""
+            if len(jobs) == 0:
+                results = "No Results"
         for company_jobs_id in company_jobs_ids:
             job_skillnames_per_jobs = []
             job_skills_per_jobs = JOBSKILL.objects.filter(
@@ -346,7 +348,7 @@ def home(request):
                 skills = SKILL.objects.get(id=job_skills_per_job.skill_id)
                 job_skillnames_per_jobs.append(skills.skillname)
             skillnames_per_jobs[company_jobs_id] = job_skillnames_per_jobs
-        return render(request, 'jobPortalApp/pages/index.html', {'jobs': jobs, 'skillnames_per_jobs': skillnames_per_jobs, 'searcher': searcher, 'seeker_name': seeker_name, 'provider_name': provider_name, 'user_type': job_title, 'job_search': job_search, 'job_type': job_type, 'job_city': job_city, 'job_country': job_country, 'applications_per_jobs': applications_per_jobs})
+        return render(request, 'jobPortalApp/pages/index.html', {'jobs': jobs, 'skillnames_per_jobs': skillnames_per_jobs, 'searcher': searcher, 'seeker_name': seeker_name, 'provider_name': provider_name, 'user_type': job_title, 'job_search': job_search, 'job_type': job_type, 'job_city': job_city, 'job_country': job_country, 'applications_per_jobs': applications_per_jobs,'results':results})
 
 
 # job seeker
