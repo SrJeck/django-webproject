@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Manage Company</title>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -412,11 +413,19 @@
                                     <td>{{activated_company.city}}</td>
                                     <td>{{activated_company.country}}</td>
                                     <td>
-                                        <a href="{% url 'admin-edit-company'%}" class="edit"><i class="material-icons"
-                                                title="Edit">&#xE254;</i></a>
-                                        <a href="#deleteEmployeeModal" class="delete" data-id="1" data-toggle="modal"><i
-                                                class="material-icons" data-toggle="tooltip"
-                                                title="Deactivate">&#xe5c9;</i></a>
+                                        <form action="../admin-edit-company/" method="POST" id="edit-user{{activated_company.user_id}}">
+                                            {% csrf_token %}
+                                        <input type="text" name="user-id" value="{{activated_company.user_id}}" style="display: none;">
+                                        </form>
+                                        <button type="submit" form="edit-user{{activated_company.user_id}}" class="edit"><i class="material-icons"
+                                                title="Edit">&#xE254;</i></button>
+                                        <form action="../company/deactivate_company" method="POST" id="deactivate-user{{activated_company.user_id}}">
+                                                {% csrf_token %}
+                                                <input type="text" name="user-id" value="{{activated_company.user_id}}" style="display: none;">
+                                        </form>
+                                        <a class="delete"
+                                            onclick="deactivateAccount('{{activated_company.user_id}}')"><i class="material-icons"
+                                                data-toggle="tooltip" title="Deactivate">&#xe5c9;</i></a>
 
                                     </td>
                                 </tr>
@@ -563,8 +572,13 @@
                                     <td>{{deactivated_company.country}}</td>
                                     <td>
 
-                                        <button type="submit"><i class="material-icons" data-toggle="tooltip"
-                                                title="Activate">&#xe147;</i></button>
+                                        
+                                        <form action="../company/activate_company" method="POST" id="activate-user{{deactivated_company.user_id}}">
+                                            {% csrf_token %}
+                                            <input type="text" name="user-id" value="{{deactivated_company.user_id}}" style="display: none;">
+                                        </form>
+                                        <a onclick="activateAccount('{{deactivated_company.user_id}}')"><i class="material-icons" data-toggle="tooltip"
+                                                title="Activate">&#xe147;</i></a>
 
 
                                     </td>
@@ -674,6 +688,58 @@
     </section>
 
     <script>
+
+function deactivateAccount(params) {
+            swal({
+            title: "Deactivate",
+            text: "Are you sure you want to deactivate this account?",
+            icon: "info",
+                buttons: {
+                yes: {
+                    text: "Yes",
+                    value: "yes"
+                },
+                no: {
+                    text: "No",
+                    value: "no",
+                }
+                }
+        }).then((value) => {
+                if (value === "yes") {
+                // Add Your Custom Code for CRUD
+                document.getElementById('deactivate-user'+params).submit();
+
+                }
+        });
+            //alert(params)
+        }
+
+        function activateAccount(params) {
+            swal({
+            title: "Activate",
+            text: "Are you sure you want to activate this account?",
+            icon: "info",
+                buttons: {
+                yes: {
+                    text: "Yes",
+                    value: "yes"
+                },
+                no: {
+                    text: "No",
+                    value: "no",
+                }
+                }
+        }).then((value) => {
+                if (value === "yes") {
+                // Add Your Custom Code for CRUD
+                document.getElementById('activate-user'+params).submit();
+
+                }
+        });
+            //alert(params)
+        }
+
+
         let sidebar = document.querySelector(".sidebar");
         let sidebarBtn = document.querySelector(".sidebarBtn");
         sidebarBtn.onclick = function () {

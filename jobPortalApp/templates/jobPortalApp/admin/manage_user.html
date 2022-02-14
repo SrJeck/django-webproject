@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Manage JobSeeker</title>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -408,38 +409,25 @@
                                     {% endfor %}
                                     <td>{{activated_seeker.fullname}}</td>
                                     <td>{{activated_seeker.experience}}</td>
-                                    <td>
-                                        <a href="{% url 'admin-edit-user'%}" class="edit"><i class="material-icons"
-                                                title="Edit">&#xE254;</i></a>
-                                        <a href="#deleteEmployeeModal" class="delete"
-                                            onclick="deactivateAccount('{{seeker.user_id}}')"><i class="material-icons"
+                                    <td>   
+                                        <form action="../admin-edit-user/" method="POST" id="edit-user{{activated_seeker.user_id}}">
+                                            {% csrf_token %}
+                                        <input type="text" name="user-id" value="{{activated_seeker.user_id}}" style="display: none;">
+                                        </form>
+                                        <button type="submit" form="edit-user{{activated_seeker.user_id}}" class="edit"><i class="material-icons"
+                                                title="Edit">&#xE254;</i></button>
+                                        <form action="../manage_user/deactivate_user" method="POST" id="deactivate-user{{activated_seeker.user_id}}">
+                                            {% csrf_token %}
+                                            <input type="text" name="user-id" value="{{activated_seeker.user_id}}" style="display: none;">
+                                        </form>
+                                        <a class="delete"
+                                            onclick="deactivateAccount('{{activated_seeker.user_id}}')"><i class="material-icons"
                                                 data-toggle="tooltip" title="Deactivate">&#xe5c9;</i></a>
 
                                     </td>
                                 </tr>
                             </tbody>
-                            <div id="deleteEmployeeModal{{activated_seeker.user_id}}" style="display: none;">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <form>
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">Deactivate Seeker</h4>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                    aria-hidden="true">&times;</button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p>Are you sure you want to delete these Records?</p>
-                                                <p class="text-warning"><small>This action cannot be undone.</small></p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <input type="button" class="btn btn-default" data-dismiss="modal"
-                                                    value="Cancel">
-                                                <input type="submit" class="btn btn-danger" value="Deactivate">
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+                            
                             {% endfor %}
                         </table>
                     </div>
@@ -557,8 +545,13 @@
                                     <td>{{deactivated_seeker.experience}}</td>
                                     <td>
 
-                                        <button type="submit"><i class="material-icons" data-toggle="tooltip"
-                                                title="Activate">&#xe147;</i></button>
+                                        
+                                        <form action="../manage_user/activate_user" method="POST" id="activate-user{{deactivated_seeker.user_id}}">
+                                            {% csrf_token %}
+                                            <input type="text" name="user-id" value="{{deactivated_seeker.user_id}}" style="display: none;">
+                                        </form>
+                                        <a onclick="activateAccount('{{deactivated_seeker.user_id}}')"><i class="material-icons" data-toggle="tooltip"
+                                                title="Activate">&#xe147;</i></a>
 
 
                                     </td>
@@ -669,8 +662,53 @@
 
     <script>
 
-        function deactivateAccount(params) {
-            document.getElementById('deleteEmployeeModal' + params).style.display = "Block"
+    function deactivateAccount(params) {
+            swal({
+            title: "Deactivate",
+            text: "Are you sure you want to deactivate this account?",
+            icon: "info",
+                buttons: {
+                yes: {
+                    text: "Yes",
+                    value: "yes"
+                },
+                no: {
+                    text: "No",
+                    value: "no",
+                }
+                }
+        }).then((value) => {
+                if (value === "yes") {
+                // Add Your Custom Code for CRUD
+                document.getElementById('deactivate-user'+params).submit();
+
+                }
+        });
+            //alert(params)
+        }
+
+        function activateAccount(params) {
+            swal({
+            title: "Activate",
+            text: "Are you sure you want to activate this account?",
+            icon: "info",
+                buttons: {
+                yes: {
+                    text: "Yes",
+                    value: "yes"
+                },
+                no: {
+                    text: "No",
+                    value: "no",
+                }
+                }
+        }).then((value) => {
+                if (value === "yes") {
+                // Add Your Custom Code for CRUD
+                document.getElementById('activate-user'+params).submit();
+
+                }
+        });
             //alert(params)
         }
         let sidebar = document.querySelector(".sidebar");

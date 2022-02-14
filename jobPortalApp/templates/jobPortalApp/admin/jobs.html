@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Manage JobSeeker</title>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -404,11 +405,19 @@
                                     <td>{{activated_job.type}}</td>
                                     <td>{{activated_job.created_at}}</td>
                                     <td>
-                                        <a href="{% url 'admin-edit-job'%}" class="edit"><i class="material-icons"
-                                                title="Edit">&#xE254;</i></a>
-                                        <a href="#deleteEmployeeModal" class="delete" data-id="1" data-toggle="modal"><i
-                                                class="material-icons" data-toggle="tooltip"
-                                                title="Deactivate">&#xe5c9;</i></a>
+                                        <form action="../admin-edit-job/" method="POST" id="edit-job{{activated_job.id}}">
+                                            {% csrf_token %}
+                                        <input type="text" name="job-id" value="{{activated_job.id}}" style="display: none;">
+                                        </form>
+                                        <button type="submit" form="edit-job{{activated_job.user_id}}" class="edit"><i class="material-icons"
+                                                title="Edit">&#xE254;</i></button>
+                                        <form action="../jobs/deactivate_job" method="POST" id="deactivate-job{{activated_job.id}}">
+                                            {% csrf_token %}
+                                            <input type="text" name="job-id" value="{{activated_job.id}}" style="display: none;">
+                                        </form>
+                                        <a class="delete"
+                                            onclick="deactivateAccount('{{activated_job.id}}')"><i class="material-icons"
+                                                data-toggle="tooltip" title="Deactivate">&#xe5c9;</i></a>>
 
                                     </td>
                                 </tr>
@@ -547,8 +556,13 @@
                                     <td>{{deactivated_job.created_at}}</td>
                                     <td>
 
-                                        <button type="submit"><i class="material-icons" data-toggle="tooltip"
-                                                title="Activate">&#xe147;</i></button>
+                                        
+                                        <form action="../jobs/activate_job" method="POST" id="activate-job{{deactivated_job.id}}">
+                                            {% csrf_token %}
+                                            <input type="text" name="job-id" value="{{deactivated_job.id}}" style="display: none;">
+                                        </form>
+                                        <a onclick="activateAccount('{{deactivated_job.id}}')"><i class="material-icons" data-toggle="tooltip"
+                                                title="Activate">&#xe147;</i></a>
 
 
                                     </td>
@@ -658,6 +672,55 @@
     </section>
 
     <script>
+        function deactivateAccount(params) {
+            swal({
+            title: "Deactivate",
+            text: "Are you sure you want to deactivate this account?",
+            icon: "info",
+                buttons: {
+                yes: {
+                    text: "Yes",
+                    value: "yes"
+                },
+                no: {
+                    text: "No",
+                    value: "no",
+                }
+                }
+        }).then((value) => {
+                if (value === "yes") {
+                // Add Your Custom Code for CRUD
+                document.getElementById('deactivate-job'+params).submit();
+
+                }
+        });
+            //alert(params)
+        }
+
+        function activateAccount(params) {
+            swal({
+            title: "Activate",
+            text: "Are you sure you want to activate this account?",
+            icon: "info",
+                buttons: {
+                yes: {
+                    text: "Yes",
+                    value: "yes"
+                },
+                no: {
+                    text: "No",
+                    value: "no",
+                }
+                }
+        }).then((value) => {
+                if (value === "yes") {
+                // Add Your Custom Code for CRUD
+                document.getElementById('activate-job'+params).submit();
+
+                }
+        });
+            //alert(params)
+        }
         let sidebar = document.querySelector(".sidebar");
         let sidebarBtn = document.querySelector(".sidebarBtn");
         sidebarBtn.onclick = function () {
