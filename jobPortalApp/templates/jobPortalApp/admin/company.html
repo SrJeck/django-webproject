@@ -417,7 +417,7 @@
                                             {% csrf_token %}
                                         <input type="text" name="user-id" value="{{activated_company.user_id}}" style="display: none;">
                                         </form>
-                                        <button type="submit" form="edit-user{{activated_company.user_id}}" class="edit"><i class="material-icons"
+                                        <button title="Edit" style="border: transparent;" type="submit" form="edit-user{{activated_company.user_id}}" class="edit"><i class="material-icons"
                                                 title="Edit">&#xE254;</i></button>
                                         <form action="../company/deactivate_company" method="POST" id="deactivate-user{{activated_company.user_id}}">
                                                 {% csrf_token %}

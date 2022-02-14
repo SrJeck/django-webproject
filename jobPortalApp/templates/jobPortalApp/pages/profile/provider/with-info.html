@@ -33,11 +33,6 @@
     </div>
 </nav>
     <main class="flex flex-col gap-y-[44px] flex-grow px-[200px] py-[60px]">
-        <div id="logout-div" style="display: none;">
-            <h3>Are you sure about that?</h3>
-            <a href="../logout"><button class="btn-outline">Yes</button></a>
-            <button class="btn-outline" id="close-logout">No</button>
-        </div>
         <section class="flex-shrink-0 flex items-center justify-between bg-white p-[36px]">
             <div class="flex items-center gap-x-[48px]">
                 {% if not profile %}
@@ -214,6 +209,7 @@ settings_choice = document.getElementById('settings');
           }
         });
     };
+    logout_open = document.getElementById('logout-btn');
     logout_open.onclick = function() {
         swal({
             title: "Logout",

@@ -388,63 +388,25 @@
                         <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th>Username</th>
-                                    <th>Email</th>
                                     <th>Name</th>
                                     <th>Description</th>
-                                    <th>City</th>
-                                    <th>Country</th>
-                                    <th>Actions</th>
+                                    <th>Date</th>
+                                    <th>User</th>
                                 </tr>
                             </thead>
-                            {% for activated_company in activated_companys%}
+                            {% for activity in activitys%}
                             <tbody>
                                 <tr>
-                                    {% for keys,values in activated_company_list.items %}
-                                    {% if keys == activated_company.user_id %}
-                                    {% for value in values %}
-                                    <td>{{value.username}}</td>
-                                    <td>{{value.email}}</td>
-                                    {% endfor %}
+                                    <td>{{activity.name}}</td>
+                                    <td>{{activity.description}}</td>
+                                    <td>{{activity.created_at}}</td>
+                                    {% for keys, values in user_per_acts.items %}
+                                    {% if keys == activity.user_id %}
+                                    <td>{{values}}</td>
                                     {% endif %}
                                     {% endfor %}
-                                    <td>{{activated_company.name}}</td>
-                                    <td>{{activated_company.description}}</td>
-                                    <td>{{activated_company.city}}</td>
-                                    <td>{{activated_company.country}}</td>
-                                    <td>
-                                        <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i
-                                                class="material-icons" data-toggle="tooltip"
-                                                title="Edit">&#xE254;</i></a>
-                                        <a href="#deleteEmployeeModal" class="delete" data-id="1" data-toggle="modal"><i
-                                                class="material-icons" data-toggle="tooltip"
-                                                title="Deactivate">&#xe5c9;</i></a>
-
-                                    </td>
                                 </tr>
                             </tbody>
-                            <div id="deleteEmployeeModal{{activated_company.user_id}}" class="modal fade">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <form>
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">Deactivate Seeker</h4>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                    aria-hidden="true">&times;</button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p>Are you sure you want to delete these Records?</p>
-                                                <p class="text-warning"><small>This action cannot be undone.</small></p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <input type="button" class="btn btn-default" data-dismiss="modal"
-                                                    value="Cancel">
-                                                <input type="submit" class="btn btn-danger" value="Deactivate">
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
                             {% endfor %}
                         </table>
                     </div>

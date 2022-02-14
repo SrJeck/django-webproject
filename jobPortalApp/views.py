@@ -13,11 +13,11 @@ from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.core.mail import send_mail
 from django.http import FileResponse
 import io
-from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch
-from reportlab.lib.pagesizes import letter
-from .models import Event, Venue
-from .forms import VenueForm, EventForm
+# from reportlab.pdfgen import canvas
+# from reportlab.lib.units import inch
+# from reportlab.lib.pagesizes import letter
+# from .models import Event, Venue
+# from .forms import VenueForm, EventForm
 
 # Create your views here.
 def index(request):
@@ -69,7 +69,7 @@ def home(request):
             if COMPANY.objects.filter(city=job_city, country=job_country).exists():
                 company_ids = COMPANY.objects.filter(
                     city=job_city, country=job_country)
-            if JOB.objects.filter(name__contains=job_search).exists():
+            if JOB.objects.filter(name__contains=job_search,status="Activated").exists():
                 for company_id in company_ids:
                     filtered_jobs = JOB.objects.filter(
                         name__contains=job_search, company_id=company_id.user_id, type=job_type)
@@ -84,9 +84,9 @@ def home(request):
                     for job_id in job_ids:
                         for company_id in company_ids:
                             jobs.append(JOB.objects.filter(
-                                id=job_id.job_id, company_id=company_id.user_id, type=job_type))
+                                id=job_id.job_id, company_id=company_id.user_id, type=job_type,status="Activated"))
                             filtered_jobs = JOB.objects.filter(
-                                id=job_id.job_id, company_id=company_id.user_id, type=job_type)
+                                id=job_id.job_id, company_id=company_id.user_id, type=job_type,status="Activated")
                             for filtered_job in filtered_jobs:
                                 company_jobs_ids.append(filtered_job.id)
             searcher = job_search + " " + job_type + \
@@ -99,9 +99,9 @@ def home(request):
             if JOB.objects.filter(name__contains=job_search, type=job_type).exists():
                 for company_id in company_ids:
                     filtered_jobs = JOB.objects.filter(
-                        name__contains=job_search, type=job_type, company_id=company_id.user_id)
+                        name__contains=job_search, type=job_type, company_id=company_id.user_id,status="Activated")
                     jobs.append(JOB.objects.filter(
-                        name__contains=job_search, type=job_type, company_id=company_id.user_id))
+                        name__contains=job_search, type=job_type, company_id=company_id.user_id,status="Activated"))
                     for filtered_job in filtered_jobs:
                         company_jobs_ids.append(filtered_job.id)
             else:
@@ -111,9 +111,9 @@ def home(request):
                     for job_id in job_ids:
                         for company_id in company_ids:
                             jobs.append(JOB.objects.filter(
-                                id=job_id.job_id, type=job_type, company_id=company_id.user_id))
+                                id=job_id.job_id, type=job_type, company_id=company_id.user_id,status="Activated"))
                             filtered_jobs = JOB.objects.filter(
-                                id=job_id.job_id, type=job_type, company_id=company_id.user_id)
+                                id=job_id.job_id, type=job_type, company_id=company_id.user_id,status="Activated")
                             for filtered_job in filtered_jobs:
                                 company_jobs_ids.append(filtered_job.id)
             searcher = job_search + " " + job_type + " in " + job_city
@@ -126,9 +126,9 @@ def home(request):
             if JOB.objects.filter(name__contains=job_search).exists():
                 for company_id in company_ids:
                     filtered_jobs = JOB.objects.filter(
-                        name__contains=job_search, company_id=company_id.user_id)
+                        name__contains=job_search, company_id=company_id.user_id,status="Activated")
                     jobs.append(JOB.objects.filter(
-                        name__contains=job_search, company_id=company_id.user_id))
+                        name__contains=job_search, company_id=company_id.user_id,status="Activated"))
                     for filtered_job in filtered_jobs:
                         company_jobs_ids.append(filtered_job.id)
             else:
@@ -138,9 +138,9 @@ def home(request):
                     for job_id in job_ids:
                         for company_id in company_ids:
                             jobs.append(JOB.objects.filter(
-                                id=job_id.job_id, company_id=company_id.user_id))
+                                id=job_id.job_id, company_id=company_id.user_id,status="Activated"))
                             filtered_jobs = JOB.objects.filter(
-                                id=job_id.job_id, company_id=company_id.user_id)
+                                id=job_id.job_id, company_id=company_id.user_id,status="Activated")
                             for filtered_job in filtered_jobs:
                                 company_jobs_ids.append(filtered_job.id)
             searcher = job_search + " in " + job_country + " - " + job_city
@@ -152,9 +152,9 @@ def home(request):
             if JOB.objects.filter(name__contains=job_search, type=job_type).exists():
                 for company_id in company_ids:
                     filtered_jobs = JOB.objects.filter(
-                        name__contains=job_search, type=job_type, company_id=company_id.user_id)
+                        name__contains=job_search, type=job_type, company_id=company_id.user_id,status="Activated")
                     jobs.append(JOB.objects.filter(
-                        name__contains=job_search, type=job_type, company_id=company_id.user_id))
+                        name__contains=job_search, type=job_type, company_id=company_id.user_id,status="Activated"))
                     for filtered_job in filtered_jobs:
                         company_jobs_ids.append(filtered_job.id)
             else:
@@ -164,9 +164,9 @@ def home(request):
                     for job_id in job_ids:
                         for company_id in company_ids:
                             jobs.append(JOB.objects.filter(
-                                id=job_id.job_id, type=job_type, company_id=company_id.user_id))
+                                id=job_id.job_id, type=job_type, company_id=company_id.user_id,status="Activated"))
                             filtered_jobs = JOB.objects.filter(
-                                id=job_id.job_id, type=job_type, company_id=company_id.user_id)
+                                id=job_id.job_id, type=job_type, company_id=company_id.user_id,status="Activated")
                             for filtered_job in filtered_jobs:
                                 company_jobs_ids.append(filtered_job.id)
             searcher = job_search + " " + job_type + " in " + job_country
@@ -178,9 +178,9 @@ def home(request):
                     city=job_city, country=job_country)
                 for company_id in company_ids:
                     jobs.append(JOB.objects.filter(
-                        type=job_type, company_id=company_id.user_id))
+                        type=job_type, company_id=company_id.user_id,status="Activated"))
                     filtered_jobs = JOB.objects.filter(
-                        type=job_type, company_id=company_id.user_id)
+                        type=job_type, company_id=company_id.user_id,status="Activated")
                     for filtered_job in filtered_jobs:
                         company_jobs_ids.append(filtered_job.id)
             searcher = job_type + " in " + job_country + " - " + job_city
@@ -192,9 +192,9 @@ def home(request):
             if JOB.objects.filter(name__contains=job_search).exists():
                 for company_id in company_ids:
                     filtered_jobs = JOB.objects.filter(
-                        name__contains=job_search, company_id=company_id.user_id)
+                        name__contains=job_search, company_id=company_id.user_id,status="Activated")
                     jobs.append(JOB.objects.filter(
-                        name__contains=job_search, company_id=company_id.user_id))
+                        name__contains=job_search, company_id=company_id.user_id,status="Activated"))
                     for filtered_job in filtered_jobs:
                         company_jobs_ids.append(filtered_job.id)
             else:
@@ -204,9 +204,9 @@ def home(request):
                     for job_id in job_ids:
                         for company_id in company_ids:
                             jobs.append(JOB.objects.filter(
-                                id=job_id.job_id, company_id=company_id.user_id))
+                                id=job_id.job_id, company_id=company_id.user_id,status="Activated"))
                             filtered_jobs = JOB.objects.filter(
-                                id=job_id.job_id, company_id=company_id.user_id)
+                                id=job_id.job_id, company_id=company_id.user_id,status="Activated")
                             for filtered_job in filtered_jobs:
                                 company_jobs_ids.append(filtered_job.id)
             searcher = job_search + " in " + job_country
@@ -218,9 +218,9 @@ def home(request):
             if JOB.objects.filter(name__contains=job_search).exists():
                 for company_id in company_ids:
                     filtered_jobs = JOB.objects.filter(
-                        name__contains=job_search, company_id=company_id.user_id)
+                        name__contains=job_search, company_id=company_id.user_id,status="Activated")
                     jobs.append(JOB.objects.filter(
-                        name__contains=job_search, company_id=company_id.user_id))
+                        name__contains=job_search, company_id=company_id.user_id,status="Activated"))
                     for filtered_job in filtered_jobs:
                         company_jobs_ids.append(filtered_job.id)
             else:
@@ -230,9 +230,9 @@ def home(request):
                     for job_id in job_ids:
                         for company_id in company_ids:
                             jobs.append(JOB.objects.filter(
-                                id=job_id.job_id, company_id=company_id.user_id))
+                                id=job_id.job_id, company_id=company_id.user_id,status="Activated"))
                             filtered_jobs = JOB.objects.filter(
-                                id=job_id.job_id, company_id=company_id.user_id)
+                                id=job_id.job_id, company_id=company_id.user_id,status="Activated")
                             for filtered_job in filtered_jobs:
                                 company_jobs_ids.append(filtered_job.id)
             searcher = job_search + " in " + job_city
@@ -240,9 +240,9 @@ def home(request):
         elif is_non_empty != False and job_type != False:
             if JOB.objects.filter(name__contains=job_search, type=job_type).exists():
                 jobs.append(JOB.objects.filter(
-                    name__contains=job_search, type=job_type))
+                    name__contains=job_search, type=job_type,status="Activated"))
                 filtered_jobs = JOB.objects.filter(
-                    name__contains=job_search, type=job_type)
+                    name__contains=job_search, type=job_type,status="Activated")
                 for filtered_job in filtered_jobs:
                     company_jobs_ids.append(filtered_job.id)
             else:
@@ -251,9 +251,9 @@ def home(request):
                     job_ids = JOBSKILL.objects.filter(skill_id=skillname.id)
                     for job_id in job_ids:
                         jobs.append(JOB.objects.filter(
-                            id=job_id.job_id, type=job_type))
+                            id=job_id.job_id, type=job_type,status="Activated"))
                         filtered_jobs = JOB.objects.filter(
-                            id=job_id.job_id, type=job_type)
+                            id=job_id.job_id, type=job_type,status="Activated")
                         for filtered_job in filtered_jobs:
                             company_jobs_ids.append(filtered_job.id)
             searcher = job_search + " " + job_type
@@ -265,9 +265,9 @@ def home(request):
                     city=job_city, country=job_country)
                 for company_id in company_ids:
                     jobs.append(JOB.objects.filter(
-                        company_id=company_id.user_id))
+                        company_id=company_id.user_id,status="Activated"))
                     filtered_jobs = JOB.objects.filter(
-                        company_id=company_id.user_id)
+                        company_id=company_id.user_id,status="Activated")
                     for filtered_job in filtered_jobs:
                         company_jobs_ids.append(filtered_job.id)
             searcher = "Jobs in " + job_country + " - " + job_city
@@ -278,9 +278,9 @@ def home(request):
                 company_ids = COMPANY.objects.filter(city=job_city)
                 for company_id in company_ids:
                     jobs.append(JOB.objects.filter(
-                        company_id=company_id.user_id, type=job_type))
+                        company_id=company_id.user_id, type=job_type,status="Activated"))
                     filtered_jobs = JOB.objects.filter(
-                        company_id=company_id.user_id, type=job_type)
+                        company_id=company_id.user_id, type=job_type,status="Activated")
                     for filtered_job in filtered_jobs:
                         company_jobs_ids.append(filtered_job.id)
             searcher = job_type+" in " + job_city
@@ -291,9 +291,9 @@ def home(request):
                 company_ids = COMPANY.objects.filter(country=job_country)
                 for company_id in company_ids:
                     jobs.append(JOB.objects.filter(
-                        company_id=company_id.user_id, type=job_type))
+                        company_id=company_id.user_id, type=job_type,status="Activated"))
                     filtered_jobs = JOB.objects.filter(
-                        company_id=company_id.user_id, type=job_type)
+                        company_id=company_id.user_id, type=job_type,status="Activated")
                     for filtered_job in filtered_jobs:
                         company_jobs_ids.append(filtered_job.id)
             searcher = job_type+" in " + job_country
@@ -304,9 +304,9 @@ def home(request):
                 company_ids = COMPANY.objects.filter(city=job_city)
                 for company_id in company_ids:
                     jobs.append(JOB.objects.filter(
-                        company_id=company_id.user_id))
+                        company_id=company_id.user_id,status="Activated"))
                     filtered_jobs = JOB.objects.filter(
-                        company_id=company_id.user_id)
+                        company_id=company_id.user_id,status="Activated")
                     for filtered_job in filtered_jobs:
                         company_jobs_ids.append(filtered_job.id)
             searcher = "Jobs in " + job_city
@@ -317,25 +317,25 @@ def home(request):
                 company_ids = COMPANY.objects.filter(country=job_country)
                 for company_id in company_ids:
                     jobs.append(JOB.objects.filter(
-                        company_id=company_id.user_id))
+                        company_id=company_id.user_id,status="Activated"))
                     filtered_jobs = JOB.objects.filter(
-                        company_id=company_id.user_id)
+                        company_id=company_id.user_id,status="Activated")
                     for filtered_job in filtered_jobs:
                         company_jobs_ids.append(filtered_job.id)
             searcher = "Jobs in " + job_country
         # type
         elif job_type != False:
             if JOB.objects.filter(type=job_type).exists():
-                jobs.append(JOB.objects.filter(type=job_type))
-                filtered_jobs = JOB.objects.filter(type=job_type)
+                jobs.append(JOB.objects.filter(type=job_type,status="Activated"))
+                filtered_jobs = JOB.objects.filter(type=job_type,status="Activated")
                 for filtered_job in filtered_jobs:
                     company_jobs_ids.append(filtered_job.id)
             searcher = job_type
         # search
         elif is_non_empty != False:
             if JOB.objects.filter(name__contains=job_search).exists():
-                jobs.append(JOB.objects.filter(name__contains=job_search))
-                filtered_jobs = JOB.objects.filter(name__contains=job_search)
+                jobs.append(JOB.objects.filter(name__contains=job_search,status="Activated"))
+                filtered_jobs = JOB.objects.filter(name__contains=job_search,status="Activated")
                 for filtered_job in filtered_jobs:
                     company_jobs_ids.append(filtered_job.id)
             else:
@@ -343,8 +343,8 @@ def home(request):
                     skillname = SKILL.objects.get(skillname=job_search)
                     job_ids = JOBSKILL.objects.filter(skill_id=skillname.id)
                     for job_id in job_ids:
-                        jobs.append(JOB.objects.filter(id=job_id.job_id))
-                        filtered_jobs = JOB.objects.filter(id=job_id.job_id)
+                        jobs.append(JOB.objects.filter(id=job_id.job_id,status="Activated"))
+                        filtered_jobs = JOB.objects.filter(id=job_id.job_id,status="Activated")
                         for filtered_job in filtered_jobs:
                             company_jobs_ids.append(filtered_job.id)
             searcher = job_search
@@ -558,7 +558,13 @@ def admin_edit_job_process(request):
 
 
 def activity_logs(request):
-    return render(request, "jobPortalApp/admin/activity_logs.html")
+    user_per_acts = {}
+    activitys = ACTIVITY.objects.all()
+    for activity in activitys:
+        user = User.objects.get(id=activity.user_id)
+        user_per_acts[activity.user_id] = user.username
+
+    return render(request, "jobPortalApp/admin/activity_logs.html",{'activitys':activitys,'user_per_acts':user_per_acts})
 
 
 # job provider
@@ -606,24 +612,39 @@ def login(request):
     if 'user_id' in request.session:
         return redirect('profile')
     else:
-        if request.method == 'POST':
+        return render(request, "jobPortalApp/pages/login.html")
+
+def loginProcess(request):
+    if request.method == 'POST':
             usermail = request.POST['usermail']
             password = request.POST['password']
             if User.objects.filter(username=usermail).exists():
                 user = User.objects.get(username=usermail)
                 user_id = user.id
+                message = ""
                 if user.check_password(password):
                     if SEEKER.objects.filter(user_id=user_id).exists():
-                        request.session['user_id'] = user_id
-                        request.session['user_type'] = "seeker"
-                        request.session['job_type'] = "Job Seeker"
+                        status = SEEKER.objects.get(user_id=user_id)
+                        if status.status == "Activated":
+                            request.session['user_id'] = user_id
+                            request.session['user_type'] = "provider"
+                            request.session['job_type'] = "Job Provider"
+                            ACTIVITY.objects.create(name="Logged", description="Logged In", user_id=user_id)
+                            return redirect('profile')
+                        else:
+                            message = "Account Seems to be Deactivated"
+                            return render(request, 'jobPortalApp/pages/login.html', {'message': message})
                     elif COMPANY.objects.filter(user_id=user_id).exists():
-                        request.session['user_id'] = user_id
-                        request.session['user_type'] = "provider"
-                        request.session['job_type'] = "Job Provider"
-                    ACTIVITY.objects.create(
-                        name="Logged", description="Logged In", user_id=user_id)
-                    return redirect('profile')
+                        status = COMPANY.objects.get(user_id=user_id)
+                        if status.status == "Activated":
+                            request.session['user_id'] = user_id
+                            request.session['user_type'] = "provider"
+                            request.session['job_type'] = "Job Provider"
+                            ACTIVITY.objects.create(name="Logged", description="Logged In", user_id=user_id)
+                            return redirect('profile')
+                        else:
+                            message = "Account Seems to be Deactivated"
+                            return render(request, 'jobPortalApp/pages/login.html', {'message': message})
                 else:
                     message = "Wrong Password"
                     return render(request, 'jobPortalApp/pages/login.html', {'message': message})
@@ -632,22 +653,33 @@ def login(request):
                 user_id = user.id
                 if user.check_password(password):
                     if SEEKER.objects.filter(user_id=user_id).exists():
-                        request.session['user_id'] = user_id
-                        request.session['user_type'] = "seeker"
-                        request.session['job_type'] = "Job Seeker"
+                        status = SEEKER.objects.get(user_id=user_id)
+                        if status.status == "Activated":
+                            request.session['user_id'] = user_id
+                            request.session['user_type'] = "provider"
+                            request.session['job_type'] = "Job Provider"
+                            ACTIVITY.objects.create(name="Logged", description="Logged In", user_id=user_id)
+                            return redirect('profile')
+                        else:
+                            message = "Account Seems to be Deactivated"
+                            return render(request, 'jobPortalApp/pages/login.html', {'message': message})   
                     elif COMPANY.objects.filter(user_id=user_id).exists():
-                        request.session['user_id'] = user_id
-                        request.session['user_type'] = "provider"
-                        request.session['job_type'] = "Job Provider"
-                    return redirect('profile')
+                        status = COMPANY.objects.get(user_id=user_id)
+                        if status.status == "Activated":
+                            request.session['user_id'] = user_id
+                            request.session['user_type'] = "provider"
+                            request.session['job_type'] = "Job Provider"
+                            ACTIVITY.objects.create(name="Logged", description="Logged In", user_id=user_id)
+                            return redirect('profile')
+                        else:
+                            message = "Account Seems to be Deactivated"
+                            return render(request, 'jobPortalApp/pages/login.html', {'message': message})
                 else:
                     message = "Wrong Password"
                     return render(request, 'jobPortalApp/pages/login.html', {'message': message})
             else:
                 message = "Wrong Email or Username"
                 return render(request, 'jobPortalApp/pages/login.html', {'message': message})
-
-        return render(request, "jobPortalApp/pages/login.html")
 
 
 def profile(request):
@@ -750,6 +782,24 @@ def providerAddJob(request):
         user_id = request.session['user_id']
         skills = SKILL.objects.all()
         return render(request, 'jobPortalApp/pages/profile/provider/add-job.html', {'skills': skills})
+
+def providerDeactivateJob(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    else:
+        if request.method == "POST":
+            job_id = request.POST['job-id']
+            JOB.objects.filter(id=job_id).update(status="Deactivated")
+        return redirect('profile')
+
+def providerActivateJob(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    else:
+        if request.method == "POST":
+            job_id = request.POST['job-id']
+            JOB.objects.filter(id=job_id).update(status="Activated")
+        return redirect('profile')
 
 
 def providerEditJob(request):

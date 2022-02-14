@@ -52,15 +52,30 @@
 </body>
 <script>
     
+    
     logout_open = document.getElementById('logout-btn');
-    logout_close = document.getElementById('close-logout');
-
     logout_open.onclick = function() {
-        document.getElementById('logout-div').style.display = "Block";
-        };
-    logout_close.onclick = function() {
-        document.getElementById('logout-div').style.display = "None";
-        };
+        swal({
+            title: "Logout",
+            text: "Are you sure you want to logout?",
+            icon: "info",
+                buttons: {
+                yes: {
+                    text: "Yes",
+                    value: "yes"
+                },
+                no: {
+                    text: "No",
+                    value: "no",
+                }
+                }
+        }).then((value) => {
+                if (value === "yes") {
+                // Add Your Custom Code for CRUD
+                window.location.href="../logout"
+                }
+        });
+    };
 </script>
 
 {% endblock content %}{# part to singit template #}

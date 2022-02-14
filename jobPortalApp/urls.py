@@ -28,6 +28,7 @@ urlpatterns += [
 # seeker
 urlpatterns += [
     path('login/', views.login, name="login"),
+    path('login-process/', views.loginProcess, name="loginProcess"),
     path('logout/', views.logout, name="logout"),
     path('profile/', views.profile, name="profile"),
     path('profile/seeker-edit-profile', views.seekerEdit, name="seekerEdit"),
@@ -62,6 +63,10 @@ urlpatterns += [
     path('home/view-post/', views.indexViewPost, name="indexViewPost"),
     path('profile/provider-edit-job',
          views.providerEditJob, name="providerEditJob"),
+    path('profile/provider-deactivate-job',
+         views.providerDeactivateJob, name="providerDeactivateJob"),
+    path('profile/provider-activate-job',
+         views.providerActivateJob, name="providerActivateJob"),
     path('profile/provider-edit-job-process',
          views.providerEditJobProcess, name="providerEditJobProcess"),
 ]

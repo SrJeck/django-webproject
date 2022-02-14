@@ -88,4 +88,29 @@
         </section>
     </main>
 </body>
+<script>
+    logout_open = document.getElementById('logout-btn');
+    logout_open.onclick = function() {
+        swal({
+            title: "Logout",
+            text: "Are you sure you want to logout?",
+            icon: "info",
+                buttons: {
+                yes: {
+                    text: "Yes",
+                    value: "yes"
+                },
+                no: {
+                    text: "No",
+                    value: "no",
+                }
+                }
+        }).then((value) => {
+                if (value === "yes") {
+                // Add Your Custom Code for CRUD
+                window.location.href="../logout"
+                }
+        });
+    };</script>
+
 {% endblock content%}
