@@ -1,3 +1,5 @@
+from fileinput import filename
+import imp
 from pydoc import describe
 import re
 from django.shortcuts import render, redirect
@@ -9,7 +11,13 @@ from .models import *
 from .forms import *
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.core.mail import send_mail
-
+from django.http import FileResponse
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
+from .models import Event, Venue
+from .forms import VenueForm, EventForm
 
 # Create your views here.
 def index(request):
@@ -1076,6 +1084,89 @@ def providerChangePassword(request):
                 return redirect('profile')
         return render(request, 'jobPortalApp/pages/profile/provider/change-password.html')
 
+
+def users_report(request):
+    buff = io.Bytes.IO()
+    canv = canvas.Canvas(buff, pagesize = letter, bottomup=0)
+    text = canv.beginText()
+    text.setTextOrigin(inch, inch)
+    text.setFont("Arial", 16)
+
+    seeker = SEEKER.objects.all()
+    users = []
+    for user in seeker:
+        users.append(user.fullname)
+
+    canv.drawText()
+    canv.showPage()
+    canv.save()
+    buff.seek(0)
+
+    return FileResponse(buff, as_attachment=True, filename='users.pdf')
+
+def activity_report(request):
+    buff = io.Bytes.IO()
+    canv = canvas.Canvas(buff, pagesize = letter, bottomup=0)
+    text = canv.beginText()
+    text.setTextOrigin(inch, inch)
+    text.setFont("Arial", 16)
+
+    activity = ACTIVITY.objects.all()
+    activity_log = []
+    for act in activity:
+        activity_log.append(act.name)
+        activity_log.append(act.user_id)
+
+    canv.drawText()
+    canv.showPage()
+    canv.save()
+    buff.seek(0)
+
+    return FileResponse(buff, as_attachment=True, filename='activity-log.pdf')
+
+def job_report(request):
+    buff = io.Bytes.IO()
+    canv = canvas.Canvas(buff, pagesize = letter, bottomup=0)
+    text = canv.beginText()
+    text.setTextOrigin(inch, inch)
+    text.setFont("Arial", 16)
+
+    job = JOB.objects.all()
+    job_list = []
+    for jobs in job:
+        job_list.append(jobs.name)
+        job_list.append(jobs.description)
+        job_list.append(jobs.type)
+        job_list.append(jobs.salary)
+
+    canv.drawText()
+    canv.showPage()
+    canv.save()
+    buff.seek(0)
+
+    return FileResponse(buff, as_attachment=True, filename='job-list.pdf')
+
+def company_report(request):
+    buff = io.Bytes.IO()
+    canv = canvas.Canvas(buff, pagesize = letter, bottomup=0)
+    text = canv.beginText()
+    text.setTextOrigin(inch, inch)
+    text.setFont("Arial", 16)
+
+    company = COMPANY.objects.all()
+    company_list = []
+    for comp in company:
+        company_list.append(comp.name)
+        company_list.append(comp.description)
+        company_list.append(comp.city)
+        company_list.append(comp.country)
+
+    canv.drawText()
+    canv.showPage()
+    canv.save()
+    buff.seek(0)
+
+    return FileResponse(buff, as_attachment=True, filename='job-list.pdf')
 
 def filedisplay(request):
 

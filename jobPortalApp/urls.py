@@ -115,3 +115,12 @@ urlpatterns += {
          name="provider_show_applicant"),
 
 }
+
+# mark joseph
+# report generation
+urlpatterns += [
+    path('users-report/', views.users_report, name="users_report"),
+    path('activity-report/', views.activity_report, name="activity_report"),
+    path('job-report/', views.job_report, name="job_report"),
+    path('company-report/', views.company_report, name="company_report"),
+]
