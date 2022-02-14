@@ -34,14 +34,20 @@ def home(request):
         elif job_title == "Job Provider":
             provider_name = COMPANY.objects.get(user_id=user_id)
         job_search = ""
-        job_type = ""
-        job_country = ""
-        job_city = ""
+        job_type = False
+        job_country = False
+        job_city = False
         if 'job-search' and 'job-type' and 'job-country' and 'job-city' in request.session:
             job_search = request.session['job-search']
             job_type = request.session['job-type']
             job_country = request.session['job-country']
             job_city = request.session['job-city']
+            if job_country == "":
+                job_country = False
+            if job_type == "":
+                job_type = False
+            if job_city == "":
+                job_city = False
         is_non_empty = bool(job_search)
         jobs = []
         company_jobs_ids = []
@@ -334,9 +340,10 @@ def home(request):
                         for filtered_job in filtered_jobs:
                             company_jobs_ids.append(filtered_job.id)
             searcher = job_search
-            results = ""
-            if len(jobs) == 0:
-                results = "No Results"
+        
+        results = ""
+        if len(jobs) == 0:
+            results = "No Results"
         for company_jobs_id in company_jobs_ids:
             job_skillnames_per_jobs = []
             job_skills_per_jobs = JOBSKILL.objects.filter(
