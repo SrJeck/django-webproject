@@ -40,7 +40,13 @@
         </div>
         <section class="flex-shrink-0 flex items-center justify-between bg-white p-[36px]">
             <div class="flex items-center gap-x-[48px]">
-                 <img src="{% static 'images/profile.svg' %}" alt="" class="w-[90px] h-[90px]">
+                {% if not profile %}
+                <img src="{% static 'images/profile.svg' %}" alt="" class="w-[90px] h-[90px]">
+                {% else %}
+                {% for prof in profile  %}
+                <img src="{{prof.profile.url}}" alt="" class="w-[90px] h-[90px]">
+                {% endfor %}
+                {% endif %}
                 <div class="flex flex-col gap-y-[12px]">
                     <span class="font-semibold text-[22px]">{{user_details.username}}</span>
                     <span class="font-light">{{user_details.email}}</span>
@@ -58,7 +64,12 @@
         <section class="flex-grow flex flex-col gap-y-[43px] bg-white min-h-[400px] p-[36px]">
             <div class="flex-shrink-0 flex justify-between items-center">
                 <div class="text-[22px] font-semibold italic text-left">Job Provider/Company Information</div>
-                <a href="../profile/provider-edit-profile"><button class="btn-outline">Edit</button></a>
+                <select  class="btn-outline" id="settings" style="appearance: none;text-align: center;">
+                    <option value="" disabled hidden selected >Settings</option>
+                    <option value="edit">Edit Information</option>
+                    <option value="pass">Change Password</option>
+                    <option value="pic">Change Profile Picture</option>
+                </select>
             </div>
             <div class="flex-grow grid grid-cols-3 gap-x-8">
                 <div class="flex flex-col gap-y-[34px]">
@@ -172,6 +183,19 @@
     
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
+
+settings_choice = document.getElementById('settings');
+    settings_choice.onchange = function name() {
+        if (settings_choice.value == "pass") {
+            window.location.href = "../profile/provider-change-password"
+        }else if (settings_choice.value == "edit") {
+            window.location.href = "../profile/provider-edit-profile"
+        } else if (settings_choice.value == "pic") {
+            window.location.href = "../profile/provider-change-profile"
+            
+        }
+    }
+
     logout_open = document.getElementById('logout-btn');
     logout_close = document.getElementById('close-logout');
 

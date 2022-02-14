@@ -1,0 +1,155 @@
+{#for job provider/company edit job post#}
+{% extends "jobPortalApp/base.html" %}
+{% load static %}
+{% block title %}Edit Job Info{% endblock title %}
+
+{% block content %}
+<nav class="flex-shrink-0 flex justify-between items-center bg-white py-[15px] pl-[150px] pr-[50px]">
+    <a href="../home">
+        <img src="{% static 'images/logo-blue.png' %}" alt="" class="w-[120px] h-[25px]">
+    </a>
+    <div x-data="{ show: false }" class="relative">
+        <div class="inline-flex items-center gap-x-2">
+            <div class="flex flex-col items-end">
+                {% if not provider_details.name%}
+                <span>Not Set</span>
+                {% else %}
+                <span>{{provider_details.name}}</span>
+                {% endif%}
+                <span class="text-xs font-light">{{user_type}}</span>
+            </div>
+            <img src="{% static 'images/profile.svg' %}" alt="" class="w-[36px] h-[36px]" @click="show = ! show">
+        </div>
+        <div x-show="show"
+            class="absolute bg-white p-[12px] right-0 w-[120px] rounded-[4px] shadow-[0_0_40px_0_rgba(0,0,0,0.1)]">
+            <a href="../profile"
+                class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
+                Profile
+            </a>
+            <a id="logout-btn" class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
+                Logout
+            </a>
+        </div>
+    </div>
+</nav>
+     <main class="flex flex-col gap-y-[44px] flex-grow px-[200px] py-[60px]">
+        <div id="logout-div" style="display: none;">
+            <h3>Are you sure about that?</h3>
+            <a href="../logout"><button class="btn-outline">Yes</button></a>
+            <button class="btn-outline" id="close-logout">No</button>
+        </div>
+        <form action="../profile/view-post/" id="view-post" method="POST">
+            {% csrf_token %}
+            <input type="text" name="job-id" value="{{job.id}}" style="display: none;">
+        </form>
+        <section class="flex-grow flex flex-col gap-y-[55px] bg-white min-h-[400px] p-[36px]">
+            <div class="flex-shrink-0 flex flex-col gap-y-[36px]">
+                <div class="flex justify-between items-start">
+                    <a onclick="returnView()" class="flex items-center gap-x-2">
+                        <span><img src="{% static 'images/chevron-left.svg' %}" alt=""></span>
+                        <span class="uppercase text-sm font-light">Go Back</span>
+                    </a>
+                    
+                </div>
+                <div class="text-[28px] font-semibold italic ml-[42px]">Editing a Job</div>
+            </div>
+            <div class="flex flex-col gap-y-[50px] px-[42px]">
+                <form id="edit-job-form" action="../profile/provider-edit-job-process" method="POST" >
+                    {% csrf_token %}
+                    <input type="text" name="job-id" id="job-id" value="{{job.id}}"
+                                    class="input-1px w-[250px]" style="display: none;">
+                <div class="flex flex-col gap-y-[34px]">
+                    <div class="text-[22px] font-semibold italic">Role Information</div>
+                    <div class="flex flex-col gap-y-[24px]">
+                        <div class="grid grid-cols-3">
+                            <div class="flex flex-col gap-y-[5px]">
+                                <span class="label">Name</span>
+                                {% if not job.name %}
+                                <input type="text" name="job-name" id="job-name" placeholder="Enter job name"
+                                    class="input-1px w-[250px]">
+                                {% else %}
+                                <input type="text" name="job-name" id="job-name" value="{{job.name}}"
+                                    class="input-1px w-[250px]">
+                                {% endif %}
+                            </div>
+                            <div class="flex flex-col gap-y-[5px]">
+                                <span class="label">Type</span>
+                                {% if not job.type %}
+                                <select name="job-type" id="job-type" required class="select-2 w-[250px]">
+                                    <option value="" disabled selected hidden>Select Type</option>
+                                    <option value="Full-time job" >Full-time job</option>
+                                    <option value="Part-time job" >Part-time job</option>
+                                </select>
+                                {% else %}
+                                <select name="job-type" id="job-type" required class="select-2 w-[250px]">
+                                    <option value="{{job.type}}" selected hidden>{{job.type}}</option>
+                                    <option value="Full-time job" >Full-time job</option>
+                                    <option value="Part-time job" >Part-time job</option>
+                                </select>
+                                {% endif %}
+                                
+                            </div>
+                            <div class="flex flex-col gap-y-[5px]">
+                                <span class="label">Salary (in $)</span>
+                                {% if not job.salary %}
+                                <input type="number" name="job-salary" id="job-salary" placeholder="Enter job name"
+                                    class="input-1px w-[250px]">
+                                {% else %}
+                                <input type="number" name="job-salary" id="job-salary" value="{{job.salary}}"
+                                    class="input-1px w-[250px]">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-y-[24px]">
+                            <div>
+                                <span class="label">Current Required skill(s)</span>
+                                <br>
+                                <ul>
+                                    {% for job_skill in job_skills %}
+                                    <li>{{job_skill}}</li>
+                                    {% endfor %}
+                                </ul>
+                                
+                                <br><span class="label">Skills</span><br>
+                                
+                                {% for skill in skills %}
+                                    <input type="checkbox" value="{{skill.id}}" class="skill_check" id="{{skill.id}}" name="skill">
+                                    <label for="{{skill.id}}">{{skill.skillname}}</label><br>
+                                {% endfor %}
+                            </div>
+                            
+                        </div>
+                        <div class="flex flex-col gap-y-[5px]">
+                            <span class="label">Description</span>
+                            
+                            {% if not job.description %}
+                            <textarea name="job-description" id="job-description" rows="8" placeholder="Enter informations about the job provider"
+                                class="input-1px"></textarea>
+                            {% else %}
+                            <textarea name="job-description" id="job-description" rows="8"
+                                class="input-1px">{{job.description}}</textarea>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
+            <button class="btn self-end" type="submit" form="edit-job-form">Save</button>
+        </section>
+    </main>
+    
+<script>
+    function returnView() {
+        document.getElementById('view-post').submit();
+    }
+    logout_open = document.getElementById('logout-btn');
+    logout_close = document.getElementById('close-logout');
+
+    logout_open.onclick = function() {
+        document.getElementById('logout-div').style.display = "Block";
+        };
+    logout_close.onclick = function() {
+        document.getElementById('logout-div').style.display = "None";
+        };
+</script>
+{% endblock content %}

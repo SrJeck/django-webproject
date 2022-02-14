@@ -363,7 +363,27 @@ def seeker_no_info(request):
     return render(request, "jobPortalApp/pages/profile/seeker/no-info.html")
 
 # admins
-
+#seeker
+def admin_edit_user(request):
+    return 
+def admin_activate_user(request):
+    return 
+def admin_deactivate_user(request):
+    return 
+#company
+def admin_deactivate_company(request):
+    return 
+def admin_activate_company(request):
+    return 
+def admin_edit_company(request):
+    return 
+#jobs
+def admin_edit_jobs(request):
+    return 
+def admin_activate_jobs(request):
+    return 
+def admin_deactivate_jobs(request):
+    return 
 
 def manage_user(request):
     activated_users_list = {}
@@ -507,6 +527,7 @@ def profile(request):
         user_type = request.session['user_type']
         job_type = request.session['job_type']
         user_details = User.objects.get(id=user_id)
+        profile = PROFILE.objects.filter(user_id=user_id)
         all_user = User.objects.filter(is_staff=True)
         if user_type == 'seeker':
             if SEEKER.objects.filter(user_id=user_id).exists():
@@ -521,7 +542,7 @@ def profile(request):
                 seeker_resume = ""
                 if RESUME.objects.filter(user_id=user_id).exists():
                     seeker_resume = RESUME.objects.get(user_id=user_id)
-                return render(request, 'jobPortalApp/pages/profile/seeker/with-info.html', {'user_details': user_details, 'seeker_details': seeker_details, 'seeker_skills': seeker_skills, 'user_type': job_type, 'seeker_resume': seeker_resume, 'all_user': all_user})
+                return render(request, 'jobPortalApp/pages/profile/seeker/with-info.html', {'user_details': user_details, 'seeker_details': seeker_details, 'seeker_skills': seeker_skills, 'user_type': job_type, 'seeker_resume': seeker_resume, 'all_user': all_user,'profile':profile})
         elif user_type == 'provider':
             if COMPANY.objects.filter(user_id=user_id).exists():
                 company_details = COMPANY.objects.get(user_id=user_id)
@@ -545,7 +566,7 @@ def profile(request):
                             id=job_skills_per_job.skill_id)
                         job_skillnames_per_jobs.append(skills.skillname)
                     skillnames_per_jobs[company_jobs_id] = job_skillnames_per_jobs
-                return render(request, 'jobPortalApp/pages/profile/provider/with-info.html', {'company_details': company_details, 'user_details': user_details, 'user_type': job_type, 'company_jobs': company_jobs, 'skillnames_per_jobs': skillnames_per_jobs, 'applications_per_jobs': applications_per_jobs})
+                return render(request, 'jobPortalApp/pages/profile/provider/with-info.html', {'company_details': company_details, 'user_details': user_details, 'user_type': job_type, 'company_jobs': company_jobs, 'skillnames_per_jobs': skillnames_per_jobs, 'applications_per_jobs': applications_per_jobs,'profile':profile})
 
 
 @xframe_options_sameorigin
@@ -943,15 +964,32 @@ def seekerChangeProfle(request):
         return redirect('login')
     else:
         user_id = request.session['user_id']
-        form = resumeForm()
+        form = profileForm()
+        profile = PROFILE.objects.filter(user_id=user_id)
         if request.method == 'POST':
-            profile = request.FILES['resume']
+            profile = request.FILES['profile']
             refresh = PROFILE.objects.filter(user_id=user_id)
             refresh.delete()
             object = PROFILE.objects.create(user_id=user_id, profile=profile)
             object.save()
             return redirect('profile')
-        return render(request, 'jobPortalApp/pages/register.html')
+        return render(request, 'jobPortalApp/pages/profile/seeker/change-profile.html',{'form':form,'profile':profile})
+
+def providerChangeProfle(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    else:
+        user_id = request.session['user_id']
+        form = profileForm()
+        profile = PROFILE.objects.filter(user_id=user_id)
+        if request.method == 'POST':
+            profile = request.FILES['profile']
+            refresh = PROFILE.objects.filter(user_id=user_id)
+            refresh.delete()
+            object = PROFILE.objects.create(user_id=user_id, profile=profile)
+            object.save()
+            return redirect('profile')
+        return render(request, 'jobPortalApp/pages/profile/provider/change-profile.html',{'form':form,'profile':profile})
 
 
 def seekerChangePassword(request):
@@ -985,11 +1023,27 @@ def providerChangePassword(request):
     if 'user_id' not in request.session:
         return redirect('login')
     else:
+        user_id = request.session['user_id']
         if request.method == 'POST':
             old_pass = request.POST['old_password']
             new_pass = request.POST['new_password']
             con_pass = request.POST['confirm_password']
-            return redirect('profile')
+            message = ""
+            user = User.objects.get(id=user_id)
+            if user.check_password(old_pass) == False:
+                message = "Old password doesn't match in Database"
+            if old_pass == new_pass:
+                message = "New password is same with Old password"
+            if new_pass != con_pass:
+                message = "New password doesn't match Confirm password"
+            is_non_empty = bool(message)
+            if is_non_empty != False:
+                return render(request, 'jobPortalApp/pages/profile/provider/change-password.html', {'message': message})
+            else:
+                user.set_password(new_pass)
+                user.save()
+                return redirect('profile')
+        return render(request, 'jobPortalApp/pages/profile/provider/change-password.html')
 
 
 def filedisplay(request):
