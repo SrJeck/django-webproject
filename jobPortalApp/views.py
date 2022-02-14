@@ -557,6 +557,49 @@ def admin_edit_job_process(request):
             JOBSKILL.objects.create(userjob_id_id=job_id,skill_id=job_skill)
     return redirect('jobs')
 
+def seekerDeleteAccount(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    else:
+        user_id = request.session['user_id']
+        ACTIVITY.objects.create(name="Delete", description="Delete Account", user_id=user_id)
+        seeker = SEEKER.objects.filter(user_id=user_id)
+        seekerskill = SEEKERSKILL.objects.filter(user_id=user_id)
+        application = APPLICATION.objects.filter(user_id=user_id)
+        user = User.objects.filter(id=user_id)
+        profile = PROFILE.objects.filter(user_id=user_id)
+        resume = RESUME.objects.filter(user_id=user_id)
+        seeker.delete()
+        seekerskill.delete()
+        application.delete()
+        user.delete()
+        profile.delete()
+        resume.delete()
+        return redirect('logout')
+
+def providerDeleteAccount(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    else:
+        user_id = request.session['user_id']
+        ACTIVITY.objects.create(name="Delete", description="Delete Account", user_id=user_id)
+        provider = COMPANY.objects.filter(user_id=user_id)
+        jobs = JOB.objects.filter(company_id=user_id)
+        for job in jobs:
+            jobskill = JOBSKILL.objects.filter(job_id=job.id)
+            jobskill.delete()
+            application = APPLICATION.objects.filter(job_id=job.id)
+            application.delete()
+        jobs.delete()
+        user = User.objects.filter(id=user_id)
+        user.delete()
+        profile = PROFILE.objects.filter(user_id=user_id)
+        profile.delete()
+        resume = RESUME.objects.filter(user_id=user_id)
+        resume.delete()
+        provider.delete()
+        return redirect('logout')
+
 
 def activity_logs(request):
     user_per_acts = {}

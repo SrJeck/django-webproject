@@ -32,6 +32,8 @@ urlpatterns += [
     path('logout/', views.logout, name="logout"),
     path('profile/', views.profile, name="profile"),
     path('profile/seeker-edit-profile', views.seekerEdit, name="seekerEdit"),
+    path('profile/seeker-delete-account',
+         views.seekerDeleteAccount, name="seekerDeleteAccount"),
     path('profile/seeker-change-profile',
          views.seekerChangeProfle, name="seekerChangeProfle"),
     path('profile/seeker-change-password',
@@ -46,6 +48,8 @@ urlpatterns += [
 urlpatterns += [
     path('profile/provider-change-profile',
          views.providerChangeProfle, name="providerChangeProfle"),
+    path('profile/provider-delete-account',
+         views.providerDeleteAccount, name="providerDeleteAccount"),
     path('profile/provider-change-password',
          views.providerChangePassword, name="providerChangePassword"),
     path('profile/provider-edit-profile',

@@ -205,15 +205,23 @@ settings_choice = document.getElementById('settings');
     delete_acc.onclick = function () {
         swal({
             title: "Delete Account",
-            text: "Are you sure you want to Delete you Account?",
-            icon: "error",
-            confirmButtonText: 'Yes, I am sure!',
-            cancelButtonText: "No, cancel it!",
-            showCancelButton: true,
-        }).then((willDelete) => {
-          if (willDelete) {
-            document.getElementById('delete-account-form').submit();
-          }
+            text: "Are you sure you want to delete your account?",
+            icon: "warning",
+                buttons: {
+                yes: {
+                    text: "Yes",
+                    value: "yes"
+                },
+                no: {
+                    text: "No",
+                    value: "no",
+                }
+                }
+        }).then((value) => {
+                if (value === "yes") {
+                // Add Your Custom Code for CRUD
+                window.location.href = "../profile/seeker-delete-account"
+                }
         });
     };
     logout_open = document.getElementById('logout-btn');
