@@ -1299,7 +1299,7 @@ def seekerChangeProfle(request):
             refresh.delete()
             object = PROFILE.objects.create(user_id=user_id, profile=profile)
             object.save()
-            return redirect('profile')
+            return redirect('seekerChangeProfle')
         return render(request, 'jobPortalApp/pages/profile/seeker/change-profile.html', {'form': form, 'profile': profile,'user_type':user_type,'seeker_details':seeker_details})
 
 
@@ -1318,7 +1318,7 @@ def providerChangeProfle(request):
             refresh.delete()
             object = PROFILE.objects.create(user_id=user_id, profile=profile)
             object.save()
-            return redirect('profile')
+            return redirect('providerChangeProfle')
         return render(request, 'jobPortalApp/pages/profile/provider/change-profile.html', {'form': form, 'profile': profile,'user_type':user_type,'provider':provider})
 
 

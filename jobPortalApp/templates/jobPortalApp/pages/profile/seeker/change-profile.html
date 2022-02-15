@@ -59,7 +59,7 @@
             <form id="edit-form" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="flex flex-col gap-y-[34px]">
-                    <div class="text-[22px] font-semibold italic">Career Information</div>
+                    
                     {% if not profile %}
                     <img src="{% static 'images/profile.svg' %}" alt="" class="w-[90px] h-[90px]">
                     {% else %}
