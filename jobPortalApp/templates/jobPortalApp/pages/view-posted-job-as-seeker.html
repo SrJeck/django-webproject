@@ -88,7 +88,7 @@
                     </form>
                     {% if not application_check %}
                         {% if seeker_info.fullname and seeker_info.experience and seeker_info.about and resume and seeker_skills %}
-                        <button class="btn self-end" type="submit" form="apply-form">Apply</button>
+                        <button class="btn self-end" onclick="applyJob()">Apply</button>
                         {% else %}
                         <label class="self-end">Fill All Necessary Information To Apply</label>
                         {% endif %}
@@ -101,6 +101,30 @@
     </main>
 </body>
 <script>
+
+    function applyJob() {
+        swal({
+            title: "Success",
+            text: "You will be applying for this job now",
+            icon: "success",
+                buttons: {
+                yes: {
+                    text: "Yes",
+                    value: "yes"
+                },
+                no: {
+                    text: "No",
+                    value: "no",
+                }
+                }
+        }).then((value) => {
+                if (value === "yes") {
+                // Add Your Custom Code for CRUD
+                document.getElementById('apply-form').submit();
+                }
+        });
+    }
+
     logout_open = document.getElementById('logout-btn');
     logout_open.onclick = function() {
         swal({
