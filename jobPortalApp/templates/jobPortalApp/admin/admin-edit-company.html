@@ -16,13 +16,13 @@
             </div>
             <form id="edit-form" action="../admin-edit-company-process/" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                <input type="text" name="edit-id" id="edit-id" value="{{provider.user_id}}"
-                class="input-1px w-[250px]" style="display: none;">
+                <input type="text" name="edit-id" id="edit-id" value="{{provider.user_id}}" class="input-1px w-[250px]"
+                    style="display: none;">
                 <div class="flex flex-col gap-y-[34px]">
                     <div class="text-[22px] font-semibold italic">Company Information</div>
                     <div class="flex flex-col gap-y-[24px]">
                         <div class="flex flex-col gap-y-[5px]">
-                            <span class="label">Username</span>
+                            <span class="label">Nmae</span>
                             {% if not provider.name %}
                             <input type="text" name="edit-name" id="edit-name" placeholder="Enter Username"
                                 class="input-1px w-[250px]">
@@ -45,51 +45,53 @@
                         <div class="flex flex-col gap-y-[5px]">
                             <span class="label">City</span>
                             {% if not provider.city %}
-                                <select name="city" id="city" required class="select-2 w-[250px]">
-                                    <option value="" disabled selected hidden>Select City</option>
-                                    <option class="China" value="Beijing" style="display: block;">Beijing</option>
-                                    <option class="China" value="Macau" style="display: block;">Macau</option>
-                                    <option class="Japan" value="Inuyama" style="display: block;">Inuyama</option>
-                                    <option class="Japan" value="Toyota" style="display: block;">Toyota</option>
-                                    <option class="Russia" value="Abakan" style="display: block;">Abakan</option>
-                                    <option class="Russia" value="Beslan" style="display: block;">Beslan</option>
-                                    <option class="South Korea" value="Seoul" style="display: block;">Seoul</option>
-                                    <option class="South Korea" value="Busan" style="display: block;">Busan</option>
-                                </select>
-                                {% else %}
-                                <select name="city" id="city" required class="select-2 w-[250px]">
-                                    <option value="{{provider.city}}" selected hidden>{{provider.city}}</option>
-                                    <option class="China" value="Beijing" style="display: block;">Beijing</option>
-                                    <option class="China" value="Macau" style="display: block;">Macau</option>
-                                    <option class="Japan" value="Inuyama" style="display: block;">Inuyama</option>
-                                    <option class="Japan" value="Toyota" style="display: block;">Toyota</option>
-                                    <option class="Russia" value="Abakan" style="display: block;">Abakan</option>
-                                    <option class="Russia" value="Beslan" style="display: block;">Beslan</option>
-                                    <option class="South Korea" value="Seoul" style="display: block;">Seoul</option>
-                                    <option class="South Korea" value="Busan" style="display: block;">Busan</option>
-                                </select>
-                                {% endif %}
-                            
+                            <select name="city" id="city" required class="select-2 w-[250px]">
+                                <option value="" disabled selected hidden>Select City</option>
+                                <option class="China" value="Beijing" style="display: block;">Beijing</option>
+                                <option class="China" value="Macau" style="display: block;">Macau</option>
+                                <option class="Japan" value="Inuyama" style="display: block;">Inuyama</option>
+                                <option class="Japan" value="Toyota" style="display: block;">Toyota</option>
+                                <option class="Russia" value="Abakan" style="display: block;">Abakan</option>
+                                <option class="Russia" value="Beslan" style="display: block;">Beslan</option>
+                                <option class="South Korea" value="Seoul" style="display: block;">Seoul</option>
+                                <option class="South Korea" value="Busan" style="display: block;">Busan</option>
+                            </select>
+                            {% else %}
+                            <select name="city" id="city" required class="select-2 w-[250px]">
+                                <option value="{{provider.city}}" selected hidden>{{provider.city}}</option>
+                                <option class="China" value="Beijing" style="display: block;">Beijing</option>
+                                <option class="China" value="Macau" style="display: block;">Macau</option>
+                                <option class="Japan" value="Inuyama" style="display: block;">Inuyama</option>
+                                <option class="Japan" value="Toyota" style="display: block;">Toyota</option>
+                                <option class="Russia" value="Abakan" style="display: block;">Abakan</option>
+                                <option class="Russia" value="Beslan" style="display: block;">Beslan</option>
+                                <option class="South Korea" value="Seoul" style="display: block;">Seoul</option>
+                                <option class="South Korea" value="Busan" style="display: block;">Busan</option>
+                            </select>
+                            {% endif %}
+
                         </div>
                         <div class="flex flex-col gap-y-[5px]">
                             <span class="label">Country</span>
                             {% if not provider.country %}
-                                <select name="country" id="id_country" required class="select-2 w-[250px]" onchange="countyChoice()">
-                                    <option value="" disabled selected hidden>Select Country</option>
-                                    <option class="country" value="China">China</option>
-                                    <option class="country" value="Russia">Russia</option>
-                                    <option class="country" value="South Korea">South Korea</option>
-                                    <option class="country" value="Japan">Japan</option>
-                                </select>
-                                {% else %}
-                                <select name="country" id="id_country" required class="select-2 w-[250px]" onchange="countyChoice()">
-                                    <option value="{{provider.country}}" selected hidden>{{provider.country}}</option>
-                                    <option class="country" value="China">China</option>
-                                    <option class="country" value="Russia">Russia</option>
-                                    <option class="country" value="South Korea">South Korea</option>
-                                    <option class="country" value="Japan">Japan</option>
-                                </select>
-                                {% endif %}
+                            <select name="country" id="id_country" required class="select-2 w-[250px]"
+                                onchange="countyChoice()">
+                                <option value="" disabled selected hidden>Select Country</option>
+                                <option class="country" value="China">China</option>
+                                <option class="country" value="Russia">Russia</option>
+                                <option class="country" value="South Korea">South Korea</option>
+                                <option class="country" value="Japan">Japan</option>
+                            </select>
+                            {% else %}
+                            <select name="country" id="id_country" required class="select-2 w-[250px]"
+                                onchange="countyChoice()">
+                                <option value="{{provider.country}}" selected hidden>{{provider.country}}</option>
+                                <option class="country" value="China">China</option>
+                                <option class="country" value="Russia">Russia</option>
+                                <option class="country" value="South Korea">South Korea</option>
+                                <option class="country" value="Japan">Japan</option>
+                            </select>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -118,25 +120,25 @@
     logout_close.onclick = function () {
         document.getElementById('logout-div').style.display = "None";
     };
-    function countyChoice(){
+    function countyChoice() {
 
-            d = document.getElementById("id_country").value;
-            var items2 = document.getElementsByClassName('country');
-            for (var i=0; i < items2.length; i++) {
-                if (items2[i].value != d){
-                    var items3 = document.getElementsByClassName(items2[i].value);
-                    for (var j=0; j < items3.length; j++) {
-                        items3[j].style.display = "none";
-                    }
+        d = document.getElementById("id_country").value;
+        var items2 = document.getElementsByClassName('country');
+        for (var i = 0; i < items2.length; i++) {
+            if (items2[i].value != d) {
+                var items3 = document.getElementsByClassName(items2[i].value);
+                for (var j = 0; j < items3.length; j++) {
+                    items3[j].style.display = "none";
                 }
             }
-            var items = document.getElementsByClassName(d);
-            for (var i=0; i < items.length; i++) {
-                items[i].style.display = "block";
-            }
+        }
+        var items = document.getElementsByClassName(d);
+        for (var i = 0; i < items.length; i++) {
+            items[i].style.display = "block";
+        }
     }
 
-    
+
 </script>
 
 {% endblock %}

@@ -409,25 +409,31 @@
                                     {% endfor %}
                                     <td>{{activated_seeker.fullname}}</td>
                                     <td>{{activated_seeker.experience}}</td>
-                                    <td>   
-                                        <form action="../admin-edit-user/" method="POST" id="edit-user{{activated_seeker.user_id}}">
+                                    <td>
+                                        <form action="../admin-edit-user/" method="POST"
+                                            id="edit-user{{activated_seeker.user_id}}">
                                             {% csrf_token %}
-                                        <input type="text" name="user-id" value="{{activated_seeker.user_id}}" style="display: none;">
+                                            <input type="text" name="user-id" value="{{activated_seeker.user_id}}"
+                                                style="display: none;">
                                         </form>
-                                        <button title="Edit" style="border: transparent;" type="submit" form="edit-user{{activated_seeker.user_id}}" class="edit"><i class="material-icons"
-                                                title="Edit">&#xE254;</i></button>
-                                        <form action="../manage_user/deactivate_user" method="POST" id="deactivate-user{{activated_seeker.user_id}}">
+                                        <button title="Edit" style="border: transparent;" type="submit"
+                                            form="edit-user{{activated_seeker.user_id}}" class="edit"><i
+                                                class="material-icons" title="Edit">&#xE254;</i></button>
+                                        <form action="../manage_user/deactivate_user" method="POST"
+                                            id="deactivate-user{{activated_seeker.user_id}}">
                                             {% csrf_token %}
-                                            <input type="text" name="user-id" value="{{activated_seeker.user_id}}" style="display: none;">
+                                            <input type="text" name="user-id" value="{{activated_seeker.user_id}}"
+                                                style="display: none;">
                                         </form>
-                                        <a class="delete"
-                                            onclick="deactivateAccount('{{activated_seeker.user_id}}')"><i class="material-icons"
-                                                data-toggle="tooltip" title="Deactivate">&#xe5c9;</i></a>
+                                        <a style="cursor: pointer;" class="delete"
+                                            onclick="deactivateAccount('{{activated_seeker.user_id}}')"><i
+                                                class="material-icons" data-toggle="tooltip"
+                                                title="Deactivate">&#xe5c9;</i></a>
 
                                     </td>
                                 </tr>
                             </tbody>
-                            
+
                             {% endfor %}
                         </table>
                     </div>
@@ -545,12 +551,16 @@
                                     <td>{{deactivated_seeker.experience}}</td>
                                     <td>
 
-                                        
-                                        <form action="../manage_user/activate_user" method="POST" id="activate-user{{deactivated_seeker.user_id}}">
+
+                                        <form action="../manage_user/activate_user" method="POST"
+                                            id="activate-user{{deactivated_seeker.user_id}}">
                                             {% csrf_token %}
-                                            <input type="text" name="user-id" value="{{deactivated_seeker.user_id}}" style="display: none;">
+                                            <input type="text" name="user-id" value="{{deactivated_seeker.user_id}}"
+                                                style="display: none;">
                                         </form>
-                                        <a onclick="activateAccount('{{deactivated_seeker.user_id}}')"><i class="material-icons" data-toggle="tooltip"
+                                        <a style="cursor: pointer;"
+                                            onclick="activateAccount('{{deactivated_seeker.user_id}}')"><i
+                                                class="material-icons" data-toggle="tooltip"
                                                 title="Activate">&#xe147;</i></a>
 
 
@@ -662,53 +672,53 @@
 
     <script>
 
-    function deactivateAccount(params) {
+        function deactivateAccount(params) {
             swal({
-            title: "Deactivate",
-            text: "Are you sure you want to deactivate this account?",
-            icon: "info",
+                title: "Deactivate",
+                text: "Are you sure you want to deactivate this account?",
+                icon: "info",
                 buttons: {
-                yes: {
-                    text: "Yes",
-                    value: "yes"
-                },
-                no: {
-                    text: "No",
-                    value: "no",
+                    yes: {
+                        text: "Yes",
+                        value: "yes"
+                    },
+                    no: {
+                        text: "No",
+                        value: "no",
+                    }
                 }
-                }
-        }).then((value) => {
+            }).then((value) => {
                 if (value === "yes") {
-                // Add Your Custom Code for CRUD
-                document.getElementById('deactivate-user'+params).submit();
+                    // Add Your Custom Code for CRUD
+                    document.getElementById('deactivate-user' + params).submit();
 
                 }
-        });
+            });
             //alert(params)
         }
 
         function activateAccount(params) {
             swal({
-            title: "Activate",
-            text: "Are you sure you want to activate this account?",
-            icon: "info",
+                title: "Activate",
+                text: "Are you sure you want to activate this account?",
+                icon: "info",
                 buttons: {
-                yes: {
-                    text: "Yes",
-                    value: "yes"
-                },
-                no: {
-                    text: "No",
-                    value: "no",
+                    yes: {
+                        text: "Yes",
+                        value: "yes"
+                    },
+                    no: {
+                        text: "No",
+                        value: "no",
+                    }
                 }
-                }
-        }).then((value) => {
+            }).then((value) => {
                 if (value === "yes") {
-                // Add Your Custom Code for CRUD
-                document.getElementById('activate-user'+params).submit();
+                    // Add Your Custom Code for CRUD
+                    document.getElementById('activate-user' + params).submit();
 
                 }
-        });
+            });
             //alert(params)
         }
         let sidebar = document.querySelector(".sidebar");
