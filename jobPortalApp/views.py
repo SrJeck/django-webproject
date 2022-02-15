@@ -416,6 +416,14 @@ def admin_edit_company(request):
 def admin_edit_jobs(request):
     return
 
+def admin_login(request):
+    return render(request,'jobPortalApp/admin/login.html')
+
+def admin_login_process(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+
 
 def admin_activate_jobs(request):
     if request.method == "POST":
@@ -605,8 +613,11 @@ def activity_logs(request):
     user_per_acts = {}
     activitys = ACTIVITY.objects.all()
     for activity in activitys:
-        user = User.objects.get(id=activity.user_id)
-        user_per_acts[activity.user_id] = user.username
+        if User.objects.filter(id=activity.user_id).exists():
+            user = User.objects.get(id=activity.user_id)
+            user_per_acts[activity.user_id] = user.username
+        else:
+            user_per_acts[activity.user_id] = "Deleted Account"
 
     return render(request, "jobPortalApp/admin/activity_logs.html",{'activitys':activitys,'user_per_acts':user_per_acts})
 
