@@ -14,9 +14,9 @@
                 </div>
                 <div class="text-[28px] font-semibold italic ml-[42px]">Setting Up Information</div>
             </div>
-            <form id="edit-form" action="../admin-edit-job-process" method="POST" enctype="multipart/form-data">
+            <form id="edit-form" action="../admin-edit-job-process/" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                <input type="text" name="job-id" id="job-id" value="{{job.name}}"
+                <input type="text" name="job-id" id="job-id" value="{{job.id}}"
                                 class="input-1px w-[250px]"  style="display: none;">
                 <div class="flex flex-col gap-y-[34px]">
                     <div class="text-[22px] font-semibold italic">Job Information</div>

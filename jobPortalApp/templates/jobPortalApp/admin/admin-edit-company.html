@@ -45,7 +45,7 @@
                         <div class="flex flex-col gap-y-[5px]">
                             <span class="label">City</span>
                             {% if not provider.city %}
-                            <select name="city" id="city" required class="select-2 w-[250px]">
+                            <select name="edit-city" id="edit-city" required class="select-2 w-[250px]">
                                 <option value="" disabled selected hidden>Select City</option>
                                 <option class="China" value="Beijing" style="display: block;">Beijing</option>
                                 <option class="China" value="Macau" style="display: block;">Macau</option>
@@ -57,7 +57,7 @@
                                 <option class="South Korea" value="Busan" style="display: block;">Busan</option>
                             </select>
                             {% else %}
-                            <select name="city" id="city" required class="select-2 w-[250px]">
+                            <select name="edit-city" id="edit-city" required class="select-2 w-[250px]">
                                 <option value="{{provider.city}}" selected hidden>{{provider.city}}</option>
                                 <option class="China" value="Beijing" style="display: block;">Beijing</option>
                                 <option class="China" value="Macau" style="display: block;">Macau</option>
@@ -74,7 +74,7 @@
                         <div class="flex flex-col gap-y-[5px]">
                             <span class="label">Country</span>
                             {% if not provider.country %}
-                            <select name="country" id="id_country" required class="select-2 w-[250px]"
+                            <select name="edit-country" id="id_country" required class="select-2 w-[250px]"
                                 onchange="countyChoice()">
                                 <option value="" disabled selected hidden>Select Country</option>
                                 <option class="country" value="China">China</option>
@@ -83,7 +83,7 @@
                                 <option class="country" value="Japan">Japan</option>
                             </select>
                             {% else %}
-                            <select name="country" id="id_country" required class="select-2 w-[250px]"
+                            <select name="edit-country" id="id_country" required class="select-2 w-[250px]"
                                 onchange="countyChoice()">
                                 <option value="{{provider.country}}" selected hidden>{{provider.country}}</option>
                                 <option class="country" value="China">China</option>

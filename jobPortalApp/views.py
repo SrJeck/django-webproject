@@ -551,10 +551,10 @@ def admin_edit_job_process(request):
         JOB.objects.filter(id=job_id).update(salary=job_salary)
         JOB.objects.filter(id=job_id).update(type=job_type)
         if len(job_skills) > 0:
-            past_skills = JOBSKILL.objects.filter(user_id=job_id)
+            past_skills = JOBSKILL.objects.filter(job_id=job_id)
             past_skills.delete()
         for job_skill in job_skills:
-            JOBSKILL.objects.create(userjob_id_id=job_id,skill_id=job_skill)
+            JOBSKILL.objects.create(job_id=job_id,skill_id=job_skill)
     return redirect('jobs')
 
 def seekerDeleteAccount(request):

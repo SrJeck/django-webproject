@@ -409,7 +409,7 @@
                                             {% csrf_token %}
                                         <input type="text" name="job-id" value="{{activated_job.id}}" style="display: none;">
                                         </form>
-                                        <button title="Edit" style="border: transparent;" type="submit" form="edit-job{{activated_job.user_id}}" class="edit"><i class="material-icons"
+                                        <button title="Edit" style="border: transparent;" type="submit" form="edit-job{{activated_job.id}}" class="edit"><i class="material-icons"
                                                 title="Edit">&#xE254;</i></button>
                                         <form action="../jobs/deactivate_job" method="POST" id="deactivate-job{{activated_job.id}}">
                                             {% csrf_token %}
