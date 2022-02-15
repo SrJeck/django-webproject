@@ -104,17 +104,17 @@
 
     function applyJob() {
         swal({
-            title: "Success",
-            text: "You will be applying for this job now",
-            icon: "success",
+            title: "Apply Job",
+            text: "Are you sure you want to apply to this job?",
+            icon: "info",
                 buttons: {
-                yes: {
+                    yes: {
                     text: "Yes",
                     value: "yes"
                 },
                 no: {
                     text: "No",
-                    value: "no",
+                    value: "no"
                 }
                 }
         }).then((value) => {

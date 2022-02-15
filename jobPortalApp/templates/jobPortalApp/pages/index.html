@@ -220,7 +220,7 @@
                                 </div>
                             </div>
                             <div class="flex justify-between mt-[28px]">
-                                <div class="text-lg font-semibold">${{jo.salary}}</div>
+                                <div class="text-lg font-semibold">${{default_all_job.salary}}</div>
                                 <form action="../../home/view-post/" id="view-post{{default_all_job.id}}" method="POST">
                                     {% csrf_token %}
                                     <input type="text" name="job-id" value="{{default_all_job.id}}" style="display: none;">
