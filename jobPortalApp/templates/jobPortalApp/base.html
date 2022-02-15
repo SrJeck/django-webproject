@@ -120,6 +120,9 @@
     {% block script %}{% endblock script %}{# part to singit template #}
 </body>
 <script>
-    document.getElementById('id_resume').accept = ".pdf";
+    function editInput(){
+    document.getElementById('id_resume').accept = "application/pdf";
+    document.getElementById('id_profile').accept = "image/jpeg";
+    }
 </script>
 </html>
