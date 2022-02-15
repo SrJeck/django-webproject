@@ -46,6 +46,20 @@ def home(request):
         job_type = False
         job_country = False
         job_city = False
+        default_all_jobs = JOB.objects.filter(status='Activated')
+        default_all_jobs_skills = {}
+        default_all_jobs_apllication = {}
+        for default_all_job in default_all_jobs:
+            job_skillnames_per_jobs = []
+            job_skills_per_jobs = JOBSKILL.objects.filter(
+                job_id=default_all_job.id)
+            application_per_jobs = APPLICATION.objects.filter(
+                job_id=default_all_job.id).count()
+            default_all_jobs_apllication[default_all_job.id] = str(application_per_jobs)
+            for job_skills_per_job in job_skills_per_jobs:
+                skills = SKILL.objects.get(id=job_skills_per_job.skill_id)
+                job_skillnames_per_jobs.append(skills.skillname)
+            default_all_jobs_skills[default_all_job.id] = job_skillnames_per_jobs
         if 'job-search' and 'job-type' and 'job-country' and 'job-city' in request.session:
             job_search = request.session['job-search']
             job_type = request.session['job-type']
@@ -364,7 +378,7 @@ def home(request):
                 skills = SKILL.objects.get(id=job_skills_per_job.skill_id)
                 job_skillnames_per_jobs.append(skills.skillname)
             skillnames_per_jobs[company_jobs_id] = job_skillnames_per_jobs
-        return render(request, 'jobPortalApp/pages/index.html', {'jobs': jobs, 'skillnames_per_jobs': skillnames_per_jobs, 'searcher': searcher, 'seeker_name': seeker_name, 'provider_name': provider_name, 'user_type': job_title, 'job_search': job_search, 'job_type': job_type, 'job_city': job_city, 'job_country': job_country, 'applications_per_jobs': applications_per_jobs, 'results': results,'profile':profile})
+        return render(request, 'jobPortalApp/pages/index.html', {'jobs': jobs, 'skillnames_per_jobs': skillnames_per_jobs, 'searcher': searcher, 'seeker_name': seeker_name, 'provider_name': provider_name, 'user_type': job_title, 'job_search': job_search, 'job_type': job_type, 'job_city': job_city, 'job_country': job_country, 'applications_per_jobs': applications_per_jobs, 'results': results,'profile':profile,'default_all_jobs':default_all_jobs,'default_all_jobs_skills':default_all_jobs_skills,'default_all_jobs_apllication':default_all_jobs_apllication})
 
 
 # job seeker
@@ -1101,7 +1115,7 @@ def providerAddJobProcess(request):
             salary = request.POST['salary']
 
             JOB.objects.create(name=job_name, description=job_description,
-                               salary=salary, type=job_types, company_id=user_id)
+                               salary=salary, type=job_types, company_id=user_id,status="Activated")
 
             ACTIVITY.objects.create(
                 name="POST", description="Posted New Job", user_id=user_id)
@@ -1322,11 +1336,11 @@ def seekerChangePassword(request):
             message = ""
             user = User.objects.get(id=user_id)
             if user.check_password(old_pass) == False:
-                message = "Old password doesn't match in Database"
+                message = "Old password does not match in Database"
             if old_pass == new_pass:
                 message = "New password is same with Old password"
             if new_pass != con_pass:
-                message = "New password doesn't match Confirm password"
+                message = "New password does not match Confirm password"
             is_non_empty = bool(message)
             if is_non_empty != False:
                 return render(request, 'jobPortalApp/pages/profile/seeker/change-password.html', {'message': message})

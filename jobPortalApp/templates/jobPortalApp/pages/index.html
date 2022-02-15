@@ -40,11 +40,7 @@
         </div>
     </nav>
     <main class="flex flex-col gap-y-[44px] flex-grow px-[200px] py-[60px]">
-        <div id="logout-div" style="display: none;">
-            <h3>Are you sure about that?</h3>
-            <a href="../logout"><button class="btn-outline">Yes</button></a>
-            <button class="btn-outline" id="close-logout">No</button>
-        </div>
+        
         <section class="flex-grow flex flex-col gap-y-[55px] bg-white min-h-[400px] p-[36px]">
             <div class="flex flex-col items-start mx-auto w-max gap-y-[8px]">
                 <form action="../job-search/" method="POST">
@@ -134,6 +130,7 @@
                 <div class="text-[22px] font-semibold italic">Search Results for {{searcher}}</div>
                 {% endif %}
                 <div class="flex flex-col gap-y-[32px] px-[70px]">
+                    {% if jobs %}
                     {% for job in jobs %}
                         {% for jo in job %} 
                             
@@ -172,7 +169,7 @@
                                         </div>
                                     </div>
                                     <div class="flex justify-between mt-[28px]">
-                                        <div class="text-lg font-semibold">{{jo.salary}}</div>
+                                        <div class="text-lg font-semibold">${{jo.salary}}</div>
                                         <form action="../../home/view-post/" id="view-post{{jo.id}}" method="POST">
                                             {% csrf_token %}
                                             <input type="text" name="job-id" value="{{jo.id}}" style="display: none;">
@@ -185,6 +182,57 @@
                                 </div>
                         {% endfor%}
                     {% endfor%}
+                    {% else %}
+                    {% for default_all_job in default_all_jobs %}
+                       
+                        <div class="flex flex-col p-[23px] shadow-[0_0_20px_0_rgba(24,47,67,0.2)] rounded-[6px]">
+                            <div class="flex justify-between">
+                                <div class="flex items-center gap-x-[18px] text-xs font-light uppercase">
+                                    <span>posted on</span>
+                                    <span>{{ default_all_job.created_at|date:"M d, Y"}}</span>
+                                </div>
+                                <div class="flex items-center gap-x-[7px]">
+                                    <span class="text-xs font-light">Applicants:</span>
+                                    {% for keys,values in default_all_jobs_apllication.items %}
+                                        {% if keys ==  default_all_job.id %}
+                                            <span class="text-[22px] font-semibold italic">{{values}}</span>
+                                        {% endif %}
+                                    {% endfor%}
+                                </div>
+                            </div>  
+                            <div class="flex flex-col gap-y-[12px] mt-[14px]">
+                                <div class="flex items-center gap-x-[14px]">
+                                    <div class="text-[22px] font-semibold italic">
+                                        {{default_all_job.name}}
+                                    </div>
+                                    <div class="flex items-center gap-x-[8px]">
+                                        {% for keys,values in default_all_jobs_skills.items%}
+                                            {% if keys ==  jo.id %}
+                                                {% for value in values%}
+                                                <div class="pill">{{value}}</div>
+                                                {% endfor %}
+                                            {% endif %}
+                                        {% endfor%}
+                                    </div>
+                                </div>
+                                <div class="font-light">
+                                    {{default_all_job.description}}
+                                </div>
+                            </div>
+                            <div class="flex justify-between mt-[28px]">
+                                <div class="text-lg font-semibold">${{jo.salary}}</div>
+                                <form action="../../home/view-post/" id="view-post{{default_all_job.id}}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="text" name="job-id" value="{{default_all_job.id}}" style="display: none;">
+                                </form>
+                                <button type="submit" form="view-post{{default_all_job.id}}" class="flex items-center gap-x-2">
+                                    <span class="uppercase text-sm font-light">view posting</span>
+                                    <span><img src="assets/chevron-right.svg" alt=""></span>
+                                </button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    {% endif %}
                     {% if searcher and results %}
                     <div class="flex flex-col p-[23px] shadow-[0_0_20px_0_rgba(24,47,67,0.2)] rounded-[6px]">
                         {{results}}
@@ -216,7 +264,7 @@
         }).then((value) => {
                 if (value === "yes") {
                 // Add Your Custom Code for CRUD
-                window.location.href="../logout"
+                window.location.href="../../logout"
                 }
         });
     };

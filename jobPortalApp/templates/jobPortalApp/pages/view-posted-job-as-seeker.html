@@ -29,7 +29,7 @@
                 <a href="" class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
                     Profile
                 </a>
-                <a href="" class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
+                <a id="logout-btn" class="block w-full font-light p-2 text-center hover:bg-light-grayish-blue rounded-[4px]">
                     Logout
                 </a>
             </div>
@@ -120,7 +120,7 @@
         }).then((value) => {
                 if (value === "yes") {
                 // Add Your Custom Code for CRUD
-                window.location.href="../logout"
+                window.location.href="../../logout"
                 }
         });
     };</script>
