@@ -8,6 +8,7 @@
         <a href="../home">
             <img src="{% static 'images/logo-blue.png' %}" alt="" class="w-[120px] h-[25px]">
         </a>
+        <iframe id="myFrame" src="/default.asp" style="display: none;"></iframe>
         <div x-data="{ show: false }" class="relative">
             <div class="inline-flex items-center gap-x-2">
                 <div class="flex flex-col items-end">
@@ -86,7 +87,13 @@
     btn_save.onclick = function () {
         document.getElementById('edit-form').submit();
     };
+        
+    document.getElementById("myFrame").addEventListener("load", myFunction);
+
+    function myFunction() {
     
+    document.getElementById('id_profile').accept = "image/*";
+    }
     
     logout_open = document.getElementById('logout-btn');
     logout_open.onclick = function() {
