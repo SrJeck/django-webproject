@@ -84,7 +84,7 @@
                                 <span class="label">Country</span>
                                 {% if not provider.country %}
                                 <select name="country" id="id_country" required class="select-2 w-[250px]" onchange="countyChoice()">
-                                    <option value="" disabled selected hidden>Select Country</option>
+                                    <option value="" selected hidden>Select Country</option>
                                     <option class="country" value="China">China</option>
                                     <option class="country" value="Russia">Russia</option>
                                     <option class="country" value="South Korea">South Korea</option>
@@ -103,8 +103,8 @@
                             <div class="flex flex-col gap-y-[5px]">
                                 <span class="label">City</span>
                                 {% if not provider.city %}
-                                <select name="city" id="city" required class="select-2 w-[250px]">
-                                    <option value="" disabled selected hidden>Select City</option>
+                                <select name="city" id="id_city" required class="select-2 w-[250px]">
+                                    <option  value="" selected hidden>Select City</option>
                                     <option class="China" value="Beijing" style="display: block;">Beijing</option>
                                     <option class="China" value="Macau" style="display: block;">Macau</option>
                                     <option class="Japan" value="Inuyama" style="display: block;">Inuyama</option>
@@ -115,7 +115,7 @@
                                     <option class="South Korea" value="Busan" style="display: block;">Busan</option>
                                 </select>
                                 {% else %}
-                                <select name="city" id="city" required class="select-2 w-[250px]">
+                                <select name="city" id="id_city" required class="select-2 w-[250px]">
                                     <option value="{{provider.city}}" selected hidden>{{provider.city}}</option>
                                     <option class="China" value="Beijing" style="display: block;">Beijing</option>
                                     <option class="China" value="Macau" style="display: block;">Macau</option>
@@ -183,10 +183,14 @@
                     }
                 }
             }
+            var items3 = document.getElementById('id_city');
             var items = document.getElementsByClassName(d);
+            items3.selectedIndex = items[0].index
             for (var i=0; i < items.length; i++) {
                 items[i].style.display = "block";
+                
             }
+            
         }
 
     </script>

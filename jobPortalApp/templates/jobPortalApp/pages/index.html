@@ -280,7 +280,9 @@
                 }
             }
             
+            var items3 = document.getElementById('job-city');
             var items = document.getElementsByClassName(d);
+            items3.selectedIndex = items[0].index
             for (var i=0; i < items.length; i++) {
                 items[i].style.display = "block";
             }
