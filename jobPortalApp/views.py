@@ -423,147 +423,200 @@ def admin_login_process(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
+        message = ""
+        if User.objects.filter(username=username,is_staff=True).exists():
+            user = User.objects.get(username=username,is_staff=True)
+            if user.check_password(password):
+                request.session['admin_id'] = user.id
+                return redirect('manage_user')
+            else:
+                message = "Wrong Password"
+                return render(request,'jobPortalApp/admin/login.html',{'message':message})
+        else:
+            message = "Wrong Username"
+            return render(request,'jobPortalApp/admin/login.html',{'message':message})
+
+
+def admin_logout(request):
+    if 'admin_id' not in request.session:
+       return redirect('login')
+    else:
+        del request.session['admin_id']
+        return redirect('login')
 
 
 def admin_activate_jobs(request):
-    if request.method == "POST":
-        job_id = request.POST['job-id']
-        JOB.objects.filter(id=job_id).update(status="Activated")
-    return redirect('jobs')
+    if 'admin_id' not in request.session:
+       return redirect('login')
+    else:
+        if request.method == "POST":
+            job_id = request.POST['job-id']
+            JOB.objects.filter(id=job_id).update(status="Activated")
+        return redirect('jobs')
 
 
 def admin_deactivate_jobs(request):
-    if request.method == "POST":
-        job_id = request.POST['job-id']
-        JOB.objects.filter(id=job_id).update(status="Deactivated")
-    return redirect('jobs')
+    if 'admin_id' not in request.session:
+       return redirect('login')
+    else:
+        if request.method == "POST":
+            job_id = request.POST['job-id']
+            JOB.objects.filter(id=job_id).update(status="Deactivated")
+        return redirect('jobs')
 
 
 def manage_user(request):
-    activated_users_list = {}
-    deactivated_users_list = {}
-    activated_seekers = SEEKER.objects.filter(status="Activated")
-    deactivated_seekers = SEEKER.objects.filter(status="Deactivated")
+    if 'admin_id' not in request.session:
+       return redirect('login')
+    else:
+        activated_users_list = {}
+        deactivated_users_list = {}
+        activated_seekers = SEEKER.objects.filter(status="Activated")
+        deactivated_seekers = SEEKER.objects.filter(status="Deactivated")
 
-    for activated_seeker in activated_seekers:
-        activated_users_list[activated_seeker.user_id] = User.objects.filter(
-            id=activated_seeker.user_id)
-    for deactivated_seeker in deactivated_seekers:
-        deactivated_users_list[deactivated_seeker.user_id] = User.objects.filter(
-            id=deactivated_seeker.user_id)
-    return render(request, 'jobPortalApp/admin/manage_user.html', {'deactivated_seekers': deactivated_seekers, 'activated_seekers': activated_seekers, 'deactivated_users_list': deactivated_users_list, 'activated_users_list': activated_users_list})
+        for activated_seeker in activated_seekers:
+            activated_users_list[activated_seeker.user_id] = User.objects.filter(
+                id=activated_seeker.user_id)
+        for deactivated_seeker in deactivated_seekers:
+            deactivated_users_list[deactivated_seeker.user_id] = User.objects.filter(
+                id=deactivated_seeker.user_id)
+        return render(request, 'jobPortalApp/admin/manage_user.html', {'deactivated_seekers': deactivated_seekers, 'activated_seekers': activated_seekers, 'deactivated_users_list': deactivated_users_list, 'activated_users_list': activated_users_list})
 
 
 def company(request):
-    activated_company_list = {}
-    deactivated_company_list = {}
-    activated_companys = COMPANY.objects.filter(status="Activated")
-    deactivated_companys = COMPANY.objects.filter(status="Deactivated")
+    if 'admin_id' not in request.session:
+       return redirect('login')
+    else:
+        activated_company_list = {}
+        deactivated_company_list = {}
+        activated_companys = COMPANY.objects.filter(status="Activated")
+        deactivated_companys = COMPANY.objects.filter(status="Deactivated")
 
-    for activated_company in activated_companys:
-        activated_company_list[activated_company.user_id] = User.objects.filter(
-            id=activated_company.user_id)
+        for activated_company in activated_companys:
+            activated_company_list[activated_company.user_id] = User.objects.filter(
+                id=activated_company.user_id)
 
-    for deactivated_company in deactivated_companys:
-        deactivated_company_list[deactivated_company.user_id] = User.objects.filter(
-            id=deactivated_company.user_id)
+        for deactivated_company in deactivated_companys:
+            deactivated_company_list[deactivated_company.user_id] = User.objects.filter(
+                id=deactivated_company.user_id)
 
-    return render(request, "jobPortalApp/admin/company.html", {'activated_companys': activated_companys, 'activated_company_list': activated_company_list, 'deactivated_companys': deactivated_companys, 'deactivated_company_list': deactivated_company_list})
+        return render(request, "jobPortalApp/admin/company.html", {'activated_companys': activated_companys, 'activated_company_list': activated_company_list, 'deactivated_companys': deactivated_companys, 'deactivated_company_list': deactivated_company_list})
 
 
 def jobs(request):
+    if 'admin_id' not in request.session:
+       return redirect('login')
+    else:
 
-    activated_jobs = JOB.objects.filter(status="Activated")
-    deactivated_jobs = JOB.objects.filter(status="Deactivated")
+        activated_jobs = JOB.objects.filter(status="Activated")
+        deactivated_jobs = JOB.objects.filter(status="Deactivated")
 
-    return render(request, "jobPortalApp/admin/jobs.html", {'activated_jobs': activated_jobs, 'deactivated_jobs': deactivated_jobs})
+        return render(request, "jobPortalApp/admin/jobs.html", {'activated_jobs': activated_jobs, 'deactivated_jobs': deactivated_jobs})
 
 
 def admin_edit_user(request):
-    user_id = ""
-    if request.method == 'POST':
-        user_id = request.POST['user-id']
-    skills = SKILL.objects.all()
-    skillnames = []
-    seeker = SEEKER.objects.get(user_id=user_id)
-    seekerskills = SEEKERSKILL.objects.filter(user_id=user_id)
-    for seekerskill in seekerskills:
-        skill = SKILL.objects.get(id=seekerskill.skill_id)
-        skillnames.append(skill.skillname)
-    return render(request, "jobPortalApp/admin/admin-edit-user.html",{'seeker':seeker,'skillnames':skillnames,'skills':skills})
+    if 'admin_id' not in request.session:
+       return redirect('login')
+    else:
+        user_id = ""
+        if request.method == 'POST':
+            user_id = request.POST['user-id']
+        skills = SKILL.objects.all()
+        skillnames = []
+        seeker = SEEKER.objects.get(user_id=user_id)
+        seekerskills = SEEKERSKILL.objects.filter(user_id=user_id)
+        for seekerskill in seekerskills:
+            skill = SKILL.objects.get(id=seekerskill.skill_id)
+            skillnames.append(skill.skillname)
+        return render(request, "jobPortalApp/admin/admin-edit-user.html",{'seeker':seeker,'skillnames':skillnames,'skills':skills})
 
 def admin_edit_user_process(request):
-    user_id = ""
-    if request.method == 'POST':
-        user_id = request.POST['edit-id']
-        user_fullname = request.POST['edit-fullname']
-        user_about = request.POST['edit-about']
-        user_experience = request.POST['edit-experience']
-        job_skills = request.POST.getlist('skill')
-        SEEKER.objects.filter(user_id=user_id).update(fullname=user_fullname)
-        SEEKER.objects.filter(user_id=user_id).update(about=user_about)
-        SEEKER.objects.filter(user_id=user_id).update(experience=user_experience)
-        if len(job_skills) > 0:
-            past_skills = SEEKERSKILL.objects.filter(user_id=user_id)
-            past_skills.delete()
-        for job_skill in job_skills:
-            SEEKERSKILL.objects.create(user_id=user_id,skill_id=job_skill)
-    return redirect('manage_user')
+    if 'admin_id' not in request.session:
+       return redirect('login')
+    else:
+        user_id = ""
+        if request.method == 'POST':
+            user_id = request.POST['edit-id']
+            user_fullname = request.POST['edit-fullname']
+            user_about = request.POST['edit-about']
+            user_experience = request.POST['edit-experience']
+            job_skills = request.POST.getlist('skill')
+            SEEKER.objects.filter(user_id=user_id).update(fullname=user_fullname)
+            SEEKER.objects.filter(user_id=user_id).update(about=user_about)
+            SEEKER.objects.filter(user_id=user_id).update(experience=user_experience)
+            if len(job_skills) > 0:
+                past_skills = SEEKERSKILL.objects.filter(user_id=user_id)
+                past_skills.delete()
+            for job_skill in job_skills:
+                SEEKERSKILL.objects.create(user_id=user_id,skill_id=job_skill)
+        return redirect('manage_user')
 
 
 def admin_edit_company(request):
-    user_id = ""
-    if request.method == 'POST':
-        user_id = request.POST['user-id']
-    provider = COMPANY.objects.get(user_id=user_id)
-    return render(request, "jobPortalApp/admin/admin-edit-company.html",{'provider':provider})
+    if 'admin_id' not in request.session:
+       return redirect('login')
+    else:
+        user_id = ""
+        if request.method == 'POST':
+            user_id = request.POST['user-id']
+        provider = COMPANY.objects.get(user_id=user_id)
+        return render(request, "jobPortalApp/admin/admin-edit-company.html",{'provider':provider})
 
 def admin_edit_company_process(request):
-    if request.method == 'POST':
-        user_id = request.POST['edit-id']
-        user_name = request.POST['edit-name']
-        user_description = request.POST['edit-description']
-        user_city = request.POST['edit-city']
-        user_country = request.POST['edit-country']
-        COMPANY.objects.filter(user_id=user_id).update(name=user_name)
-        COMPANY.objects.filter(user_id=user_id).update(description=user_description)
-        COMPANY.objects.filter(user_id=user_id).update(city=user_city)
-        COMPANY.objects.filter(user_id=user_id).update(country=user_country)
-    return redirect('company')
+    if 'admin_id' not in request.session:
+       return redirect('login')
+    else:
+        if request.method == 'POST':
+            user_id = request.POST['edit-id']
+            user_name = request.POST['edit-name']
+            user_description = request.POST['edit-description']
+            user_city = request.POST['edit-city']
+            user_country = request.POST['edit-country']
+            COMPANY.objects.filter(user_id=user_id).update(name=user_name)
+            COMPANY.objects.filter(user_id=user_id).update(description=user_description)
+            COMPANY.objects.filter(user_id=user_id).update(city=user_city)
+            COMPANY.objects.filter(user_id=user_id).update(country=user_country)
+        return redirect('company')
 
 
 def admin_edit_job(request):
-    job_id = ""
-    if request.method == 'POST':
-        job_id = request.POST['job-id']
-    skills = SKILL.objects.all()
-    skillnames = []
-    job = JOB.objects.get(id=job_id)
-    seekerskills = JOBSKILL.objects.filter(job_id=job_id)
-    for seekerskill in seekerskills:
-        skill = SKILL.objects.get(id=seekerskill.skill_id)
-        skillnames.append(skill.skillname)
-    return render(request, "jobPortalApp/admin/admin-edit-job.html",{'job':job,'skills':skills,'skillnames':skillnames})
+    if 'admin_id' not in request.session:
+       return redirect('login')
+    else:
+        job_id = ""
+        if request.method == 'POST':
+            job_id = request.POST['job-id']
+        skills = SKILL.objects.all()
+        skillnames = []
+        job = JOB.objects.get(id=job_id)
+        seekerskills = JOBSKILL.objects.filter(job_id=job_id)
+        for seekerskill in seekerskills:
+            skill = SKILL.objects.get(id=seekerskill.skill_id)
+            skillnames.append(skill.skillname)
+        return render(request, "jobPortalApp/admin/admin-edit-job.html",{'job':job,'skills':skills,'skillnames':skillnames})
 
 def admin_edit_job_process(request):
-    if request.method == 'POST':
-        job_id = request.POST['job-id']
-        job_name = request.POST['job-name']
-        job_salary = request.POST['job-salary']
-        job_description = request.POST['job-description']
-        job_type = request.POST['job-type']
-        job_skills = request.POST.getlist('skill')
-        
-        JOB.objects.filter(id=job_id).update(name=job_name)
-        JOB.objects.filter(id=job_id).update(description=job_description)
-        JOB.objects.filter(id=job_id).update(salary=job_salary)
-        JOB.objects.filter(id=job_id).update(type=job_type)
-        if len(job_skills) > 0:
-            past_skills = JOBSKILL.objects.filter(job_id=job_id)
-            past_skills.delete()
-        for job_skill in job_skills:
-            JOBSKILL.objects.create(job_id=job_id,skill_id=job_skill)
-    return redirect('jobs')
+    if 'admin_id' not in request.session:
+       return redirect('login')
+    else:
+        if request.method == 'POST':
+            job_id = request.POST['job-id']
+            job_name = request.POST['job-name']
+            job_salary = request.POST['job-salary']
+            job_description = request.POST['job-description']
+            job_type = request.POST['job-type']
+            job_skills = request.POST.getlist('skill')
+            
+            JOB.objects.filter(id=job_id).update(name=job_name)
+            JOB.objects.filter(id=job_id).update(description=job_description)
+            JOB.objects.filter(id=job_id).update(salary=job_salary)
+            JOB.objects.filter(id=job_id).update(type=job_type)
+            if len(job_skills) > 0:
+                past_skills = JOBSKILL.objects.filter(job_id=job_id)
+                past_skills.delete()
+            for job_skill in job_skills:
+                JOBSKILL.objects.create(job_id=job_id,skill_id=job_skill)
+        return redirect('jobs')
 
 def seekerDeleteAccount(request):
     if 'user_id' not in request.session:

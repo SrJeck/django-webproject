@@ -79,6 +79,7 @@ urlpatterns += [
 urlpatterns += [
     path('manage_user/', views.manage_user, name="manage_user"),
     path('admin-login/', views.admin_login, name="admin_login"),
+    path('admin-logout/', views.admin_logout, name="admin_logout"),
     path('admin-login-process/', views.admin_login_process, name="admin_login_process"),
     path('manage_user/activate_user',views.admin_activate_user, name="admin_activate_user"),
     path('manage_user/deactivate_user',views.admin_deactivate_user, name="admin_deactivate_user"),
