@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-
+from django.core.validators import FileExtensionValidator
 # Create your models here.
 
 # maverick
@@ -52,7 +52,7 @@ class JOBSKILL(models.Model):
 
 class RESUME(models.Model):
     user_id = models.IntegerField(null=True)
-    resume = models.FileField(upload_to=settings.MEDIA_ROOT, null=True)
+    resume = models.FileField(upload_to=settings.MEDIA_ROOT, null=True,validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
 
 
 class JOB(models.Model):

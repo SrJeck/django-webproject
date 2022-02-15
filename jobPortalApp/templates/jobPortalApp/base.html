@@ -114,10 +114,12 @@
         </style>
 </head>
 
-<body class="flex flex-col bg-very-pale-blue">
+<body class="flex flex-col bg-very-pale-blue" onload="editInput()">
 
     {% block content %}{% endblock content %}{# part to singit template #}
     {% block script %}{% endblock script %}{# part to singit template #}
 </body>
-
+<script>
+    document.getElementById('id_resume').accept = ".pdf";
+</script>
 </html>
