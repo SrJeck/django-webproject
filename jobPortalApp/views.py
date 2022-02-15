@@ -36,12 +36,13 @@ def home(request):
         job_title = request.session['job_type']
         user_id = request.session['user_id']
         profile = PROFILE.objects.filter(user_id=user_id)
-        provider_name = ""
-        seeker_name = ""
+        user_name = ""
         if job_title == "Job Seeker":
             seeker_name = SEEKER.objects.get(user_id=user_id)
+            user_name = seeker_name.fullname
         elif job_title == "Job Provider":
             provider_name = COMPANY.objects.get(user_id=user_id)
+            user_name = provider_name.name
         job_search = ""
         job_type = False
         job_country = False
@@ -378,7 +379,7 @@ def home(request):
                 skills = SKILL.objects.get(id=job_skills_per_job.skill_id)
                 job_skillnames_per_jobs.append(skills.skillname)
             skillnames_per_jobs[company_jobs_id] = job_skillnames_per_jobs
-        return render(request, 'jobPortalApp/pages/index.html', {'jobs': jobs, 'skillnames_per_jobs': skillnames_per_jobs, 'searcher': searcher, 'seeker_name': seeker_name, 'provider_name': provider_name, 'user_type': job_title, 'job_search': job_search, 'job_type': job_type, 'job_city': job_city, 'job_country': job_country, 'applications_per_jobs': applications_per_jobs, 'results': results,'profile':profile,'default_all_jobs':default_all_jobs,'default_all_jobs_skills':default_all_jobs_skills,'default_all_jobs_apllication':default_all_jobs_apllication})
+        return render(request, 'jobPortalApp/pages/index.html', {'jobs': jobs, 'skillnames_per_jobs': skillnames_per_jobs, 'searcher': searcher, 'user_name': user_name, 'user_type': job_title, 'job_search': job_search, 'job_type': job_type, 'job_city': job_city, 'job_country': job_country, 'applications_per_jobs': applications_per_jobs, 'results': results,'profile':profile,'default_all_jobs':default_all_jobs,'default_all_jobs_skills':default_all_jobs_skills,'default_all_jobs_apllication':default_all_jobs_apllication})
 
 
 # job seeker

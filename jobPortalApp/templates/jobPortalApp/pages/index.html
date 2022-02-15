@@ -10,12 +10,10 @@
         <div x-data="{ show: false }" class="relative">
             <div class="inline-flex items-center gap-x-2">
                 <div class="flex flex-col items-end">
-                    {% if not provider_name and not  seeker_name%}
+                    {% if not user_name%}
                     <span>Not Set</span>
-                    {% elif  provider_name %}
-                    <span>{{provider_name.name}}</span>
-                    {% elif seeker_name.fullname %}
-                    <span>{{seeker_name.fullname}}</span>
+                    {% else %}
+                    <span>{{user_name}}</span>
                     {% endif%}
                     <span class="text-xs font-light">{{user_type}}</span>
                 </div>
