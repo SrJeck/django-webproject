@@ -405,19 +405,25 @@
                                     <td>{{activated_job.type}}</td>
                                     <td>{{activated_job.created_at}}</td>
                                     <td>
-                                        <form action="../admin-edit-job/" method="POST" id="edit-job{{activated_job.id}}">
+                                        <form action="../admin-edit-job/" method="POST"
+                                            id="edit-job{{activated_job.id}}">
                                             {% csrf_token %}
-                                        <input type="text" name="job-id" value="{{activated_job.id}}" style="display: none;">
+                                            <input type="text" name="job-id" value="{{activated_job.id}}"
+                                                style="display: none;">
                                         </form>
-                                        <button title="Edit" style="border: transparent;" type="submit" form="edit-job{{activated_job.id}}" class="edit"><i class="material-icons"
+                                        <button title="Edit" style="border: transparent;" type="submit"
+                                            form="edit-job{{activated_job.id}}" class="edit"><i class="material-icons"
                                                 title="Edit">&#xE254;</i></button>
-                                        <form action="../jobs/deactivate_job" method="POST" id="deactivate-job{{activated_job.id}}">
+                                        <form action="../jobs/deactivate_job" method="POST"
+                                            id="deactivate-job{{activated_job.id}}">
                                             {% csrf_token %}
-                                            <input type="text" name="job-id" value="{{activated_job.id}}" style="display: none;">
+                                            <input type="text" name="job-id" value="{{activated_job.id}}"
+                                                style="display: none;">
                                         </form>
-                                        <a class="delete"
-                                            onclick="deactivateAccount('{{activated_job.id}}')"><i class="material-icons"
-                                                data-toggle="tooltip" title="Deactivate">&#xe5c9;</i></a>
+                                        <a style="cursor: pointer;" class="delete"
+                                            onclick="deactivateAccount('{{activated_job.id}}')"><i
+                                                class="material-icons" data-toggle="tooltip"
+                                                title="Deactivate">&#xe5c9;</i></a>
 
                                     </td>
                                 </tr>
@@ -556,12 +562,16 @@
                                     <td>{{deactivated_job.created_at}}</td>
                                     <td>
 
-                                        
-                                        <form action="../jobs/activate_job" method="POST" id="activate-job{{deactivated_job.id}}">
+
+                                        <form action="../jobs/activate_job" method="POST"
+                                            id="activate-job{{deactivated_job.id}}">
                                             {% csrf_token %}
-                                            <input type="text" name="job-id" value="{{deactivated_job.id}}" style="display: none;">
+                                            <input type="text" name="job-id" value="{{deactivated_job.id}}"
+                                                style="display: none;">
                                         </form>
-                                        <a onclick="activateAccount('{{deactivated_job.id}}')"><i class="material-icons" data-toggle="tooltip"
+                                        <a style="cursor: pointer;"
+                                            onclick="activateAccount('{{deactivated_job.id}}')"><i
+                                                class="material-icons" data-toggle="tooltip"
                                                 title="Activate">&#xe147;</i></a>
 
 
@@ -674,51 +684,51 @@
     <script>
         function deactivateAccount(params) {
             swal({
-            title: "Deactivate",
-            text: "Are you sure you want to deactivate this account?",
-            icon: "info",
+                title: "Deactivate",
+                text: "Are you sure you want to deactivate this account?",
+                icon: "info",
                 buttons: {
-                yes: {
-                    text: "Yes",
-                    value: "yes"
-                },
-                no: {
-                    text: "No",
-                    value: "no",
+                    yes: {
+                        text: "Yes",
+                        value: "yes"
+                    },
+                    no: {
+                        text: "No",
+                        value: "no",
+                    }
                 }
-                }
-        }).then((value) => {
+            }).then((value) => {
                 if (value === "yes") {
-                // Add Your Custom Code for CRUD
-                document.getElementById('deactivate-job'+params).submit();
+                    // Add Your Custom Code for CRUD
+                    document.getElementById('deactivate-job' + params).submit();
 
                 }
-        });
+            });
             //alert(params)
         }
 
         function activateAccount(params) {
             swal({
-            title: "Activate",
-            text: "Are you sure you want to activate this account?",
-            icon: "info",
+                title: "Activate",
+                text: "Are you sure you want to activate this account?",
+                icon: "info",
                 buttons: {
-                yes: {
-                    text: "Yes",
-                    value: "yes"
-                },
-                no: {
-                    text: "No",
-                    value: "no",
+                    yes: {
+                        text: "Yes",
+                        value: "yes"
+                    },
+                    no: {
+                        text: "No",
+                        value: "no",
+                    }
                 }
-                }
-        }).then((value) => {
+            }).then((value) => {
                 if (value === "yes") {
-                // Add Your Custom Code for CRUD
-                document.getElementById('activate-job'+params).submit();
+                    // Add Your Custom Code for CRUD
+                    document.getElementById('activate-job' + params).submit();
 
                 }
-        });
+            });
             //alert(params)
         }
         let sidebar = document.querySelector(".sidebar");
