@@ -10,7 +10,6 @@ urlpatterns = [
     path('creatt/', views.index),
     path('home/apply-job', views.applyJob, name="applyJob"),
     path('job-search/', views.jobSearch, name="jobSearch"),
-    path('seeker-info/', views.seeker_no_info, name="seeker_no_info"),
     path('register/', views.register, name="register"),
     path('login/', views.login, name="login"),
     path('login-process/', views.loginProcess, name="loginProcess"),
