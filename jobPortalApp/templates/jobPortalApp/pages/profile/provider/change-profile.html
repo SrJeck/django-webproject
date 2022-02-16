@@ -47,6 +47,8 @@
             <a href="../logout"><button class="btn-outline">Yes</button></a>
             <button class="btn-outline" id="close-logout">No</button>
         </div>
+        <form id="edit-form" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
         <section class="flex-grow flex flex-col gap-y-[55px] bg-white min-h-[400px] p-[36px]">
             <div class="flex-shrink-0 flex flex-col gap-y-[36px]">
                 <div class="flex justify-between items-start">
@@ -57,8 +59,6 @@
                 </div>
                 <div class="text-[28px] font-semibold italic ml-[42px]">Change Profile Picture</div>
             </div>
-            <form id="edit-form" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
                 <div class="flex flex-col gap-y-[34px]">
                     
                     {% if not profile %}
@@ -73,20 +73,13 @@
                         {{form.profile}}
                     </div>
                 </div>
-            </form>
-            <button class="btn self-end" id="edit-save">Save</button> 
-            <div class="flex flex-col gap-y-[50px] px-[42px]">
-                
-            </div>
+            <button class="btn self-end">Save</button> 
         </section>
+    </form>
     </main>
 </body>
 <script>
-    btn_save = document.getElementById('edit-save');
-
-    btn_save.onclick = function () {
-        document.getElementById('edit-form').submit();
-    };
+    
         
     document.getElementById("myFrame").addEventListener("load", myFunction);
 

@@ -54,7 +54,7 @@
                     <span class="font-light">{{user_details.email}}</span>
                 </div>
             </div>
-            <form id="delete-form" action="../" method="POST">
+            <form id="delete-form" action="../../profile/provider-delete-accountt" method="POST">
                 <input type="text" value="{{company_details.user_id}}" style="display: none;">
             </form>
             <div>
@@ -220,7 +220,7 @@ settings_choice = document.getElementById('settings');
         }).then((value) => {
                 if (value === "yes") {
                 // Add Your Custom Code for CRUD
-                window.location.href = "../profile/seeker-delete-account"
+                window.location.href = "../../profile/provider-delete-account"
                 }
         });
     };

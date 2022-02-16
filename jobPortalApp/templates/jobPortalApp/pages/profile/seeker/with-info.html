@@ -63,8 +63,8 @@
                     <span class="font-light">{{user_details.email}}</span>
                 </div>
             </div>
-            <form id="delete-account-form" action="../" method="POST">
-                <input type="text" value="{{seeker_details.user_id}}" style="display: none;">
+            <form id="delete-account-form" action="../../profile/seeker-delete-account" method="POST">
+                <input type="text" name="" value="{{seeker_details.user_id}}" style="display: none;">
             </form>
             <div>
                 <button class="btn-outline-danger" id="delete-account">Delete</button>
@@ -179,7 +179,7 @@
         }).then((value) => {
                 if (value === "yes") {
                 // Add Your Custom Code for CRUD
-                window.location.href = "../profile/seeker-delete-account"
+                window.location.href = "../../profile/seeker-delete-account"
                 }
         });
     }
