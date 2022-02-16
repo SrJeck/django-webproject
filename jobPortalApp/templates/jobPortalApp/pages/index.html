@@ -128,6 +128,12 @@
                 <div class="text-[22px] font-semibold italic">Search Results for {{searcher}}</div>
                 {% endif %}
                 <div class="flex flex-col gap-y-[32px] px-[70px]">
+                    
+                    {% if searcher and results %}
+                    <div class="flex flex-col p-[23px] shadow-[0_0_20px_0_rgba(24,47,67,0.2)] rounded-[6px]">
+                        {{results}}
+                    </div>
+                    {% else %}
                     {% if jobs %}
                     {% for job in jobs %}
                         {% for jo in job %} 
@@ -231,10 +237,6 @@
                         </div>
                     {% endfor %}
                     {% endif %}
-                    {% if searcher and results %}
-                    <div class="flex flex-col p-[23px] shadow-[0_0_20px_0_rgba(24,47,67,0.2)] rounded-[6px]">
-                        {{results}}
-                    </div>
                     {% endif %}
                 </div>
             </div>
