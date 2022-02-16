@@ -381,19 +381,6 @@ def home(request):
             skillnames_per_jobs[company_jobs_id] = job_skillnames_per_jobs
         return render(request, 'jobPortalApp/pages/index.html', {'jobs': jobs, 'skillnames_per_jobs': skillnames_per_jobs, 'searcher': searcher, 'user_name': user_name, 'user_type': job_title, 'job_search': job_search, 'job_type': job_type, 'job_city': job_city, 'job_country': job_country, 'applications_per_jobs': applications_per_jobs, 'results': results,'profile':profile,'default_all_jobs':default_all_jobs,'default_all_jobs_skills':default_all_jobs_skills,'default_all_jobs_apllication':default_all_jobs_apllication})
 
-
-# job seeker
-def seeker_no_info(request):
-    return render(request, "jobPortalApp/pages/profile/seeker/no-info.html")
-
-# admins
-# seeker
-
-
-def admin_edit_user(request):
-    return
-
-
 def admin_activate_user(request):
     if request.method == "POST":
         user_id = request.POST['user-id']
@@ -406,8 +393,6 @@ def admin_deactivate_user(request):
         user_id = request.POST['user-id']
         SEEKER.objects.filter(user_id=user_id).update(status="Deactivated")
     return redirect('manage_user')
-# company
-
 
 def admin_deactivate_company(request):
     if request.method == "POST":
@@ -421,15 +406,6 @@ def admin_activate_company(request):
         user_id = request.POST['user-id']
         COMPANY.objects.filter(user_id=user_id).update(status="Activated")
     return redirect('company')
-
-
-def admin_edit_company(request):
-    return
-# jobs
-
-
-def admin_edit_jobs(request):
-    return
 
 def admin_login(request):
     return render(request,'jobPortalApp/admin/login.html')
@@ -688,32 +664,6 @@ def activity_logs(request):
             user_per_acts[activity.user_id] = "Deleted Account"
 
     return render(request, "jobPortalApp/admin/activity_logs.html",{'activitys':activitys,'user_per_acts':user_per_acts})
-
-
-# job provider
-def provider_no_info(request):
-    return render(request, "jobPortalApp/pages/profile/provider/no-info.html")
-
-
-def provider_with_info(request):
-    return render(request, "jobPortalApp/pages/profile/provider/with-info.html")
-
-
-def provider_edit_info(request):
-    return render(request, "jobPortalApp/pages/profile/provider/add-edit-info.html")
-
-
-def provider_show_job_post(request):
-    return render(request, "jobPortalApp/pages/profile/provider/show-job-post.html")
-
-
-def provider_edit_job(request):
-    return render(request, "jobPortalApp/pages/profile/provider/add-edit-job.html")
-
-
-def provider_show_applicant(request):
-    return render(request, "jobPortalApp/pages/profile/provider/show-applicant.html")
-
 
 def logout(request):
     user_id = request.session['user_id']

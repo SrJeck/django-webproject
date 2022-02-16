@@ -10,23 +10,8 @@ urlpatterns = [
     path('creatt/', views.index),
     path('home/apply-job', views.applyJob, name="applyJob"),
     path('job-search/', views.jobSearch, name="jobSearch"),
-]
-
-
-# benitez
-# for job seeker profile
-urlpatterns += [
     path('seeker-info/', views.seeker_no_info, name="seeker_no_info"),
-]
-# maverick
-# register
-urlpatterns += [
     path('register/', views.register, name="register"),
-]
-
-# jack
-# seeker
-urlpatterns += [
     path('login/', views.login, name="login"),
     path('login-process/', views.loginProcess, name="loginProcess"),
     path('logout/', views.logout, name="logout"),
@@ -41,11 +26,6 @@ urlpatterns += [
     path('seeker-resume/', views.seekerView, name="seekerView"),
     path('profile/seeker-edit-process',
          views.seekerEditProcess, name="seekerEditProcess"),
-
-]
-
-# provider
-urlpatterns += [
     path('profile/provider-change-profile',
          views.providerChangeProfle, name="providerChangeProfle"),
     path('profile/provider-delete-account',
@@ -73,10 +53,6 @@ urlpatterns += [
          views.providerActivateJob, name="providerActivateJob"),
     path('profile/provider-edit-job-process',
          views.providerEditJobProcess, name="providerEditJobProcess"),
-]
-# mohammed
-# administrator
-urlpatterns += [
     path('manage_user/', views.manage_user, name="manage_user"),
     path('admin-login/', views.admin_login, name="admin_login"),
     path('admin-logout/', views.admin_logout, name="admin_logout"),
@@ -96,32 +72,6 @@ urlpatterns += [
     path('jobs/activate_job', views.admin_activate_jobs,name="admin_activate_jobs"),
     path('jobs/deactivate_job', views.admin_deactivate_jobs,name="admin_deactivate_jobs"),
     path('activity_logs/', views.activity_logs, name="activity_logs"),
-]
-# lowell
-# for Company/Job Provider
-urlpatterns += {
-    path('provider-no-info/', views.provider_no_info, name="provider_no_info"),
-    path('provider-with-info/', views.provider_with_info,
-         name="provider_with_info"),
-
-    path('provider-edit-info/', views.provider_edit_info,
-         name="provider_edit_info"),
-
-    path('fileupload/', views.fileupload, name="fileupload"),
-    path('filedisplay/', views.filedisplay, name="filedisplay"),
-    path('provider-show-job-post/', views.provider_show_job_post,
-         name="provider_show_job_post"),
-    path('provider-edit-job-post/', views.provider_edit_job,
-         name="provider_edit_job_post"),
-
-    path('provider-show-applicant/', views.provider_show_applicant,
-         name="provider_show_applicant"),
-
-}
-
-# mark joseph
-# report generation
-urlpatterns += [
     path('users-report/', views.users_report, name="users_report"),
     path('activity-report/', views.activity_report, name="activity_report"),
     path('job-report/', views.job_report, name="job_report"),
