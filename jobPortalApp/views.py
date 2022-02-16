@@ -1222,7 +1222,7 @@ def register(request):
 
 
 def fileupload(request):
-    form = resumeForm(use_required_attribute=False)
+    form = resumeForm()
     if request.method == 'POST':
         user_id = 1
         upload2 = request.FILES.get('resume', False)
