@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('home/', views.home, name="home"),
+    path('home-redirect/', views.homeRedirect, name="homeRedirect"),
     path('', views.redirectLogin, name="redirectLogin"),
     path('creatt/', views.index),
     path('home/apply-job', views.applyJob, name="applyJob"),

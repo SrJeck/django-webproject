@@ -27,6 +27,12 @@ def index(request):
 def redirectLogin(request):
     return redirect('login')
 
+def homeRedirect(request):
+    del request.session['job-search']
+    del request.session['job-type']
+    del request.session['job-country']
+    del request.session['job-city']
+    return redirect('home')
 
 def home(request):
     # return HttpResponse('Home Page')
@@ -105,8 +111,7 @@ def home(request):
                                 id=job_id.job_id, company_id=company_id.user_id, type=job_type,status="Activated")
                             for filtered_job in filtered_jobs:
                                 company_jobs_ids.append(filtered_job.id)
-            searcher = job_search + " " + job_type + \
-                " in " + job_country + " - " + job_city
+            searcher = job_search + " " + job_type + " in " + job_country + " - " + job_city
         # search city type
         elif is_non_empty != False and job_type != False and job_city != False:
             company_ids = ""
