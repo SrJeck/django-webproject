@@ -28,10 +28,14 @@ def redirectLogin(request):
     return redirect('login')
 
 def homeRedirect(request):
-    del request.session['job-search']
-    del request.session['job-type']
-    del request.session['job-country']
-    del request.session['job-city']
+    if 'job-search' in request.session:
+        del request.session['job-search']
+    if 'job-type' in request.session:
+        del request.session['job-type']
+    if 'job-country' in request.session:
+        del request.session['job-country']
+    if 'job-city' in request.session:
+        del request.session['job-city']
     return redirect('home')
 
 def home(request):
