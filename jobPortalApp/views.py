@@ -527,10 +527,11 @@ def admin_edit_user(request):
         skillnames = []
         seeker = SEEKER.objects.get(user_id=user_id)
         seekerskills = SEEKERSKILL.objects.filter(user_id=user_id)
+        resume = RESUME.objects.filter(user_id=user_id)
         for seekerskill in seekerskills:
             skill = SKILL.objects.get(id=seekerskill.skill_id)
             skillnames.append(skill.skillname)
-        return render(request, "jobPortalApp/admin/admin-edit-user.html",{'seeker':seeker,'skillnames':skillnames,'skills':skills})
+        return render(request, "jobPortalApp/admin/admin-edit-user.html",{'seeker':seeker,'skillnames':skillnames,'skills':skills,'resume':resume})
 
 def admin_edit_user_process(request):
     if 'admin_id' not in request.session:

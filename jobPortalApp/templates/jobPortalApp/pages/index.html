@@ -211,7 +211,7 @@
                                     </div>
                                     <div class="flex items-center gap-x-[8px]">
                                         {% for keys,values in default_all_jobs_skills.items%}
-                                            {% if keys ==  jo.id %}
+                                            {% if keys ==  default_all_job.id %}
                                                 {% for value in values%}
                                                 <div class="pill">{{value}}</div>
                                                 {% endfor %}
