@@ -444,12 +444,12 @@ def admin_logout(request):
     else:
         del request.session['admin_id']
         request.session.modified = True
-        return redirect('admin_logout')
+        return redirect('admin_login')
 
 
 def admin_activate_jobs(request):
     if 'admin_id' not in request.session:
-       return redirect('admin_logout')
+       return redirect('admin_login')
     else:
         if request.method == "POST":
             job_id = request.POST['job-id']
@@ -459,7 +459,7 @@ def admin_activate_jobs(request):
 
 def admin_deactivate_jobs(request):
     if 'admin_id' not in request.session:
-       return redirect('admin_logout')
+       return redirect('admin_login')
     else:
         if request.method == "POST":
             job_id = request.POST['job-id']
@@ -469,7 +469,7 @@ def admin_deactivate_jobs(request):
 
 def manage_user(request):
     if 'admin_id' not in request.session:
-       return redirect('admin_logout')
+       return redirect('admin_login')
     else:
         activated_users_list = {}
         deactivated_users_list = {}
@@ -487,7 +487,7 @@ def manage_user(request):
 
 def company(request):
     if 'admin_id' not in request.session:
-       return redirect('admin_logout')
+       return redirect('admin_login')
     else:
         activated_company_list = {}
         deactivated_company_list = {}
@@ -507,7 +507,7 @@ def company(request):
 
 def jobs(request):
     if 'admin_id' not in request.session:
-       return redirect('admin_logout')
+       return redirect('admin_login')
     else:
 
         activated_jobs = JOB.objects.filter(status="Activated")
@@ -518,7 +518,7 @@ def jobs(request):
 
 def admin_edit_user(request):
     if 'admin_id' not in request.session:
-       return redirect('admin_logout')
+       return redirect('admin_login')
     else:
         user_id = ""
         if request.method == 'POST':
@@ -534,7 +534,7 @@ def admin_edit_user(request):
 
 def admin_edit_user_process(request):
     if 'admin_id' not in request.session:
-       return redirect('admin_logout')
+       return redirect('admin_login')
     else:
         user_id = ""
         if request.method == 'POST':
@@ -556,7 +556,7 @@ def admin_edit_user_process(request):
 
 def admin_edit_company(request):
     if 'admin_id' not in request.session:
-       return redirect('admin_logout')
+       return redirect('admin_login')
     else:
         user_id = ""
         if request.method == 'POST':
@@ -566,7 +566,7 @@ def admin_edit_company(request):
 
 def admin_edit_company_process(request):
     if 'admin_id' not in request.session:
-       return redirect('admin_logout')
+       return redirect('admin_login')
     else:
         if request.method == 'POST':
             user_id = request.POST['edit-id']
@@ -583,7 +583,7 @@ def admin_edit_company_process(request):
 
 def admin_edit_job(request):
     if 'admin_id' not in request.session:
-       return redirect('admin_logout')
+       return redirect('admin_login')
     else:
         job_id = ""
         if request.method == 'POST':
@@ -599,7 +599,7 @@ def admin_edit_job(request):
 
 def admin_edit_job_process(request):
     if 'admin_id' not in request.session:
-       return redirect('admin_logout')
+       return redirect('admin_login')
     else:
         if request.method == 'POST':
             job_id = request.POST['job-id']
