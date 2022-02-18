@@ -36,6 +36,7 @@ def homeRedirect(request):
         del request.session['job-country']
     if 'job-city' in request.session:
         del request.session['job-city']
+    request.session.modified = True
     return redirect('home')
 
 def home(request):
@@ -439,15 +440,16 @@ def admin_login_process(request):
 
 def admin_logout(request):
     if 'admin_id' not in request.session:
-       return redirect('login')
+       return redirect('admin_login')
     else:
         del request.session['admin_id']
-        return redirect('login')
+        request.session.modified = True
+        return redirect('admin_logout')
 
 
 def admin_activate_jobs(request):
     if 'admin_id' not in request.session:
-       return redirect('login')
+       return redirect('admin_logout')
     else:
         if request.method == "POST":
             job_id = request.POST['job-id']
@@ -457,7 +459,7 @@ def admin_activate_jobs(request):
 
 def admin_deactivate_jobs(request):
     if 'admin_id' not in request.session:
-       return redirect('login')
+       return redirect('admin_logout')
     else:
         if request.method == "POST":
             job_id = request.POST['job-id']
@@ -467,7 +469,7 @@ def admin_deactivate_jobs(request):
 
 def manage_user(request):
     if 'admin_id' not in request.session:
-       return redirect('login')
+       return redirect('admin_logout')
     else:
         activated_users_list = {}
         deactivated_users_list = {}
@@ -485,7 +487,7 @@ def manage_user(request):
 
 def company(request):
     if 'admin_id' not in request.session:
-       return redirect('login')
+       return redirect('admin_logout')
     else:
         activated_company_list = {}
         deactivated_company_list = {}
@@ -505,7 +507,7 @@ def company(request):
 
 def jobs(request):
     if 'admin_id' not in request.session:
-       return redirect('login')
+       return redirect('admin_logout')
     else:
 
         activated_jobs = JOB.objects.filter(status="Activated")
@@ -516,7 +518,7 @@ def jobs(request):
 
 def admin_edit_user(request):
     if 'admin_id' not in request.session:
-       return redirect('login')
+       return redirect('admin_logout')
     else:
         user_id = ""
         if request.method == 'POST':
@@ -532,7 +534,7 @@ def admin_edit_user(request):
 
 def admin_edit_user_process(request):
     if 'admin_id' not in request.session:
-       return redirect('login')
+       return redirect('admin_logout')
     else:
         user_id = ""
         if request.method == 'POST':
@@ -554,7 +556,7 @@ def admin_edit_user_process(request):
 
 def admin_edit_company(request):
     if 'admin_id' not in request.session:
-       return redirect('login')
+       return redirect('admin_logout')
     else:
         user_id = ""
         if request.method == 'POST':
@@ -564,7 +566,7 @@ def admin_edit_company(request):
 
 def admin_edit_company_process(request):
     if 'admin_id' not in request.session:
-       return redirect('login')
+       return redirect('admin_logout')
     else:
         if request.method == 'POST':
             user_id = request.POST['edit-id']
@@ -581,7 +583,7 @@ def admin_edit_company_process(request):
 
 def admin_edit_job(request):
     if 'admin_id' not in request.session:
-       return redirect('login')
+       return redirect('admin_logout')
     else:
         job_id = ""
         if request.method == 'POST':
@@ -597,7 +599,7 @@ def admin_edit_job(request):
 
 def admin_edit_job_process(request):
     if 'admin_id' not in request.session:
-       return redirect('login')
+       return redirect('admin_logout')
     else:
         if request.method == 'POST':
             job_id = request.POST['job-id']
@@ -676,8 +678,7 @@ def activity_logs(request):
 
 def logout(request):
     user_id = request.session['user_id']
-    ACTIVITY.objects.create(
-        name="Logged", description="Logged Out", user_id=user_id)
+    ACTIVITY.objects.create(name="Logged", description="Logged Out", user_id=user_id)
     del request.session['user_id']
     del request.session['user_type']
     del request.session['job_type']
@@ -775,7 +776,7 @@ def profile(request):
         profile = PROFILE.objects.filter(user_id=user_id)
         all_user = User.objects.filter(is_staff=True)
         if user_type == 'seeker':
-            if SEEKER.objects.filter(user_id=user_id).exists():
+            if SEEKER.objects.filter(user_id=user_id,status="Activated").exists():
                 seeker_skills = []
                 if SEEKERSKILL.objects.filter(user_id=user_id).exists():
                     seeker_skills_id = SEEKERSKILL.objects.filter(user_id=user_id)
@@ -787,6 +788,8 @@ def profile(request):
                 if RESUME.objects.filter(user_id=user_id).exists():
                     seeker_resume = RESUME.objects.get(user_id=user_id)
                 return render(request, 'jobPortalApp/pages/profile/seeker/with-info.html', {'user_details': user_details, 'seeker_details': seeker_details, 'seeker_skills': seeker_skills, 'user_type': job_type, 'seeker_resume': seeker_resume, 'all_user': all_user, 'profile': profile})
+            else:
+                return redirect('logout')
         elif user_type == 'provider':
             if COMPANY.objects.filter(user_id=user_id).exists():
                 company_details = COMPANY.objects.get(user_id=user_id)
@@ -811,6 +814,8 @@ def profile(request):
                         job_skillnames_per_jobs.append(skills.skillname)
                     skillnames_per_jobs[company_jobs_id] = job_skillnames_per_jobs
                 return render(request, 'jobPortalApp/pages/profile/provider/with-info.html', {'company_details': company_details, 'user_details': user_details, 'user_type': job_type, 'company_jobs': company_jobs, 'skillnames_per_jobs': skillnames_per_jobs, 'applications_per_jobs': applications_per_jobs, 'profile': profile})
+            else:
+                return redirect('logout')
 
 
 @xframe_options_sameorigin
